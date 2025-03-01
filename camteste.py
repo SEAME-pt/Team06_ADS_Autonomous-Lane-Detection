@@ -5,7 +5,17 @@ import cv2
 
 
 
-
+def csi_pipeline(width=640, height=480, fps=30,flip_method=0,  sensor_id=0):
+    return ('nvarguscamerasrc sensor-id=%d ! '
+            'video/x-raw(memory:NVMM), '
+            'width=(int)%d, height=(int)%d, '
+            'format=(string)NV12, framerate=(fraction)%d/1 ! '
+            'nvvidconv flip-method=%d ! '
+            'video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! '
+            'videoconvert ! '
+            'video/x-raw, format=(string)BGR ! appsink' % (sensor_id,
+                                                            width, height, fps, flip_method,
+                                                            width, height))
 
 
 def gstreamer_pipeline(
@@ -15,7 +25,7 @@ def gstreamer_pipeline(
     display_width=640,
     display_height=480,
     framerate=30,
-    flip_method=0,
+    flip_method=1,
 ):
     return (
         "nvarguscamerasrc sensor-id=%d ! "
@@ -39,8 +49,8 @@ def gstreamer_pipeline(
 def show_camera():
     window_title = " Camera"
 
-    print(gstreamer_pipeline(flip_method=0))
-    video_capture = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    #print(gstreamer_pipeline(flip_method=0))
+    video_capture = cv2.VideoCapture(csi_pipeline(), cv2.CAP_GSTREAMER)
     if cv2.cuda.getCudaEnabledDeviceCount() > 0:
       print("OpenCV com CUDA :)")
     else:

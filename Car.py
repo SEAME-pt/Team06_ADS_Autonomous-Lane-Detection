@@ -7,10 +7,10 @@ from JetCar import JetCar
 def gstreamer_pipeline(
     sensor_id=0,
     capture_width=640,
-    capture_height=720,
+    capture_height=550,
     display_width=640,
     display_height=480,
-    framerate=30,
+    framerate=15,
     flip_method=0,
 ):
     return (
@@ -65,7 +65,7 @@ def process_image(frame):
     
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Pode ajudar na precisão da cor
     hsv = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2HSV)
-    lower_orange = np.array([10, 100, 100])
+    lower_orange = np.array([5, 120, 150])
     upper_orange = np.array([25, 255, 255])
     mask = cv2.inRange(hsv, lower_orange, upper_orange)
     
@@ -75,7 +75,7 @@ def process_image(frame):
     mask = cv2.dilate(mask, kernel, iterations=2)
     
     # Define ROI in the lower part of the image
-    roi_height = int(height * 0.3)
+    roi_height = int(height * 0.5)
     roi = mask[height - roi_height:height, :]
     
     # Find contours in the ROI
@@ -104,8 +104,8 @@ def main():
     car = JetCar()
     car.start()
     
-    BASE_SPEED = 40
-    DIFF = 160.0
+    BASE_SPEED = 50
+    DIFF = 90.0
     car.set_speed(0)
     
 
@@ -117,7 +117,7 @@ def main():
     
     # Initialize PID controller
     #pid = PID(kp=0.25, ki=0.006, kd=2.0)
-    pid = PID(kp=0.25, ki=0.005, kd=0.8)   
+    pid = PID(kp=0.25, ki=0.005, kd=2.0)   
     
     frame_count = 0
     frame_skip = 15
@@ -133,11 +133,9 @@ def main():
         while True:
             current_time = time.time()
             dt = current_time - last_time
-            if dt < 0.05:  # Limita a taxa de atualização a 20 FPS (~1/0.05s)
-                time.sleep(0.05 - dt)  
             last_time = time.time()
 
-            print(f"Tempo entre frames: {dt:.4f} segundos") 
+
             ret, frame = cap.read()
             if not ret:
                 print("Error: Failed to capture frame.")
@@ -153,7 +151,7 @@ def main():
                 # Convert PID output to steering angle (-90 to 90 degrees)
                 steering_angle = int(steering_correction * DIFF)  
                 current_steering_angle = int(steering_correction * DIFF)
-                MAX_ANGLE = 120  # para evitar o turn  exagerado
+                MAX_ANGLE = 100  # para evitar o turn  exagerado
                 steering_angle = max(-MAX_ANGLE, min(MAX_ANGLE, steering_angle))
                 
             
@@ -163,7 +161,7 @@ def main():
           
                 
                 # Apply steering and adjust speed
-                #car.set_steering(smoothed_steering_angle)
+                car.set_steering(smoothed_steering_angle)
 
                 turn_factor = abs(steering_angle) / DIFF
                 adjusted_speed = BASE_SPEED * (1 - (turn_factor *reduce))
@@ -184,7 +182,7 @@ def main():
                 cv2.putText(frame, f"Speed: {adjusted_speed:.1f}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             else:
                 # Line lost, stop the car
-                print(last_speed)
+  
                 car.set_speed(last_speed)
                 car.set_steering(last_steering_angle)
                 pid.need_reset = True
