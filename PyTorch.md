@@ -258,3 +258,89 @@
   model = models.resnet18(pretrained=True)
   model.fc = nn.Linear(model.fc.in_features, num_classes)  # Replace final layer
   ```
+
+---
+
+## PyTorch Custom Datasets
+
+### Creating Custom Datasets
+- Subclass `torch.utils.data.Dataset`:
+  ```python
+  from torch.utils.data import Dataset
+
+  class CustomDataset(Dataset):
+      def __init__(self, data, labels, transform=None):
+          self.data = data
+          self.labels = labels
+          self.transform = transform
+
+      def __len__(self):
+          return len(self.data)
+
+      def __getitem__(self, idx):
+          sample = self.data[idx]
+          label = self.labels[idx]
+          if self.transform:
+              sample = self.transform(sample)
+          return sample, label
+  ```
+
+### Using Custom Datasets
+- Create a dataset and DataLoader:
+  ```python
+  dataset = CustomDataset(data, labels, transform=transform)
+  dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+  ```
+
+---
+
+## PyTorch Going Modular
+
+### Organizing Code into Modules
+- Split code into reusable modules:
+  - `model.py`: Define the model architecture.
+  - `train.py`: Training loop and evaluation.
+  - `utils.py`: Utility functions (e.g., data loading, transformations).
+
+### Example: Modular Workflow
+1. **Model Definition** (`model.py`):
+   ```python
+   import torch.nn as nn
+
+   class MyModel(nn.Module):
+       def __init__(self):
+           super(MyModel, self).__init__()
+           self.layer1 = nn.Linear(10, 50)
+           self.layer2 = nn.Linear(50, 1)
+
+       def forward(self, x):
+           x = self.layer1(x)
+           x = torch.relu(x)
+           x = self.layer2(x)
+           return x
+   ```
+
+2. **Training Script** (`train.py`):
+   ```python
+   from model import MyModel
+   from torch.utils.data import DataLoader
+   import torch.optim as optim
+   import torch.nn as nn
+
+   # Load data
+   dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+
+   # Initialize model, optimizer, and loss function
+   model = MyModel()
+   optimizer = optim.Adam(model.parameters(), lr=0.001)
+   criterion = nn.MSELoss()
+
+   # Training loop
+   for epoch in range(epochs):
+       for batch_features, batch_labels in dataloader:
+           optimizer.zero_grad()
+           outputs = model(batch_features)
+           loss = criterion(outputs, batch_labels)
+           loss.backward()
+           optimizer.step()
+   ```
