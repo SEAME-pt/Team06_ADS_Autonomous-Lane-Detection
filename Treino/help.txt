@@ -1,0 +1,1 @@
+./trtexec --onnx=~/code/Team06-ADS_Autonomous-Lane-Detection/Treino/model_light.onnx --saveEngine=~/code/Team06-ADS_Autonomous-Lane-Detection/Treino/model_light.engine
