@@ -11,16 +11,16 @@ class JetCar:
         self.motor_bus = smbus2.SMBus(1)
         self.MOTOR_ADDR = motor_addr
 
-        self.MAX_ANGLE = 180
+        self.MAX_ANGLE = 140
         self.SERVO_CENTER_PWM = 320 + 0
-        self.SERVO_LEFT_PWM = 320 - 250
-        self.SERVO_RIGHT_PWM = 320 + 250
+        self.SERVO_LEFT_PWM = 320 - self.MAX_ANGLE
+        self.SERVO_RIGHT_PWM = 320 + self.MAX_ANGLE
         
         self.is_running = False
         self.current_speed = 0
         self.target_speed = 0
         
-        # Inicialização
+        # Inicializa
         self.init_servo()
         self.init_motors()
 
@@ -74,20 +74,7 @@ class JetCar:
    
    
 
-    def set_steering(self, angle):
-        angle = max(-self.MAX_ANGLE, min(self.MAX_ANGLE, angle))
-        
-        if angle < 0:
-            pwm = int(self.SERVO_CENTER_PWM + 
-                     (angle / self.MAX_ANGLE) * (self.SERVO_CENTER_PWM - self.SERVO_LEFT_PWM))
-        elif angle > 0:
-            pwm = int(self.SERVO_CENTER_PWM + 
-                     (angle / self.MAX_ANGLE) * (self.SERVO_RIGHT_PWM - self.SERVO_CENTER_PWM))
-        else:
-            pwm = self.SERVO_CENTER_PWM
-            
-        self.set_servo_pwm(self.STEERING_CHANNEL, 0, pwm)
-        self.current_angle = angle
+
 
     def set_angle(self, angle):
         self.set_servo_pwm(self.STEERING_CHANNEL, 0, angle)
@@ -132,10 +119,10 @@ class JetCar:
 
  
 
-    def set_speed(self, speed):
-        speed = max(-100, min(100, speed))
-        
-        pwm_value = int(abs(speed) / 100.0 * 4095)
+    def set_speed(self, speed: float):
+        """valores entre -1.0 (marcha atrás) e 1.0 (máxima para frente)."""
+        speed = max(-1.0, min(1.0, speed))
+        pwm_value = int(abs(speed) * 4095)
         
         if speed > 0:  # Forward
             self.set_motor_pwm(0, pwm_value)  # IN1 Direita
@@ -150,7 +137,6 @@ class JetCar:
             self.set_motor_pwm(1, pwm_value)  # IN2
             self.set_motor_pwm(2, 0)          # ENA
 
-         
             self.set_motor_pwm(5, 0)          # IN3
             self.set_motor_pwm(6, pwm_value)  # IN4
             self.set_motor_pwm(7, pwm_value)  # ENB
@@ -160,9 +146,26 @@ class JetCar:
         
         self.current_speed = speed
         
-        self.current_speed = speed
-   
-
+    def set_steering(self, steer):
+        angle = steer *100.0
+        angle = max(-self.MAX_ANGLE, min(self.MAX_ANGLE, angle))
+        
+        if angle < 0:
+            pwm = int(self.SERVO_CENTER_PWM + (angle / self.MAX_ANGLE) * (self.SERVO_CENTER_PWM - self.SERVO_LEFT_PWM))
+        elif angle > 0:
+            pwm = int(self.SERVO_CENTER_PWM + (angle / self.MAX_ANGLE) * (self.SERVO_RIGHT_PWM - self.SERVO_CENTER_PWM))
+        else:
+            pwm = self.SERVO_CENTER_PWM
+            
+        self.set_servo_pwm(self.STEERING_CHANNEL, 0, pwm)
+        self.current_angle = angle
+    
+    def reset(self):
+        self.set_speed(0)
+        self.set_steering(0)
+    def drive(self,speed,steering):
+        self.set_speed(speed)
+        self.set_steering(steering)
     def start(self):
         self.running = True
    
@@ -173,3 +176,37 @@ class JetCar:
         self.set_steering(0)
         self.servo_bus.close()
         self.motor_bus.close()
+
+
+
+
+
+if __name__ == "__main__":
+    car = JetCar()
+    car.start()
+    time.sleep(2)
+    car.set_steering(0)
+    time.sleep(2)
+    car.set_steering(-1.0)
+    time.sleep(2)
+    car.set_steering(1.0)
+    time.sleep(2)
+    car.set_steering(-1.0)
+    time.sleep(0.5)
+    car.set_steering(1.0)
+    time.sleep(0.5)
+    car.set_steering(-1.0)
+    time.sleep(0.5)
+    car.set_steering(1.0)
+    time.sleep(0.5)
+    car.set_steering(-1.0)
+    time.sleep(0.5)
+    car.set_steering(1.0)
+    time.sleep(0.5)
+    car.set_steering(-1.0)
+    time.sleep(0.5)
+    car.set_steering(1.0)
+    time.sleep(0.5)
+    time.sleep(2)
+    car.set_steering(0)
+    car.stop()

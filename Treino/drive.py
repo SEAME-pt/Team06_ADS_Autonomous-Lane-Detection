@@ -57,7 +57,6 @@ class Controller:
         self.running = True
         
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print(self.device)
         self.model = LightSteeringNet().to(self.device)
         self.model.load_state_dict(torch.load('model_light.pth', map_location=self.device))
         self.model.eval()
