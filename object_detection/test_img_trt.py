@@ -1,4 +1,4 @@
-import cv2
+""" import cv2
 import numpy as np
 import pycuda.driver as cuda
 import pycuda.autoinit
@@ -31,7 +31,7 @@ engine = load_engine(engine_path)
 context = engine.create_execution_context()
 
 # Input info
-input_binding_idx = engine.get_binding_index("images")
+input_binding_idx = engine.get_tensor_index("images")
 output_binding_idx = engine.get_binding_index("output0")
 input_shape = engine.get_binding_shape(input_binding_idx)
 input_size = (input_shape[-1], input_shape[-2])  # (W, H)
@@ -54,4 +54,51 @@ output = infer(context, inputs, outputs, bindings, stream)
 
 # Exibir resultado bruto (para debug)
 print("Output shape:", output.shape)
-print("Output data (primeiros 10 valores):", output[:10])
+print("Output data (primeiros 10 valores):", output[:10]) """
+
+
+import tensorrt as trt
+import pycuda.driver as cuda
+import pycuda.autoinit
+import numpy as np
+import cv2
+
+# Carregar o engine
+TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
+with open("best.engine", "rb") as f, trt.Runtime(TRT_LOGGER) as runtime:
+    engine = runtime.deserialize_cuda_engine(f.read())
+
+# DEBUG: listar todos os bindings
+for i in range(engine.num_bindings):
+    name = engine.get_binding_name(i)
+    print(f"Binding {i}: {name}")
+
+# Definir o binding correto manualmente
+input_binding_idx = 0  # ou outro número, dependendo do que aparecer
+
+# Criar context
+context = engine.create_execution_context()
+
+# Preparar entrada
+img = cv2.imread("image.jpg")  # <- teu caminho de teste
+img = cv2.resize(img, (640, 640))
+img = img.transpose((2, 0, 1))  # channels first
+img = np.expand_dims(img, axis=0).astype(np.float32) / 255.0  # Normalizar, se necessário
+
+# Alocar buffers
+d_input = cuda.mem_alloc(img.nbytes)
+d_output = cuda.mem_alloc(1000 * 4)  # tamanho aproximado, ajustar se souber
+
+bindings = [int(d_input), int(d_output)]
+
+# Copiar dados de input
+cuda.memcpy_htod(d_input, img)
+
+# Inference
+context.execute_v2(bindings)
+
+# Pegar output
+output = np.empty([1000], dtype=np.float32)  # ajustar tamanho se necessário
+cuda.memcpy_dtoh(output, d_output)
+
+print("Output:", output)
