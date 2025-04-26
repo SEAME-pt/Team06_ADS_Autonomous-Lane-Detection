@@ -8,3 +8,5 @@
    https://github.com/mailrocketsystems/JetsonYolov5/blob/main/README.md
 
    https://www.youtube.com/watch?v=ErWC3nBuV6k&list=PLWw98q-Xe7iGIwrnBY_SpXHZzAZZ6944l
+
+   https://www.youtube.com/watch?v=bcM5AQSAzUY&t=199s
