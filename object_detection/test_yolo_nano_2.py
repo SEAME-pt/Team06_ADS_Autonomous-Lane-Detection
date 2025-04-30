@@ -6,7 +6,7 @@ import cv2
 import time
 
 # Configurações
-MODEL_PATH = "yolov5s.engine"  # Ou "yolov5n.engine" para mais FPS
+MODEL_PATH = "best.engine"  # Ou "yolov5n.engine" para mais FPS
 INPUT_SIZE = (416, 416)  # Reduzido para maior FPS
 CONF_THRES = 0.4  # Ajustado para mais detecções
 IOU_THRES = 0.5  # Ajustado para menos falsos positivos
