@@ -6,7 +6,7 @@ import cv2
 import time
 
 # Configurações
-MODEL_PATH = "yolov5s.engine"  # Caminho para o motor TensorRT
+MODEL_PATH = "best.engine"  # Caminho para o motor TensorRT
 INPUT_SIZE = (640, 640)  # Tamanho da entrada do modelo (mesmo usado no treinamento)
 CONF_THRES = 0.5  # Limiar de confiança
 IOU_THRES = 0.4  # Limiar de IoU para NMS
