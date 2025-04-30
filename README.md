@@ -27,3 +27,5 @@ python train.py --img 640 --batch 16 --epochs 3 --data coco128.yaml --weights yo
 3.
 python export.py --weights runs/train/yolov5n_coco128/weights/best.pt --include onnx --opset 13 --simplify
 
+4. (jetson nano)
+/usr/src/tensorrt/bin/trtexec --onnx=best.onnx --saveEngine=best.engine --fp16
