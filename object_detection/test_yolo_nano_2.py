@@ -7,7 +7,9 @@ import time
 
 # Configurações
 MODEL_PATH = "best_yolov5n128.engine"  # Ou "yolov5n.engine" para mais FPS
+print("     aqui!!")
 INPUT_SIZE = (416, 416)  # Reduzido para maior FPS
+print("         end")
 CONF_THRES = 0.4  # Ajustado para mais detecções
 IOU_THRES = 0.5  # Ajustado para menos falsos positivos
 CLASSES = [
@@ -110,7 +112,7 @@ def main():
     
     # Configurar captura de vídeo
     cap = cv2.VideoCapture(
-        "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=640, height=480, format=NV12, framerate=30/1 ! "
+        "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=416, height=416, format=NV12, framerate=30/1 ! "
         "nvvidconv ! video/x-raw, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
         cv2.CAP_GSTREAMER
     )
