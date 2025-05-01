@@ -22,10 +22,25 @@ cd yolov5
 pip install -r requirements.txt
 
 2.
-python train.py --img 416 --batch 16 --epochs 3 --data coco128.yaml --weights yolov5n.pt --name yolov5_coco128
+python train.py --img 416 --batch 16 --epochs 10 --data coco128.yaml --weights yolov5n.pt --name yolov5_coco128
+
+python train.py \
+  --img 416 \
+  --batch 8 \
+  --epochs 10 \
+  --data coco128.yaml \
+  --weights yolov5n.pt \
+  --device 0 \
+  --workers 4
 
 3.
 python export.py --weights runs/train/yolov5n_coco128/weights/best.pt --include onnx --opset 13 --simplify
+
+python export.py \
+  --weights runs/train/exp/weights/best.pt \
+  --include onnx \
+  --opset 13 \
+  --imgsz 416
 
 4. (jetson nano)
 /usr/src/tensorrt/bin/trtexec --onnx=best_yolov5n128.onnx --saveEngine=best_yolov5n128.engine --fp16
