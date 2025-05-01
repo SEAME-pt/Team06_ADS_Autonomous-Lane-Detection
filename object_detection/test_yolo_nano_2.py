@@ -6,8 +6,8 @@ import cv2
 import time
 
 # Configurações
-MODEL_PATH = "best_320.engine"  # Ou "yolov5n.engine" para mais FPS
-INPUT_SIZE = (320, 320)  # Reduzido para maior FPS
+MODEL_PATH = "best_416.engine"  # Ou "yolov5n.engine" para mais FPS
+INPUT_SIZE = (416, 416)  # Reduzido para maior FPS
 CONF_THRES = 0.4  # Ajustado para mais detecções
 IOU_THRES = 0.5  # Ajustado para menos falsos positivos
 CLASSES = [
@@ -112,7 +112,7 @@ def main():
 
     cap = cv2.VideoCapture(
         "nvarguscamerasrc sensor-mode=5 ! video/x-raw(memory:NVMM), width=1280, height=720, format=NV12, framerate=30/1 ! "
-        "nvvidconv ! video/x-raw, width=640, height=640, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
+        "nvvidconv ! video/x-raw, width=416, height=416, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
         cv2.CAP_GSTREAMER
     )
 
