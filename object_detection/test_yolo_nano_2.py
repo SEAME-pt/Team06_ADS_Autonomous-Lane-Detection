@@ -6,10 +6,8 @@ import cv2
 import time
 
 # Configurações
-MODEL_PATH = "best_yolov5n128.engine"  # Ou "yolov5n.engine" para mais FPS
-print("     aqui!!")
-INPUT_SIZE = (416, 416)  # Reduzido para maior FPS
-print("         end")
+MODEL_PATH = "best_320.engine"  # Ou "yolov5n.engine" para mais FPS
+INPUT_SIZE = (320, 320)  # Reduzido para maior FPS
 CONF_THRES = 0.4  # Ajustado para mais detecções
 IOU_THRES = 0.5  # Ajustado para menos falsos positivos
 CLASSES = [
@@ -111,15 +109,19 @@ def main():
     warm_up(engine, INPUT_SIZE)
     
     # Configurar captura de vídeo
+
     cap = cv2.VideoCapture(
-        "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=416, height=416, format=NV12, framerate=30/1 ! "
-        "nvvidconv ! video/x-raw, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
+        "nvarguscamerasrc sensor-mode=5 ! video/x-raw(memory:NVMM), width=1280, height=720, format=NV12, framerate=30/1 ! "
+        "nvvidconv ! video/x-raw, width=640, height=640, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
         cv2.CAP_GSTREAMER
     )
-    
+
     if not cap.isOpened():
         print("Erro ao abrir a câmera")
         return
+
+    skip_frame = 4  # Processar 1 a cada 2 frames
+    frame_count = 0
 
     while True:
         ret, frame = cap.read()
@@ -127,10 +129,19 @@ def main():
             print("Erro ao capturar frame")
             break
 
+        frame_count += 1
+
+        if frame_count % skip_frame != 0:
+            # Só exibe a imagem sem processar
+            cv2.imshow("YOLOv5 TensorRT", frame)
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
+            continue
+
         # Realizar inferência
         start_time = time.time()
         outputs = infer(engine, frame)
-        
+
         # Processar saída
         boxes, scores, class_ids = [], [], []
         for pred in outputs:
@@ -152,20 +163,21 @@ def main():
             boxes = np.array(boxes)[indices]
             scores = np.array(scores)[indices]
             class_ids = np.array(class_ids)[indices]
-        
+
         # Desenhar caixas
         frame = draw_boxes(frame, boxes, scores, class_ids)
-        
+
         # Mostrar FPS
         fps = 1.0 / (time.time() - start_time)
         cv2.putText(frame, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        
+
         # Exibir frame
         cv2.imshow("YOLOv5 TensorRT", frame)
-        
+
         # Sair com 'q'
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
+
 
     # Liberar recursos
     cap.release()
