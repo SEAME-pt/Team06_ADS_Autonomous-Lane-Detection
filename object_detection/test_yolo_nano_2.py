@@ -66,12 +66,13 @@ def infer(engine, image):
     output = outputs[0]["host"].reshape(-1, 85)  # Ajuste se o formato for diferente
     return output
 
+
 # Desenhar caixas com nomes de classes
-def draw_boxes(image, boxes, scores, classes):
-    for i, idx in enumerate(classes):
+def draw_boxes(image, boxes, scores, class_ids):
+    for i, idx in enumerate(class_ids):
         box = boxes[i]
         score = scores[i]
-        class_id = int(classes[i])
+        class_id = int(class_ids[i])
         class_name = CLASSES[class_id]
         x, y, w, h = box
         x1, y1 = int(x - w / 2), int(y - h / 2)
@@ -80,6 +81,7 @@ def draw_boxes(image, boxes, scores, classes):
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     return image
+
 
 # Aquecimento CUDA
 def warm_up(engine, input_size):

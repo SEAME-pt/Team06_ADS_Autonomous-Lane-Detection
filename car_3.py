@@ -11,8 +11,8 @@ from collections import deque
 def gstreamer_pipeline(
     capture_width=320,
     capture_height=240,
-    display_width=320,
-    display_height=240,
+    display_width=640,
+    display_height=480,
     framerate=30,
     flip_method=0,
 ):
@@ -29,8 +29,8 @@ def gstreamer_pipeline(
 
 class AutonomousCar:
     def __init__(self):
-        self.engine_path = "unet_model_2.engine"
-        self.img_size = (64, 64)
+        self.engine_path = "unet_model_256.engine"
+        self.img_size = (256, 256)
         self.threshold = 0.5
         self.ghost_timeout = 2.0
         self.min_distance = 40
@@ -187,7 +187,7 @@ class AutonomousCar:
 
     def executar(self):
         frame_count = 0
-        skip_frames = 2  # Processa só 1 em cada 3 frames
+        skip_frames = 20  
         while self.cap.isOpened():
             frame_count += 1
             if frame_count % (skip_frames + 1) != 0:
