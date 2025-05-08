@@ -1,15 +1,15 @@
 import tensorrt as trt
 print("tensorrt ok")
-import pycuda.driver as cuda
-print("cuda ok")
-import pycuda.autoinit
-print("cuda autoinit ok")
 import cv2
 print("cv2 ok")
 import time
 print("time ok")
 import numpy as np
 print("numpy ok")
+import pycuda.driver as cuda
+print("pycuda ok")
+import pycuda.autoinit
+print("cuda autoinit ok")
 
 # Configurações
 MODEL_PATH = "best_416.engine"  # Ou "yolov5n.engine" para mais FPS
