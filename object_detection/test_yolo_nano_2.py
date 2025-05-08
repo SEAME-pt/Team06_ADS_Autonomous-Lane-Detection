@@ -1,7 +1,7 @@
-import tensorrt as trt
-print("tensorrt ok")
 import cv2
 print("cv2 ok")
+import tensorrt as trt
+print("tensorrt ok")
 import time
 print("time ok")
 import numpy as np
