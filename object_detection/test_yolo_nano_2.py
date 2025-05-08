@@ -1,5 +1,3 @@
-import cv2
-print("cv2 ok")
 import tensorrt as trt
 print("tensorrt ok")
 import time
@@ -10,6 +8,8 @@ import pycuda.driver as cuda
 print("pycuda ok")
 import pycuda.autoinit
 print("cuda autoinit ok")
+import cv2
+print("cv2 ok")
 
 # Configurações
 MODEL_PATH = "best_416.engine"  # Ou "yolov5n.engine" para mais FPS
