@@ -210,7 +210,7 @@ python export.py \
   --imgsz 320
 
 6. (jetson nano) onnx -> tensorrt(engine)
-/usr/src/tensorrt/bin/trtexec --onnx=yolov5_crosswalk.onnx --saveEngine=yolov5_crosswalk.engine --fp16
+/usr/src/tensorrt/bin/trtexec --onnx=yolov5_crosswalk.onnx --saveEngine=yolov5_crosswalk.engine --workspace=2048 --fp16
 
 
 ## Running YoloV8 with TensorRT Engine on Jetson
