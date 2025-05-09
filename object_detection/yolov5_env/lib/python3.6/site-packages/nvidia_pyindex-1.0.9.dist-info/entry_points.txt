@@ -1,0 +1,3 @@
+[console_scripts]
+nvidia_pyindex = nvidia_pyindex.cmdline:main
+
