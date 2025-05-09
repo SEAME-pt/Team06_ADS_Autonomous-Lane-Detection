@@ -54,7 +54,7 @@ def infer(engine, image):
     stream.synchronize()
     
     # Saída para 1 classe: [batch, num_boxes, (x, y, w, h, conf, cls0)]
-    output = outputs[0]["host"].reshape(1, -1, 6)
+    output = outputs[0]["host"].reshape(1, -1, 7)
     return output
 
 # Desenhar caixas com nomes de classes
