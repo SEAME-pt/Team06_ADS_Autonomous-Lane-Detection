@@ -6,11 +6,11 @@ import cv2
 import time
 
 # Configurações
-MODEL_PATH = "best_stop320.engine"  # Caminho do motor TensorRT
-INPUT_SIZE = (320, 320)  # Tamanho de entrada
+MODEL_PATH = "best_stop320.engine"  # Ajuste para o nome do seu arquivo TensorRT
+INPUT_SIZE = (320, 320)  # Tamanho de entrada (deve corresponder ao treinamento/exportação)
 CONF_THRES = 0.4  # Limiar de confiança
 IOU_THRES = 0.5  # Limiar de IoU para NMS
-CLASSES = ['3']  # Classes do dataset
+CLASSES = ['3']  # Classe do dataset; mude para ['stop_sign'] se corrigir o data.yaml
 
 # Função de NMS otimizada
 def non_max_suppression(boxes, scores, conf_thres, iou_thres):
@@ -53,8 +53,8 @@ def infer(engine, image):
     cuda.memcpy_dtoh_async(outputs[0]["host"], outputs[0]["device"], stream)
     stream.synchronize()
     
-    # Ajustar para o formato de saída do YOLOv5 (depende do modelo)
-    output = outputs[0]["host"].reshape(1, -1, 6)  # [batch, num_boxes, (x, y, w, h, conf, cls0, cls1)]
+    # Saída para 1 classe: [batch, num_boxes, (x, y, w, h, conf, cls0)]
+    output = outputs[0]["host"].reshape(1, -1, 6)
     return output
 
 # Desenhar caixas com nomes de classes
@@ -102,7 +102,7 @@ def main():
     # Configurar captura de vídeo
     cap = cv2.VideoCapture(
         "nvarguscamerasrc sensor-mode=5 ! video/x-raw(memory:NVMM), width=1280, height=720, format=NV12, framerate=30/1 ! "
-        "nvvidconv ! video/x-raw, width=416, height=416, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
+        "nvvidconv ! video/x-raw, width=320, height=320, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink",
         cv2.CAP_GSTREAMER
     )
 
@@ -136,9 +136,9 @@ def main():
             conf = pred[4]
             if conf > CONF_THRES:
                 x, y, w, h = pred[0:4]
-                class_scores = pred[5:6]  # Apenas 1 classe (stop)
-                class_id = np.argmax(class_scores)
-                class_score = class_scores[class_id]
+                class_scores = pred[5:6]  # Apenas 1 classe
+                class_id = 0  # Classe única
+                class_score = class_scores[0]
                 if class_score * conf > CONF_THRES:
                     boxes.append([x, y, w, h])
                     scores.append(conf * class_score)

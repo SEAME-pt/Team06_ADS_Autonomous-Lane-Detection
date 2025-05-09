@@ -171,12 +171,12 @@ python train.py --img 320 --batch 16 --epochs 30 --data Stop_data/data.yaml --we
 python3 -m venv yolov5_env
 source yolov5_env/bin/activate
 
-1.
+1. 
 git clone https://github.com/ultralytics/yolov5
 cd yolov5
 pip install -r requirements.txt
 
-2.
+2. 
 python train.py \
   --img 320 \
   --batch 8 \
@@ -186,14 +186,17 @@ python train.py \
   --device 0 \
   --workers 4
 
-3.
+3.  
+python detect.py --source Stop_data/test/images --weights runs/train/exp/weights/best.pt --img 320 --conf 0.4
+
+4. 
 python export.py \
   --weights runs/train/crosswalk-pedestrian7/weights/best.pt \
   --include onnx \
   --opset 13 \
   --imgsz 320
 
-4. (jetson nano)
+5. (jetson nano)
 /usr/src/tensorrt/bin/trtexec --onnx=yolov5_crosswalk.onnx --saveEngine=yolov5_crosswalk.engine --fp16
 
 
