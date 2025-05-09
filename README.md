@@ -163,8 +163,18 @@ python train.py --img 320 --batch 16 --epochs 30 --data Stop_data/data.yaml --we
 /usr/src/tensorrt/bin/trtexec --onnx=unet_model_256.onnx --saveEngine=unet_model_256.engine --fp16
 
 
+### Dataset Roboflow
+#### Install
+$ pip install roboflow
 
-#################################
+#### Authenticate
+$ roboflow login
+
+#### Import
+        roboflow import -w objetctdetectionseame -p objectdetection_seame /path/to/data
+                    
+
+
 
 ## Running YoloV5 with TensorRT Engine on Jetson
 
@@ -186,17 +196,20 @@ python train.py \
   --device 0 \
   --workers 4
 
-3.  
+3. Val
+   python val.py --data /content/yolov5/dataset/data.yaml --weights /content/yolov5/runs/train/exp/weights/best.pt
+
+4. test
 python detect.py --source Stop_data/test/images --weights runs/train/exp/weights/best.pt --img 320 --conf 0.4
 
-4. 
+5. pth -> onnx
 python export.py \
   --weights runs/train/crosswalk-pedestrian7/weights/best.pt \
   --include onnx \
   --opset 13 \
   --imgsz 320
 
-5. (jetson nano)
+6. (jetson nano) onnx -> tensorrt(engine)
 /usr/src/tensorrt/bin/trtexec --onnx=yolov5_crosswalk.onnx --saveEngine=yolov5_crosswalk.engine --fp16
 
 

@@ -6,11 +6,11 @@ import cv2
 import time
 
 # Configurações
-MODEL_PATH = "best_stop320.engine"  # Ajuste para o nome do seu arquivo TensorRT
-INPUT_SIZE = (320, 320)  # Tamanho de entrada (deve corresponder ao treinamento/exportação)
+MODEL_PATH = "stop_noEntry.engine"  # Ajuste para o nome do seu arquivo TensorRT
+INPUT_SIZE = (416, 416)  # Tamanho de entrada (deve corresponder ao treinamento/exportação)
 CONF_THRES = 0.4  # Limiar de confiança
 IOU_THRES = 0.5  # Limiar de IoU para NMS
-CLASSES = ['3']  # Classe do dataset; mude para ['stop_sign'] se corrigir o data.yaml
+CLASSES = ['NoEntry', 'stop-sign'] 
 
 # Função de NMS otimizada
 def non_max_suppression(boxes, scores, conf_thres, iou_thres):
@@ -136,9 +136,9 @@ def main():
             conf = pred[4]
             if conf > CONF_THRES:
                 x, y, w, h = pred[0:4]
-                class_scores = pred[5:6]  # Apenas 1 classe
-                class_id = 0  # Classe única
-                class_score = class_scores[0]
+                class_scores = pred[5:5+len(CLASSES)]  # Ajustar para número de classes
+                class_id = np.argmax(class_scores)
+                class_score = class_scores[class_id]
                 if class_score * conf > CONF_THRES:
                     boxes.append([x, y, w, h])
                     scores.append(conf * class_score)
