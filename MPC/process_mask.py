@@ -4,7 +4,7 @@ import numpy as np
 def calcular_deslocamento_lateral(mascara):
     # Máscara: imagem binária 256x128, branco (255) para linhas, preto (0) para fundo
     # Pegar a linha inferior (y=128) ou próxima (y=120 para evitar bordas)
-    linha = mascara[300, :]  # Linha y=120
+    linha = mascara[480, :]  # Linha y=120
 
     # Encontrar pixels brancos (linhas)
     pixels_brancos = np.where(linha == 255)[0]  # Índices dos pixels brancos
