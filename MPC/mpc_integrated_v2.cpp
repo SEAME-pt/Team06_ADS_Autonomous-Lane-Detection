@@ -5,30 +5,42 @@
 
 class VehicleModel {
 public:
-    const float v = 3.0f;      // Speed: 3 m/s
-    const float L = 0.15f;     // Wheelbase: 0.15 m
-    const float dt = 0.05f;    // Time step: 0.05 s (20 Hz)
-    const float meters_per_pixel = 0.00125f; // Conversion: 0.25 m / 200 pixels (estimate for 256x128)
+    const int width = 640;      // Mask width
+    const int height = 480;     // Mask height
+    const float v = 3.0f;       // Speed: 3 m/s
+    const float L = 0.15f;      // Wheelbase: 0.15 m
+    const float dt = 0.05f;     // Time step: 0.05 s (20 Hz)
+    const float lines_dist = 0.25f; // Distance between lines: 0.25 m
+    float meters_per_pixel;     // Conversion: lines_dist / pixel distance between lines
 
     float y;    // Lateral position (meters)
     float psi;  // Heading angle (radians)
 
-    VehicleModel() : y(0.0f), psi(0.0f) {}
+    VehicleModel() : y(0.0f), psi(0.0f), meters_per_pixel(0.0f) {}
 
+    // Update state based on steering angle
     void update(float delta) {
         y += dt * v * std::sin(psi);
         psi += dt * (v / L) * std::tan(delta);
     }
 
+    // Convert pixel shift to meters
     float convertShift(float pixel_shift) {
         return pixel_shift * meters_per_pixel;
+    }
+
+    // Compute meters_per_pixel based on pixel distance between lines
+    void computeMetersPerPixel(float pixel_lane_width) {
+        if (pixel_lane_width > 0) {
+            meters_per_pixel = lines_dist / pixel_lane_width;
+        }
     }
 };
 
 class MPCController {
 public:
     const int N = 10;          // Prediction horizon
-    const float R = 0.05f;     // Control weight (reduced for faster response)
+    const float R = 0.05f;     // Control weight
     const float delta_max = M_PI / 6.0f; // Max steering angle: 30 degrees
     const float dt = 0.05f;    // Time step: 0.05 s
 
@@ -51,7 +63,7 @@ public:
 
     float optimize(float y_ref) {
         float delta = 0.0f;
-        float learning_rate = 0.02f; // Increased for faster convergence
+        float learning_rate = 0.02f;
         float cost, cost_plus, cost_minus;
         const int max_iterations = 50;
 
@@ -76,16 +88,14 @@ public:
     }
 };
 
-float computeLateralShift(const cv::Mat& mask) {
-    const int WIDTH = 640;  // Mask width
-    const int HEIGHT = 480; // Mask height
-
-    if (mask.cols != WIDTH || mask.rows != HEIGHT) {
-        std::cerr << "Invalid mask dimensions! Expected: " << WIDTH << "x" << HEIGHT << std::endl;
+float computeLateralShift(const cv::Mat& mask, VehicleModel& model) {
+    if (mask.cols != model.width || mask.rows != model.height) {
+        std::cerr << "Invalid mask dimensions! Expected: " << model.width << "x" << model.height << std::endl;
         return 0.0f;
     }
 
-    int y_line = HEIGHT - 8; // Line y=120
+    float pixel_lane_width;
+    int y_line = model.height - 1; // Line at bottom
     cv::Mat line = mask.row(y_line);
 
     std::vector<int> white_pixels;
@@ -102,13 +112,17 @@ float computeLateralShift(const cv::Mat& mask) {
 
     int x_left = *std::min_element(white_pixels.begin(), white_pixels.end());
     int x_right = *std::max_element(white_pixels.begin(), white_pixels.end());
+    pixel_lane_width = x_right - x_left; // Distance between lines in pixels
+    model.computeMetersPerPixel(pixel_lane_width); // Update meters_per_pixel
+
     float x_center = (x_left + x_right) / 2.0f;
-    float x_center_image = WIDTH / 2.0f;
+    float x_center_image = model.width / 2.0f;
     float shift = x_center - x_center_image;
 
-    std::cout << "Left line: x=" << x_left << ", Right line: x=" << x_right << std::endl;
-    std::cout << "Trajectory center: x=" << x_center << std::endl;
-    std::cout << "Lateral shift: " << shift << " pixels" << std::endl;
+    //std::cout << "Left line: x=" << x_left << ", Right line: x=" << x_right << std::endl;
+    //std::cout << "Trajectory center: x=" << x_center << std::endl;
+    //std::cout << "Lateral shift: " << shift << " pixels" << std::endl;
+    //std::cout << "Meters per pixel: " << model.meters_per_pixel << std::endl;
 
     return shift;
 }
@@ -120,14 +134,13 @@ int main() {
 
     // Simulate 20 steps (1 second at 20 Hz)
     for (int k = 0; k < 20; ++k) {
-        // Example: load mask (replace with real-time mask from your model)
         cv::Mat mask = cv::imread("mask/mask_test01.png", cv::IMREAD_GRAYSCALE);
         if (mask.empty()) {
             std::cerr << "Error loading mask!" << std::endl;
             return -1;
         }
 
-        float pixel_shift = computeLateralShift(mask);
+        float pixel_shift = computeLateralShift(mask, vehicle);
         float y_ref = vehicle.convertShift(pixel_shift);
 
         float delta = mpc.optimize(y_ref);

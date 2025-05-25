@@ -8,7 +8,7 @@ int x = 640;
 float calLatShift(const cv::Mat& mask){
     // mask: imagem binária 256x128
     // line y=120 (para evitar bordas)
-    cv::Mat line = mask.row(479);
+    cv::Mat line = mask.row(h - 1);
 
     // find white pixels(lines)
     std::vector<int> whitePixels;

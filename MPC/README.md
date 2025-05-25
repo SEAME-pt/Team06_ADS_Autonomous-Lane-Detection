@@ -19,3 +19,7 @@ g++ -o mpc mpc.cpp -I/usr/include/eigen3
 ## Compile mpc_integrated
 g++ -o mpc_integrated mpc_integrated.cpp `pkg-config --cflags --libs opencv4` -I/usr/include/eigen3
 ./mpc_integrated
+
+## Compile mpc_carla
+g++ -o mpc_carla mpc_carla.cpp `pkg-config --cflags --libs opencv4` -I/home/ndo-vale/Desktop/carla/include -L/home/ndo-vale/Desktop/carla/lib -lcarla_client -lboost_python
+./mpc_carla
