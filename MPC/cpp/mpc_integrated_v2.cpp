@@ -134,7 +134,7 @@ int main() {
 
     // Simulate 20 steps (1 second at 20 Hz)
     for (int k = 0; k < 20; ++k) {
-        cv::Mat mask = cv::imread("mask/mask_test01.png", cv::IMREAD_GRAYSCALE);
+        cv::Mat mask = cv::imread("../mask/mask_test01.png", cv::IMREAD_GRAYSCALE);
         if (mask.empty()) {
             std::cerr << "Error loading mask!" << std::endl;
             return -1;
