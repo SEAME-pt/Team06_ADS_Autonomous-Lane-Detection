@@ -40,7 +40,7 @@ class VehicleModel:
 class MPCController:
     def __init__(self, vehicle: VehicleModel):
         self.n = 20  # Horizonte de predição
-        self.r = np.float32(0.05)  # Penalidade de controle
+        self.r = np.float32(0.01)  # Penalidade de controle reduzida para 0.01
         self.delta_max = np.float32(math.pi / 6.0)  # Máximo ângulo de esterçamento
         self.dt = np.float32(0.05)
         self.vehicle = vehicle
@@ -52,18 +52,18 @@ class MPCController:
         y = np.float32(self.vehicle.y)
         psi = np.float32(self.vehicle.psi)
         predicted_path = []
+        print(f"y_ref_seq: {y_ref_seq}")  # Depuração
 
         for k in range(self.n):
-            cost += (y - y_ref_seq[k]) ** 2
+            cost += 10.0 * (y - y_ref_seq[k]) ** 2  # Aumentar peso do erro de trajetória
             cost += self.r * delta_seq[k] ** 2
-            # Converter y (metros) para x (pixels)
             x_pixel = self.vehicle.convert_to_pixels(y)
-            y_pixel = self.vehicle.height - 1 - k * (self.vehicle.v * self.dt * 10)  # Mesmo ajuste usado em y_ref_seq
+            y_pixel = self.vehicle.height - 1 - k * (self.vehicle.v * self.dt * 10)
             predicted_path.append((x_pixel, y_pixel))
-            # Atualizar estados
             y += self.dt * self.vehicle.v * np.sin(psi)
             psi += self.dt * (self.vehicle.v / self.vehicle.l) * np.tan(delta_seq[k])
 
+        print(f"Computed cost: {cost}")  # Depuração
         return cost, predicted_path
 
     def optimize(self, y_ref_seq: np.ndarray) -> Tuple[float, List[Tuple[float, float]]]:
@@ -76,12 +76,12 @@ class MPCController:
             bounds=bounds,
             options={'disp': False}
         )
-        # Calcular o caminho previsto com a sequência otimizada
         _, predicted_path = self.compute_cost(result.x, y_ref_seq)
+        print(f"Optimized delta: {result.x[0]}")  # Depuração
         return result.x[0], predicted_path
 
 def track_imaginary_center(mask: np.ndarray) -> Tuple[bool, float, float, Optional[np.ndarray], Optional[np.ndarray], bool, Optional[Tuple[float, float]]]:
-    """Extrai line_l e line_r, calcula a reta imaginária com base em pontos médios a cada 2 pixels."""
+    """Extrai line_l e line_r, calcula a reta imaginária com base em pontos médios a cada 1 pixel."""
     global last_valid_line_params
     
     # Garantir máscara binária
@@ -89,7 +89,8 @@ def track_imaginary_center(mask: np.ndarray) -> Tuple[bool, float, float, Option
     
     # Detectar contornos
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    valid_contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 20]  # Reduzido para 20
+    valid_contours = [cnt for cnt in contours if cv2.contourArea(cnt) > 5]  # Reduzido para 5
+    print(f"Number of valid contours: {len(valid_contours)}")  # Depuração
     
     if len(valid_contours) == 0:
         print("No lines detected in mask!")
@@ -111,9 +112,9 @@ def track_imaginary_center(mask: np.ndarray) -> Tuple[bool, float, float, Option
         y_min = max(np.min(line_l[:, 1]), np.max(line_r[:, 1]))
         y_max = min(np.max(line_l[:, 1]), np.max(line_r[:, 1]))
         
-        # Amostrar pontos médios a cada 2 pixels
+        # Amostrar pontos médios a cada 1 pixel
         x_centers, y_coords = [], []
-        for y in range(int(y_min), int(y_max) + 1, 2):
+        for y in range(int(y_min), int(y_max) + 1, 1):
             x_lefts = line_l[line_l[:, 1] == y, 0]
             x_rights = line_r[line_r[:, 1] == y, 0]
             if len(x_lefts) > 0 and len(x_rights) > 0:
@@ -127,14 +128,13 @@ def track_imaginary_center(mask: np.ndarray) -> Tuple[bool, float, float, Option
             x_right = np.mean(line_r[:, 0])
             x_center = (x_left + x_right) / 2.0
             pixel_lane_width = float(x_right - x_left)
-            # Estimar uma inclinação mínima com base na diferença vertical
             y_range = y_max - y_min
             if y_range > 0:
-                m_est = (x_right - x_left) / y_range if y_range > 0 else 0.0
+                m_est = (x_right - x_left) / y_range if y_range > 0 else 0.1  # Inclinação mínima de 0.1
                 b_est = x_center - m_est * (mask.shape[0] - 1)
                 last_valid_line_params = (m_est, b_est)
             else:
-                last_valid_line_params = (0.0, x_center)
+                last_valid_line_params = (0.1, x_center)  # Forçar inclinação mínima
             return True, x_center, pixel_lane_width, line_l, line_r, True, last_valid_line_params
         
         # Ajustar reta aos pontos médios
@@ -148,11 +148,11 @@ def track_imaginary_center(mask: np.ndarray) -> Tuple[bool, float, float, Option
             pixel_lane_width = float(x_right - x_left)
             y_range = y_max - y_min
             if y_range > 0:
-                m_est = (x_right - x_left) / y_range if y_range > 0 else 0.0
+                m_est = (x_right - x_left) / y_range if y_range > 0 else 0.1
                 b_est = x_center - m_est * (mask.shape[0] - 1)
                 last_valid_line_params = (m_est, b_est)
             else:
-                last_valid_line_params = (0.0, x_center)
+                last_valid_line_params = (0.1, x_center)
             return True, x_center, pixel_lane_width, line_l, line_r, True, last_valid_line_params
 
         # Calcular x_center na linha inferior (y = height - 1)
@@ -177,7 +177,8 @@ def track_imaginary_center(mask: np.ndarray) -> Tuple[bool, float, float, Option
             line_l, line_r = None, line_single
         m, b = last_valid_line_params
         x_center = m * (mask.shape[0] - 1) + b
-        return True, x_center, 200.0, line_l, line_r, True, last_valid_line_params
+        pixel_lane_width = 200.0  # Valor padrão
+        return True, x_center, pixel_lane_width, line_l, line_r, True, last_valid_line_params
     
     print("No valid lines or previous line parameters available!")
     return False, 0.0, 0.0, None, None, False, None
@@ -214,10 +215,10 @@ def process_mask(mask: np.ndarray) -> Tuple[float, float, float, float, bool, fl
             shift = x_center_future - vehicle_model.width / 2.0
             y_ref_seq[k] = vehicle_model.convert_shift(shift)
     else:
-        # Forçar variação em y_ref_seq mesmo no fallback
+        # Forçar variação maior em y_ref_seq
         x_center_image = vehicle_model.width / 2.0
         shift_base = x_center - x_center_image
-        y_ref_seq = np.linspace(vehicle_model.convert_shift(shift_base - 0.1), vehicle_model.convert_shift(shift_base + 0.1), mpc.n, dtype=np.float32)
+        y_ref_seq = np.linspace(vehicle_model.convert_shift(shift_base - 1.0), vehicle_model.convert_shift(shift_base + 1.0), mpc.n, dtype=np.float32)
         print(f"Using fallback y_ref_seq: {y_ref_seq}")
 
     delta, predicted_path = mpc.optimize(y_ref_seq)
@@ -225,4 +226,5 @@ def process_mask(mask: np.ndarray) -> Tuple[float, float, float, float, bool, fl
 
     # Confirmação de retorno
     result = (delta, vehicle_model.y, vehicle_model.psi, y_ref_seq[0], lines_detected, x_center, line_params, predicted_path)
+    print(f"process_mask returning: {result}")  # Depuração adicional
     return result

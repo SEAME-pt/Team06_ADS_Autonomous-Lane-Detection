@@ -142,9 +142,9 @@ def drive_waypoints(world, vehicle, waypoints, direction_forward=True, speed_fac
             # Exibir máscara com ROI e trajetória prevista
             if current_mask is not None:
                 mask_display = cv2.cvtColor(current_mask, cv2.COLOR_GRAY2BGR)
-                roi_x = int(WIDTH * 0.05)
-                roi_width = int(WIDTH * 0.90)
-                roi_y = int(HEIGHT * 0.5)
+                roi_x = int(WIDTH * 0.15)
+                roi_width = int(WIDTH * 0.70)
+                roi_y = int(HEIGHT * 0.4)
                 roi_height = int(HEIGHT * 0.6)
                 cv2.rectangle(mask_display, (roi_x, roi_y), (roi_x + roi_width, roi_y + roi_height), (0, 255, 0), 2)
                 cv2.putText(mask_display, f"Lines Detected: {lines_detected if 'lines_detected' in locals() else False}", 
@@ -213,9 +213,9 @@ def process_segmentation(image):
     
     # Definir ROI
     roi_mask = np.zeros_like(mask)
-    roi_x = int(WIDTH * 0.05)
-    roi_width = int(WIDTH * 0.90)
-    roi_y = int(HEIGHT * 0.5)
+    roi_x = int(WIDTH * 0.15)
+    roi_width = int(WIDTH * 0.70)
+    roi_y = int(HEIGHT * 0.4)
     roi_height = int(HEIGHT * 0.6)
     roi_mask[roi_y:roi_y + roi_height, roi_x:roi_x + roi_width] = 255
     

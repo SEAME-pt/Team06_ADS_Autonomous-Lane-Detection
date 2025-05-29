@@ -131,10 +131,10 @@ def drive_waypoints(world, vehicle, waypoints, direction_forward=True, speed_fac
                 # Converter máscara para RGB
                 mask_display = cv2.cvtColor(current_mask, cv2.COLOR_GRAY2BGR)
                 # Desenhar retângulo da ROI (ajustado para 1024x720)
-                roi_x = int(WIDTH * 0.01)  # 5% da esquerda
-                roi_width = int(WIDTH * 0.98)  # 90% da largura
+                roi_x = int(WIDTH * 0.10)  # 5% da esquerda
+                roi_width = int(WIDTH * 0.80)  # 90% da largura
                 roi_y = int(HEIGHT * 0.5)  # 50% inferior
-                roi_height = int(HEIGHT * 0.6)  # 50% da altura
+                roi_height = int(HEIGHT * 0.5)  # 50% da altura
                 cv2.rectangle(mask_display, (roi_x, roi_y), (roi_x + roi_width, roi_y + roi_height), (0, 255, 0), 2)
                 cv2.putText(mask_display, f"Lines Detected: {lines_detected}", 
                            (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
@@ -191,10 +191,10 @@ def process_segmentation(image):
     
     # Definir ROI (50% inferior, 60% central em largura)
     roi_mask = np.zeros_like(mask)
-    roi_x = int(WIDTH * 0.01)  # 20% da esquerda
-    roi_width = int(WIDTH * 0.98)  # 60% da largura
+    roi_x = int(WIDTH * 0.10)  # 20% da esquerda
+    roi_width = int(WIDTH * 0.8)  # 60% da largura
     roi_y = int(HEIGHT * 0.5)  # 50% inferior
-    roi_height = int(HEIGHT * 0.6)  # 50% da altura
+    roi_height = int(HEIGHT * 0.5)  # 50% da altura
     roi_mask[roi_y:roi_y + roi_height, roi_x:roi_x + roi_width] = 255
     
     # Aplicar ROI à máscara

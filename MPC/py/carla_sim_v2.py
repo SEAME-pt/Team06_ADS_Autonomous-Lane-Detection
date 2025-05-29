@@ -226,7 +226,7 @@ def main():
         client = carla.Client('localhost', 2000)
         client.set_timeout(20.0)
         print("Carregando mundo...")
-        world = client.load_world("/Game/Carla/Maps/Town10HD_Opt")
+        world = client.load_world("/Game/Carla/Maps/Town05_Opt")
         world = client.get_world()
         
         world.unload_map_layer(carla.MapLayer.ParkedVehicles)
