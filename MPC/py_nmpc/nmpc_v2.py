@@ -2,16 +2,16 @@ import casadi as ca
 import numpy as np
 
 # Parâmetros do veículo
-L = 2.9
-MAX_STEER = np.deg2rad(30.0)
-MAX_ACC = 3.0
-MAX_SPEED = 20.0
-DT = 0.1
+L = 2.9  # Distância entre eixos (m)
+MAX_STEER = np.deg2rad(30.0)  # Máximo ângulo de direção (rad)
+MAX_ACC = 3.0  # Máxima aceleração (m/s^2)
+MAX_SPEED = 20.0  # Máxima velocidade (m/s)
+DT = 0.05  # Passo de tempo (s)
 
 # Parâmetros do NMPC
-N = 8
-Q = np.diag([5.0, 5.0, 10.0, 10.0])  # Aumentar peso da velocidade
-R = np.diag([20.0, 1.0])  # Aumentar penalidade em delta
+N = 8  # Horizonte de predição
+Q = np.diag([5.0, 5.0, 10.0, 5.0])  # Ajustado: equilibrar y, psi, v
+R = np.diag([10.0, 1.0])  # Aumentar penalidade em delta
 
 def setup_nmpc():
     """Configura o controlador NMPC usando CasADi."""
@@ -89,8 +89,8 @@ def compute_control(solver, n_states, n_controls, state_init, state_ref, lbx, ub
     delta = float(u_opt[0, 0])
     a = float(u_opt[1, 0])
 
+    # Limitar delta dentro de [-MAX_STEER, MAX_STEER]
     delta = np.clip(delta, -MAX_STEER, MAX_STEER)
-    print(f"NMPC: delta={delta * 180.0 / np.pi:.3f} deg, a={a:.3f} m/s^2")  # Depuração
 
     X_pred = x_opt[0:(N + 1) * n_states].reshape((n_states, N + 1))
     return delta, a, x_opt, X_pred

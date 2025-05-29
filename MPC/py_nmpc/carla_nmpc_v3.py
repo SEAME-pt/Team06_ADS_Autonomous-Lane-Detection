@@ -26,9 +26,8 @@ def process_mask(mask):
     roi_height = int(HEIGHT * 0.6)
     roi = mask[roi_y:roi_y + roi_height, roi_x:roi_x + roi_width]
 
-    # Melhorar detecção com menos ruído
-    edges = cv2.Canny(roi, 100, 200)  # Aumentar thresholds para reduzir ruído
-    lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=20, minLineLength=20, maxLineGap=15)
+    edges = cv2.Canny(roi, 50, 150)
+    lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=30, minLineLength=30, maxLineGap=20)
     
     if lines is not None and len(lines) > 0:
         x_sum, y_sum, angles, count = 0, 0, [], 0
@@ -37,9 +36,8 @@ def process_mask(mask):
             x_sum += (x1 + x2) / 2
             y_sum += (y1 + y2) / 2
             angle = math.atan2(y2 - y1, x2 - x1)
-            if abs(angle - np.pi / 2) > np.deg2rad(10):  # Filtrar linhas muito verticais
-                angles.append(angle)
-                count += 1
+            angles.append(angle)
+            count += 1
         if count > 0:
             x_center = x_sum / count + roi_x
             y_center = y_sum / count + roi_y
@@ -48,24 +46,22 @@ def process_mask(mask):
             if len(y_ref_history) > 5:
                 y_ref_history.pop(0)
             y_ref = np.mean(y_ref_history)
-            psi_ref = np.mean(angles) - np.pi / 2 if angles else 0.0
-            psi_ref = np.clip(psi_ref, -np.pi / 4, np.pi / 4)  # Reduzir limite de psi_ref
+            psi_ref = np.mean(angles) if angles else 0.0
+            psi_ref = np.clip(psi_ref, -np.pi / 2, np.pi / 2)
             delta_initial = np.arctan2(y_ref, 10.0)
-            print(f"Detecção: x_center={x_center:.2f}, y_ref={y_ref:.3f}, psi_ref={psi_ref:.3f}")
             return delta_initial, y_ref, psi_ref, True
-    print("Nenhuma linha válida detectada")
     return 0.0, 0.0, 0.0, False
 
 def world_to_image(x, y, z, transform, fov=90, width=WIDTH, height=HEIGHT):
-    """Converte coordenadas do mundo para imagem com tolerância ajustada."""
+    """Converte coordenadas do mundo para imagem com debug."""
     f = width / (2 * math.tan(math.radians(fov / 2)))
     cx, cy = width / 2, height / 2
     rel_x = x - transform.location.x
     rel_y = y - transform.location.y
     rel_z = z - transform.location.z
-    if rel_y > -0.1:  # Relaxar restrição
-        u = cx + f * rel_x / (rel_y + 0.1)  # Evitar divisão por zero
-        v = cy - f * rel_z / (rel_y + 0.1)
+    if rel_y > 0.1:
+        u = cx + f * rel_x / rel_y
+        v = cy - f * rel_z / rel_y
         return int(u), int(v)
     return None
 
