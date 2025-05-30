@@ -154,8 +154,8 @@ This implementation demonstrates how modern deep learning architectures can be c
 ![Sample Carla]( results/frame_15_173904.jpg)
 
 
-- **Vídeo 1**: [Lab](Videos/sample1.mp4)
-- **Vídeo 2**: [Lab](Videos/sample2.mp4)
-- **Vídeo 3**: [Lab](Videos/sample3.mp4)
+- **Vídeo 1**: [Lab](Videos/demo1.mp4)
+- **Vídeo 2**: [Lab](Videos/demo2.mp4)
+- **Vídeo 3**: [Lab](Videos/demo3.mp4)
  
  
