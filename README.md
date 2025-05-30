@@ -84,6 +84,8 @@ The system generates two types of masks:
 
 Both mask types are automatically scaled to match the original image dimensions and exported in training-ready formats.
 
+
+
 ### **Widget Architecture**
 
 ## Visualizações Interativas
@@ -135,6 +137,9 @@ The annotation tool provides an intuitive interface for creating training datase
 
 **Widget-Based Annotation**: The custom widget system provides professional-grade annotation capabilities typically found in commercial computer vision tools.
 
+![Editor]( visualizations/tool.png)
+- **Vídeo Tool**: [Lab](Videos/tool.mp4)
+
 **Integrated Pipeline**: Seamless workflow from annotation through training to inference, eliminating common integration challenges in computer vision projects.
 
 This implementation demonstrates how modern deep learning architectures can be combined with sophisticated tooling to create complete computer vision solutions for autonomous driving applications.
@@ -157,5 +162,7 @@ This implementation demonstrates how modern deep learning architectures can be c
 - **Vídeo 1**: [Lab](Videos/demo1.mp4)
 - **Vídeo 2**: [Lab](Videos/demo2.mp4)
 - **Vídeo 3**: [Lab](Videos/demo3.mp4)
+
+
  
  
