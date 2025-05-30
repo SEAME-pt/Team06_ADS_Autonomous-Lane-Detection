@@ -1,4 +1,3 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" class="logo" width="120"/>
 
 # TwinLiteNet-Based Lane Detection and Segmentation System
 
@@ -136,10 +135,4 @@ The annotation tool provides an intuitive interface for creating training datase
 **Integrated Pipeline**: Seamless workflow from annotation through training to inference, eliminating common integration challenges in computer vision projects.
 
 This implementation demonstrates how modern deep learning architectures can be combined with sophisticated tooling to create complete computer vision solutions for autonomous driving applications.
-
-<div style="text-align: center">⁂</div>
-
-[^1]: treino.py
-
-[^2]: editor.py
 
