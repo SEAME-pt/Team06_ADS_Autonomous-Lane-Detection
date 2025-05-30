@@ -86,6 +86,9 @@ Both mask types are automatically scaled to match the original image dimensions 
 
 ### **Widget Architecture**
 
+## Visualizações Interativas
+[pywidget.md](pywidget.md).
+
 Our custom widget system provides:
 
 - **Modular Design**: Each widget is independently configurable and reusable
@@ -136,3 +139,23 @@ The annotation tool provides an intuitive interface for creating training datase
 
 This implementation demonstrates how modern deep learning architectures can be combined with sophisticated tooling to create complete computer vision solutions for autonomous driving applications.
 
+
+**Train Progress**
+![Epoch 2]( visualizations/predictions_epoch_002.png)
+![Epoch 20]( visualizations/predictions_epoch_020.png)
+![Epoch 50]( visualizations/predictions_epoch_50.png)
+![Epoch 100]( visualizations/predictions_epoch_100.png)
+![Epoch 125]( visualizations/predictions_epoch_126.png)
+
+**Samples**
+![Sample Lab](results/vlcsnap-2025-05-30-09h13m51s106.png)
+![Sample Lab](results/vlcsnap-2025-05-30-09h17m25s512.png)
+![Sample Lab]( results/vlcsnap-2025-05-30-09h17m43s105.png)
+![Sample Carla]( results/frame_15_173904.jpg)
+
+
+- **Vídeo 1**: [Lab](Videos/sample1.mp4)
+- **Vídeo 2**: [Lab](Videos/sample2.mp4)
+- **Vídeo 3**: [Lab](Videos/sample3.mp4)
+ 
+ 

@@ -21,9 +21,9 @@
 
 | Layouts & Windows | Lists & Buttons | Foldouts & Controls | Text Editors |
 |-------------------|------------------|----------------------|--------------|
-| ![](images/box_layouts.gif) | ![](images/buttons.gif) | ![](images/foldout.gif) | ![](images/texts.gif) |
+| ![](gif/box_layouts.gif) | ![](gif/buttons.gif) | ![](gif/foldout.gif) | ![](gif/texts.gif) |
 | Sliders & Toggles | Color Picker | Grouping UI | Dropdowns |
-| ![](images/sliders.gif) | ![](images/color_picker.gif) | ![](images/groups.gif) | ![](images/lists.gif) |
+| ![](gif/sliders.gif) | ![](gif/color_picker.gif) | ![](gif/groups.gif) | ![](gif/lists.gif) |
 
 ---
 
