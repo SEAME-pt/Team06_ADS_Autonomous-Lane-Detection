@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import math
 
+# [Outras funções (trace_line, order_line_pixels, align_lines, merge_lines, resample_line, calculate_center_line) permanecem as mesmas]
 def trace_line(roi, start_x, start_y, visited, max_gap=2):
     """Rastrea uma linha a partir de um pixel branco, seguindo pixels adjacentes com prioridade diagonal, tolerando pequenos gaps."""
     line_pixels = [(start_x, start_y)]
@@ -172,13 +173,15 @@ def calculate_center_line(line1_pixels, line2_pixels, num_points=50):
 
     return smoothed_center_line
 
-def process_mask(mask_path):
-    """Processa uma imagem de máscara para identificar linhas brancas apenas na ROI e exibir coordenadas."""
+# [Outras funções (trace_line, order_line_pixels, align_lines, merge_lines, resample_line, calculate_center_line) permanecem as mesmas]
+
+def process_mask(mask_path, nmpc_pred=None, current_state=None):
+    """Processa uma imagem de máscara para identificar linhas brancas apenas na ROI e exibe previsões NMPC."""
     # Carregar a imagem
     mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
     if mask is None:
         print("Erro: Não foi possível carregar a imagem.")
-        return None, None, None, False
+        return None, None, None, False, []
 
     # Definir ROI
     height, width = mask.shape
@@ -187,6 +190,7 @@ def process_mask(mask_path):
     roi_y = int(height * 0.5)
     roi_height = int(height * 0.6)
     roi = mask[roi_y:roi_y + roi_height, roi_x:roi_x + roi_width]
+    print(f"ROI dimensions: width={roi_width}, height={roi_height}")
 
     # Encontrar pixels brancos (valor 255) dentro da ROI
     white_pixels = np.column_stack(np.where(roi == 255))
@@ -195,7 +199,7 @@ def process_mask(mask_path):
         cv2.imshow('Máscara sem Linhas', roi)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        return 0.0, 0.0, roi, False
+        return None, None, roi, False, []
 
     # Rastrear todas as linhas a partir de pixels brancos não visitados dentro da ROI
     visited = np.zeros_like(roi, dtype=bool)
@@ -205,7 +209,6 @@ def process_mask(mask_path):
             line_pixels = trace_line(roi, x, y, visited, max_gap=2)
             if len(line_pixels) > 10:  # Filtrar linhas muito curtas
                 lines.append(line_pixels)
-                #print(f"Pixels rastreados para nova linha: {line_pixels}")  # Depuração
 
     # Juntar linhas que estão conectadas ou muito próximas
     lines = merge_lines(lines, max_distance=5)
@@ -216,92 +219,78 @@ def process_mask(mask_path):
         cv2.imshow('Máscara sem Linhas', roi)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        return 0.0, 0.0, roi, False
-
-    # Calcular pontos extremos e médio para cada linha dentro da ROI
-    processed_lines = []
-    mid_points = []  # Armazena o ponto médio de cada linha
-    #print("\nCoordenadas das linhas (relativas à ROI, de 0 a width/height da ROI):")
-    # Ordenar linhas por x médio (esquerda para direita)
-    lines_with_avg_x = [(sum(p[0] for p in line) / len(line), line) for line in lines]
-    lines_with_avg_x.sort()  # Ordenar por x médio
-    lines = [line for _, line in lines_with_avg_x]
-
-    for idx, line_pixels in enumerate(lines):
-        # Determinar se é linha esquerda ou direita
-        is_left_line = idx == 0  # Primeira linha é a mais à esquerda
-
-        if is_left_line:
-            # Linha esquerda: mais próximo (menor y, maior x), mais afastado (maior y, maior x)
-            y_sorted_min = sorted(line_pixels, key=lambda p: (p[1], -p[0]))  # Menor y, maior x
-            y_sorted_max = sorted(line_pixels, key=lambda p: (-p[1], -p[0]))  # Maior y, maior x
-            near_point = y_sorted_min[0]
-            far_point = y_sorted_max[0]
-        else:
-            # Linha direita: mais próximo (menor y, menor x), mais afastado (maior y, menor x)
-            y_sorted_min = sorted(line_pixels, key=lambda p: (p[1], p[0]))  # Menor y, menor x
-            y_sorted_max = sorted(line_pixels, key=lambda p: (-p[1], p[0]))  # Maior y, menor x
-            near_point = y_sorted_min[0]
-            far_point = y_sorted_max[0]
-
-        # Usar near_point e far_point para desenho
-        x1, y1 = near_point
-        x2, y2 = far_point
-        # Ponto médio da linha
-        mid_x = (near_point[0] + far_point[0]) / 2
-        mid_y = (near_point[1] + far_point[1]) / 2
-        mid_points.append((mid_x, mid_y))
-        # Exibir coordenadas
-        near_x, near_y = near_point
-        far_x, far_y = far_point
-        #print(f"Linha {idx + 1}:")
-        #print(f"  Ponto mais afastado: (x={far_x:.2f}, y={far_y:.2f})")
-        #print(f"  Ponto médio: (x={mid_x:.2f}, y={mid_y:.2f})")
-        #print(f"  Ponto mais próximo: (x={near_x:.2f}, y={near_y:.2f})")
-        processed_lines.append(((x1, y1), (x2, y2)))
+        return None, None, roi, False, []
 
     # Calcular a linha central ao longo das duas linhas
     center_line = []
     if len(lines) >= 2:
         line1_pixels = lines[0]  # Linha esquerda
         line2_pixels = lines[1]  # Linha direita
-
-        # Calcular a linha central com alinhamento baseado na distância
         center_line = calculate_center_line(line1_pixels, line2_pixels, num_points=50)
 
-        # Imprimir os pontos da linha central
-        #print("\nLinha central (pontos médios ao longo da trajetória):")
-        #for x, y in center_line:
-        #    print(f"  (x={x:.2f}, y={y:.2f})")
+    # Imprimir os pontos da linha central para depuração
+    print("Center line points (x, y):")
+    for x, y in center_line[:5]:  # Mostrar os primeiros 5 pontos para não sobrecarregar
+        print(f"  ({x}, {y})")
 
     # Visualizar linhas detectadas com cores diferentes apenas na ROI
     line_display = cv2.cvtColor(roi, cv2.COLOR_GRAY2BGR)
-    colors = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (255, 255, 0), (0, 255, 255),
-              (255, 0, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0)]
-    # Desenhar as linhas originais como curvas contínuas
-    for idx, line_pixels in enumerate(lines):
-        color = colors[idx % len(colors)]  # Ciclo de cores
+    colors = [(0, 255, 0), (0, 0, 255)]
+    for idx, line_pixels in enumerate(lines[:2]):  # Usar apenas as duas primeiras linhas
+        color = colors[idx % len(colors)]
         for i in range(len(line_pixels) - 1):
             x1, y1 = line_pixels[i]
             x2, y2 = line_pixels[i + 1]
             cv2.line(line_display, (x1, y1), (x2, y2), color, 2)
-    # Desenhar a linha central
     if center_line:
         for i in range(len(center_line) - 1):
             x1, y1 = center_line[i]
             x2, y2 = center_line[i + 1]
-            cv2.line(line_display, (x1, y1), (x2, y2), (255, 255, 255), 2)  # Linha branca
+            cv2.line(line_display, (x1, y1), (x2, y2), (255, 255, 255), 2)  # Linha central branca
+
+    # Desenhar a trajetória predita pelo NMPC
+    if nmpc_pred is not None and current_state is not None:
+        # Extrair as posições preditas (x, y) do X_pred
+        x_pred = nmpc_pred[0, :].flatten()  # Converter para array 1D
+        y_pred = nmpc_pred[1, :].flatten()  # Converter para array 1D
+        x_current, y_current = current_state[0], current_state[1]  # Posição atual
+
+        # Imprimir valores para depuração
+        print("Predicted trajectory points (x_pred, y_pred):")
+        for i in range(len(x_pred)):
+            print(f"  Step {i}: ({x_pred[i]}, {y_pred[i]})")
+        print(f"Current position: x={x_current}, y={y_current}")
+
+        # Desenhar a trajetória predita como uma linha tracejada (vermelha)
+        for i in range(len(x_pred) - 1):
+            x1 = int(x_pred[i])
+            y1 = int(y_pred[i])
+            x2 = int(x_pred[i + 1])
+            y2 = int(y_pred[i + 1])
+            # Verificar se as coordenadas estão dentro da ROI
+            if (0 <= x1 < roi_width and 0 <= y1 < roi_height) and (0 <= x2 < roi_width and 0 <= y2 < roi_height):
+                cv2.line(line_display, (x1, y1), (x2, y2), (0, 0, 255), 2, cv2.LINE_4)  # Linha tracejada
+            else:
+                print(f"Warning: Predicted point out of ROI bounds at step {i}: ({x1}, {y1}) to ({x2}, {y2})")
+
+        # Desenhar um marcador na posição atual (verde)
+        if 0 <= int(x_current) < roi_width and 0 <= int(y_current) < roi_height:
+            cv2.circle(line_display, (int(x_current), int(y_current)), 5, (0, 255, 0), -1)
+        else:
+            print(f"Warning: Current position out of ROI bounds: ({x_current}, {y_current})")
+
     cv2.imshow('Linhas Detectadas', line_display)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    return 0.0, 0.0, line_display, True
+    return 0.0, 0.0, line_display, True if center_line else False, center_line
 
 def main():
     """Função principal para testar a detecção de linhas."""
     mask_path = "../mask/mask_test03.png"
-    y_ref, psi_ref, display_img, lines_detected = process_mask(mask_path)
+    y_ref, psi_ref, display_img, lines_detected, center_line = process_mask(mask_path)
     if not lines_detected:
         print("Nenhuma linha detectada com sucesso.")
+    return center_line
 
 if __name__ == "__main__":
-    main()
+    center_line = main()
