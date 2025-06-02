@@ -50,7 +50,7 @@ class AnnotationApp(App):
         self.lines = []
         self.current_polygon = []
         self.polygons = []
-        self.line_thickness = 3
+        self.line_thickness = 4
         
         # Edição
         self.selected_point = None
@@ -218,40 +218,114 @@ class AnnotationApp(App):
         print(select)
         print(widget)
 
-    
+    def save_annotations_with_custom_colors(self, button=None):
+        if not self.current_image or not self.image_files:
+            return
+
+        current_file = self.image_files[self.current_image_index]
+        filename = current_file.stem
+
+        orig_width = self.original_image.get_width()
+        orig_height = self.original_image.get_height()
+
+        # Configurações de cores
+        INTERIOR_COLOR = 128  # Cinza para o interior
+        BORDER_COLOR = 255    # Branco para o rebordo
+        BORDER_THICKNESS = 3  # Espessura do rebordo
+
+        # Cria imagem para segmentação
+        seg_image = np.zeros((orig_height, orig_width), dtype=np.uint8)
+        
+        for polygon in self.polygons:
+            if len(polygon) >= 3:
+                points = np.array(polygon, dtype=np.int32)
+                
+                # Primeiro preenche com a cor interior
+                cv2.fillPoly(seg_image, [points], INTERIOR_COLOR)
+                
+                # Depois desenha o rebordo por cima
+                cv2.polylines(seg_image, [points], True, BORDER_COLOR, 
+                            thickness=BORDER_THICKNESS)
+
+        # Salva a imagem
+        try:
+            cv2.imwrite(str(self.segmentation_folder / f"{filename}.png"), seg_image)
+            print(f"Segmentação salva para {filename} com rebordo branco e interior cinza")
+        except Exception as e:
+            print(f"Erro ao salvar segmentação: {e}")
+
     def save_annotations(self, button=None):
-       
         if not self.current_image or not self.image_files:
             return
         
+        INTERIOR_COLOR = 128  # Cinza para o interior
+        BORDER_COLOR = 255    # Branco para o rebordo
+        BORDER_THICKNESS = 2  # Espessura do rebordo
+
         current_file = self.image_files[self.current_image_index]
         filename = current_file.stem
-        
-        # Dimensões da imagem original
+
+ 
         orig_width = self.original_image.get_width()
         orig_height = self.original_image.get_height()
-        
-        # Cria imagem para linhas
+
+ 
         lines_image = np.zeros((orig_height, orig_width), dtype=np.uint8)
         for line in self.lines:
             if len(line) >= 2:
                 points = np.array(line, dtype=np.int32)
                 cv2.polylines(lines_image, [points], False, 255, self.line_thickness)
-        
-        # Cria imagem para segmentação
+
+ 
         seg_image = np.zeros((orig_height, orig_width), dtype=np.uint8)
+        
         for polygon in self.polygons:
             if len(polygon) >= 3:
                 points = np.array(polygon, dtype=np.int32)
-                cv2.fillPoly(seg_image, [points], 255)
-        
-        # Salva as imagens
+                cv2.fillPoly(seg_image, [points], INTERIOR_COLOR)
+                cv2.polylines(seg_image, [points], True, BORDER_COLOR, 
+                            thickness=BORDER_THICKNESS)
+
         try:
             cv2.imwrite(str(self.lines_folder / f"{filename}.png"), lines_image)
             cv2.imwrite(str(self.segmentation_folder / f"{filename}.png"), seg_image)
-            print(f"Anotações salvas para {filename}")
+            print(f"Anotações guardadas para {filename}")
         except Exception as e:
             print(f"Erro ao salvar anotações: {e}")
+
+    # def save_annotations(self, button=None):
+       
+    #     if not self.current_image or not self.image_files:
+    #         return
+        
+    #     current_file = self.image_files[self.current_image_index]
+    #     filename = current_file.stem
+        
+    #     # Dimensões da imagem original
+    #     orig_width = self.original_image.get_width()
+    #     orig_height = self.original_image.get_height()
+        
+    #     # Cria imagem para linhas
+    #     lines_image = np.zeros((orig_height, orig_width), dtype=np.uint8)
+    #     for line in self.lines:
+    #         if len(line) >= 2:
+    #             points = np.array(line, dtype=np.int32)
+    #             cv2.polylines(lines_image, [points], False, 255, self.line_thickness)
+        
+    #     # Cria imagem para segmentação
+    #     seg_image = np.zeros((orig_height, orig_width), dtype=np.uint8)
+    #     for polygon in self.polygons:
+    #         if len(polygon) >= 3:
+    #             points = np.array(polygon, dtype=np.int32)
+    #             cv2.fillPoly(seg_image, [points], 255)
+        
+    #     # Salva as imagens
+    #     try:
+    #         cv2.imwrite(str(self.lines_folder / f"{filename}.png"), lines_image)
+    #         cv2.imwrite(str(self.segmentation_folder / f"{filename}.png"), seg_image)
+    #         print(f"Anotações guardadas para {filename}")
+    #     except Exception as e:
+    #         print(f"Erro ao salvar anotações: {e}")
     
     def clear_annotations(self, button=None):
 
@@ -333,6 +407,9 @@ class AnnotationApp(App):
             self.original_image = pygame.surfarray.make_surface(cv_image.swapaxes(0, 1))
             self.fit_image_to_screen()
             self.clear_annotations()
+
+
+            print(f"Imagem carregada: {image_path}")
         except Exception as e:
             print(f"Erro ao carregar imagem {image_path}: {e}")
     

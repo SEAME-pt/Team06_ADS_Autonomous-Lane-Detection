@@ -57,13 +57,12 @@ class TensorRTInference:
         return outputs
 
 class CSICamera:
-    def __init__(self, width=1280, height=720, fps=30):
-        # Pipeline GStreamer para câmera CSI
+    def __init__(self, width=640, height=360, fps=30):
         self.pipeline = (
             f"nvarguscamerasrc ! "
             f"video/x-raw(memory:NVMM), width={width}, height={height}, "
             f"format=NV12, framerate={fps}/1 ! "
-            f"nvvidconv flip-method=2 ! "
+            f"nvvidconv flip-method=0 ! "
             f"video/x-raw, width={width}, height={height}, format=BGRx ! "
             f"videoconvert ! "
             f"video/x-raw, format=BGR ! appsink"
@@ -122,7 +121,7 @@ def main():
     trt_inference = TensorRTInference('model.engine')
     
  
-    camera = CSICamera(width=1280, height=720, fps=30)
+    camera = CSICamera(width=640, height=360, fps=30)
     camera.start()
     
     print("Pressiona 'q' para sair")
@@ -145,7 +144,7 @@ def main():
             # Pós-processamento
             result = postprocess_outputs(outputs, frame)
             
-            # Calcular FPS
+ 
             fps_counter += 1
             if fps_counter % 30 == 0:
                 elapsed = time.time() - start_time

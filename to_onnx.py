@@ -9,7 +9,7 @@ def convert_to_onnx():
     model = model.cuda()
     model.load_state_dict(torch.load('pretrained/model.pth'))
     model.eval()  
-    
+    model = model.cuda()
     
     dummy_input = torch.randn(1, 3, 360, 640).cuda()
      
@@ -28,6 +28,8 @@ def convert_to_onnx():
             'lane_lines': {0: 'batch_size'}
         }
     )
+    #onnx_model = onnx.load("model.onnx")
+    #onnx.checker.check_model(onnx_model)
     print("Modelo convertido para ONNX com sucesso!")
 
 if __name__ == "__main__":

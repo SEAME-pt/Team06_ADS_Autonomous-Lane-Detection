@@ -195,11 +195,11 @@ def load_pretrained_weights(model, pretrained_path, strict=False):
                 if key in model_dict:
                     if model_dict[key].shape == v.shape:
                         filtered_dict[key] = v
-                        print(f"✓ Loaded: {key} {v.shape}")
+                        print(f"Loaded: {key} {v.shape}")
                     else:
-                        print(f"✗ Shape mismatch for {key}: model={model_dict[key].shape}, pretrained={v.shape}")
+                        print(f"Shape mismatch for {key}: model={model_dict[key].shape}, pretrained={v.shape}")
                 else:
-                    print(f"✗ Key not found in model: {key}")
+                    print(f"Key not found in model: {key}")
             
             pretrained_dict = filtered_dict
             
@@ -239,7 +239,8 @@ def train_net(args):
 
 
     trainLoader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, pin_memory=True)
-    valLoader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, pin_memory=True)
+    #OBS: Validar com batch size 1 para simular condições reais
+    valLoader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False, num_workers=args.num_workers, pin_memory=True)
 
     if cuda_available:
         args.onGPU = True
@@ -262,7 +263,7 @@ def train_net(args):
     if args.freeze_backbone and args.pretrained:
         print("=> Freezing backbone layers for transfer learning")
         for name, param in model.named_parameters():
-            # Ajustar nomes conforme sua arquitetura específica
+ 
             if any(layer in name for layer in ['encoder', 'backbone', 'features', 'conv1', 'conv2', 'conv3']):
                 if not any(head in name for head in ['classifier', 'segmentation_head', 'decode', 'head', 'final']):
                     param.requires_grad = False
@@ -416,7 +417,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--max_epochs', type=int, default=300, help='Max. number of epochs')
     parser.add_argument('--num_workers', type=int, default=6, help='No. of parallel threads')
-    parser.add_argument('--batch_size', type=int, default=6, help='Batch size. 12 for ESPNet-C and 6 for ESPNet. Change as per the GPU memory')
+    parser.add_argument('--batch_size', type=int, default=8, help='Batch size. Change as per the GPU memory')
     parser.add_argument('--step_loss', type=int, default=100, help='Decrease learning rate after how many epochs.')
     parser.add_argument('--lr', type=float, default=5e-4, help='Initial learning rate')
     parser.add_argument('--savedir', default='./test_', help='directory to save the results')
@@ -425,12 +426,7 @@ if __name__ == '__main__':
     parser.add_argument('--strict_loading', action='store_true', help='Use strict loading for pretrained weights')
     parser.add_argument('--freeze_backbone', action='store_true', help='Freeze backbone layers for transfer learning')
     
-    # Dataset paths
-    parser.add_argument('--train_images', default='dataset/train/images', help='Path to training images')
-    parser.add_argument('--train_masks', default='dataset/train/masks', help='Path to training masks')
-    parser.add_argument('--val_images', default='dataset/val/images', help='Path to validation images')
-    parser.add_argument('--val_masks', default='dataset/val/masks', help='Path to validation masks')
-    
+
     # Early stopping parameters
     parser.add_argument('--patience', type=int, default=10, help='Early stopping patience (number of epochs without improvement)')
     parser.add_argument('--min_delta', type=float, default=0.001, help='Minimum change to qualify as improvement')
@@ -447,3 +443,6 @@ if __name__ == '__main__':
 # python train.py     --pretrained ./pretrained/best.pth     --lr 5e-5  
 
 # python treino.py --pretrained ./pretrained/best.pth    --freeze_backbone     --unfreeze_epoch 15     --lr 1e-4     --patience 20
+
+# python treino.py    --pretrained ./pretrained/best.pth     --freeze_backbone     --unfreeze_epoch 12     --lr 1e-4      --batch_size 4     --patience 10     --max_epochs 60 
+#python treino.py     --pretrained ./pretrained/best.pth     --freeze_backbone    --unfreeze_epoch 20 --lr 5e-5 --batch_size 2 --patience 15 --max_epochs 100 --min_delta 0.0001

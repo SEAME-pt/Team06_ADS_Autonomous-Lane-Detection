@@ -8,6 +8,36 @@ import random
 import albumentations as A
 import math
 
+def augment_hsv_safe(img, hgain=0.015, sgain=0.7, vgain=0.4):
+    """Versão mais robusta usando numpy"""
+    if img is None or len(img.shape) != 3:
+        return img
+    
+    # Certificar formato correto
+    img_work = img.astype(np.float32) / 255.0
+    
+    # Converter para HSV usando cv2
+    hsv = cv2.cvtColor(img_work, cv2.COLOR_BGR2HSV)
+    
+    # Gerar fatores aleatórios
+    r = np.random.uniform(-1, 1, 3) * [hgain, sgain, vgain] + 1
+    
+    # Aplicar mudanças
+    hsv[:, :, 0] = (hsv[:, :, 0] * r[0]) % 1.0  # Hue
+    hsv[:, :, 1] = np.clip(hsv[:, :, 1] * r[1], 0, 1)  # Saturation
+    hsv[:, :, 2] = np.clip(hsv[:, :, 2] * r[2], 0, 1)  # Value
+    
+    # Converter de volta
+    bgr = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+    
+    # Converter para uint8
+    result = (bgr * 255).astype(np.uint8)
+    
+    # Copiar de volta
+    img[:] = result[:]
+    
+    return img
+
 def augment_hsv(img, hgain=0.015, sgain=0.7, vgain=0.4):
     """change color hue, saturation, value"""
     r = np.random.uniform(-1, 1, 3) * [hgain, sgain, vgain] + 1  # random gains
@@ -76,161 +106,6 @@ def random_perspective(combination,  degrees=10, translate=.1, scale=.1, shear=1
 
 
 
-class CustomLaneDataset(torch.utils.data.Dataset):
-    '''
-    Dataset customizado para segmentação de linhas de faixa e área dirigível (dummy)
-    Adaptado para TwinLiteNet: retorna imagem (3, H, W) e duas máscaras (2, H, W)
-    '''
-    def __init__(self, images_dir='dataset/images', masks_dir='dataset/mask',
-                 transform=None, valid=False, img_size=(640, 360)):
-        self.images_dir = images_dir
-        self.masks_dir = masks_dir
-        self.transform = transform
-        self.Tensor = transforms.ToTensor()
-        self.valid = valid
-        self.W_, self.H_ = img_size
-
-        # Emparelhar imagens e máscaras por nome base
-        img_files = sorted([f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
-        mask_files = sorted([f for f in os.listdir(masks_dir) if f.lower().endswith('.png')])
-        img_bases = {os.path.splitext(f)[0]: f for f in img_files}
-        mask_bases = {os.path.splitext(f)[0]: f for f in mask_files}
-        common_keys = sorted(set(img_bases.keys()) & set(mask_bases.keys()))
-
-        self.img_paths = [os.path.join(images_dir, img_bases[k]) for k in common_keys]
-        self.mask_paths = [os.path.join(masks_dir, mask_bases[k]) for k in common_keys]
-        print(f"Dataset carregado: {len(self.img_paths)} pares de imagem/máscara")
-
-    def __len__(self):
-        return len(self.img_paths)
-
-    def __getitem__(self, idx):
-        # Carregar imagem e máscara
-        image = cv2.imread(self.img_paths[idx])
-        mask = cv2.imread(self.mask_paths[idx], 0)  # grayscale
-        image_name = os.path.splitext(os.path.basename(self.img_paths[idx]))[0]
-
-        # Augmentações (apenas no treino)
-        if not self.valid:
-            # Flip horizontal
-            if random.random() < 0.5:
-                image = np.fliplr(image)
-                mask = np.fliplr(mask)
-            # Perspective transform (opcional, implemente se quiser)
-            # if random.random() < 0.3:
-            #     image, mask = self.random_perspective_simple(image, mask)
-            # HSV augmentation (opcional)
-            # if random.random() < 0.5:
-            #     self.augment_hsv_simple(image)
-
-        # Redimensionar
-        image = cv2.resize(image, (self.W_, self.H_))
-        mask = cv2.resize(mask, (self.W_, self.H_))
-
-        # Máscara dummy para área dirigível (tudo 0)
-        dummy_da = np.zeros_like(mask)
-        _, seg_bg_da = cv2.threshold(dummy_da, 1, 255, cv2.THRESH_BINARY_INV)
-        _, seg_fg_da = cv2.threshold(dummy_da, 1, 255, cv2.THRESH_BINARY)
-        seg_bg_da = self.Tensor(seg_bg_da)
-        seg_fg_da = self.Tensor(seg_fg_da)
-        seg_da = torch.stack((seg_bg_da[0], seg_fg_da[0]), 0)
-
-        # Máscara real para linhas
-        _, seg_bg = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY_INV)
-        _, seg_fg = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
-        seg_bg = self.Tensor(seg_bg)
-        seg_fg = self.Tensor(seg_fg)
-        seg_ll = torch.stack((seg_bg[0], seg_fg[0]), 0)
-
-        # Processar imagem (BGR -> RGB -> CHW)
-        image = image[:, :, ::-1].transpose(2, 0, 1)
-        image = np.ascontiguousarray(image)
-
-        # Retorna imagem e duas máscaras (sem o nome)
-        return image_name,torch.from_numpy(image), (seg_da, seg_ll)
-        #return image_name,torch.from_numpy(image),(seg_da,seg_ll)
-
-
-class MyDataset(torch.utils.data.Dataset):
-    '''
-    Class to load the dataset
-    '''
-    def __init__(self, transform=None,valid=False):
-        '''
-        :param imList: image list (Note that these lists have been processed and pickled using the loadData.py)
-        :param labelList: label list (Note that these lists have been processed and pickled using the loadData.py)
-        :param transform: Type of transformation. SEe Transforms.py for supported transformations
-        '''
-
-        self.transform = transform
-        self.Tensor = transforms.ToTensor()
-        self.valid=valid
-        if valid:
-            self.root='/home/djoker/code/conda/TwinLiteNet/TwinLiteNet/organized_dataset/val'
-            self.names=os.listdir(self.root)
-        else:
-            self.root='/home/djoker/code/conda/TwinLiteNet/TwinLiteNet/organized_dataset/train'
-            self.names=os.listdir(self.root)
-        
-
-    def __len__(self):
-        return len(self.names)
-
-    def __getitem__(self, idx):
-        '''
-
-        :param idx: Index of the image file
-        :return: returns the image and corresponding label file.
-        '''
-        W_=640
-        H_=360
-        image_name=os.path.join(self.root,self.names[idx])
-        
-        image = cv2.imread(image_name)
-        label1 = cv2.imread(image_name.replace("segments").replace("jpg","png"), 0)
-        label2 = cv2.imread(image_name.replace("lane").replace("jpg","png"), 0)
-        
-      
-
-        if not self.valid:
-            if random.random()<0.5:
-                combination = (image, label1, label2)
-                (image, label1, label2)= random_perspective(
-                    combination=combination,
-                    degrees=10,
-                    translate=0.1,
-                    scale=0.25,
-                    shear=0.0
-                )
-            if random.random()<0.5:
-                augment_hsv(image)
-            if random.random() < 0.5:
-                image = np.fliplr(image)
-                label1 = np.fliplr(label1)
-                label2 = np.fliplr(label2)
-            
-        label1 = cv2.resize(label1, (W_, H_))
-        label2 = cv2.resize(label2, (W_, H_))
-        image = cv2.resize(image, (W_, H_))
-
-        _,seg_b1 = cv2.threshold(label1,1,255,cv2.THRESH_BINARY_INV)
-        _,seg_b2 = cv2.threshold(label2,1,255,cv2.THRESH_BINARY_INV)
-        _,seg1 = cv2.threshold(label1,1,255,cv2.THRESH_BINARY)
-        _,seg2 = cv2.threshold(label2,1,255,cv2.THRESH_BINARY)
-
-        seg1 = self.Tensor(seg1)
-        seg2 = self.Tensor(seg2)
-        seg_b1 = self.Tensor(seg_b1)
-        seg_b2 = self.Tensor(seg_b2)
-        seg_da = torch.stack((seg_b1[0], seg1[0]),0)
-        seg_ll = torch.stack((seg_b2[0], seg2[0]),0)
-        image = image[:, :, ::-1].transpose(2, 0, 1)
-        image = np.ascontiguousarray(image)
-
-
-       
-        return image_name,torch.from_numpy(image),(seg_da,seg_ll)
-       
        
 class JetsonDataSet(torch.utils.data.Dataset):
  
@@ -273,69 +148,41 @@ class JetsonDataSet(torch.utils.data.Dataset):
         if self.color_augmentation and not self.valid:
             print("Augmentações de cor ativadas para treino")
 
+
     def setup_color_augmentations(self):
- 
         if not self.valid and self.color_augmentation:
             self.color_transform = A.Compose([
-                # Mudanças de brilho e contraste (para diferentes condições de luz)
                 A.RandomBrightnessContrast(
-                    brightness_limit=0.3,  # ±30% de brilho
-                    contrast_limit=0.3,    # ±30% de contraste
-                    p=0.7
+                    brightness_limit=0.2,  # Reduzido de 0.3
+                    contrast_limit=0.2,    # Reduzido de 0.3
+                    p=0.6                  # Reduzido de 0.7
                 ),
                 
-                # Mudanças de matiz e saturação (para diferentes cores de vidro)
                 A.HueSaturationValue(
-                    hue_shift_limit=20,     # ±20 graus de matiz
-                    sat_shift_limit=30,     # ±30 de saturação
-                    val_shift_limit=20,     # ±20 de valor
-                    p=0.6
+                    hue_shift_limit=15,     # Reduzido de 20
+                    sat_shift_limit=20,     # Reduzido de 30
+                    val_shift_limit=15,     # Reduzido de 20
+                    p=0.5                   # Reduzido de 0.6
                 ),
                 
-                # Gamma correction (para simular diferentes exposições)
-                A.RandomGamma(
-                    gamma_limit=(80, 120),  # Gamma entre 0.8 e 1.2
-                    p=0.4
-                ),
-                
-                # CLAHE para melhorar contraste local
-                A.CLAHE(
-                    clip_limit=2.0,
-                    tile_grid_size=(8, 8),
-                    p=0.3
-                ),
-                
-                # Color jittering para variações sutis
-                A.ColorJitter(
-                    brightness=0.2,
-                    contrast=0.2,
-                    saturation=0.2,
-                    hue=0.1,
-                    p=0.5
-                ),
-                
-                # Mudanças de temperatura de cor
+
                 A.OneOf([
-                    A.ToSepia(p=1.0),  # Tom sépia
-                    A.ToGray(p=1.0),   # Escala de cinza
-                    A.ChannelShuffle(p=1.0),  # Embaralhar canais
-                ], p=0.2),
+                    A.RandomGamma(gamma_limit=(85, 115), p=1.0),  # Mais conservador
+                    A.CLAHE(clip_limit=1.5, tile_grid_size=(8, 8), p=1.0),
+                ], p=0.3),  # Reduzido de múltiplas aplicações
                 
-                # Simulação de diferentes condições atmosféricas
+                # Condições especiais (mais raras)
                 A.OneOf([
-                    A.RandomFog(fog_coef_lower=0.1, fog_coef_upper=0.3, p=1.0),
+                    A.RandomFog(fog_coef_lower=0.05, fog_coef_upper=0.15, p=1.0),  # Névoa mais sutil
                     A.RandomSunFlare(
-                        flare_roi=(0, 0, 1, 0.5),
-                        angle_lower=0,
-                        angle_upper=1,
+                        flare_roi=(0, 0, 1, 0.3),  # Área menor
                         num_flare_circles_lower=1,
-                        num_flare_circles_upper=3,
+                        num_flare_circles_upper=2,  # Menos círculos
                         p=1.0
                     ),
-                ], p=0.15),
-            ], p=0.8)  # 80% chance de aplicar alguma augmentação
-        else:
-            self.color_transform = None
+                ], p=0.1),  # Muito mais raro
+                
+            ], p=0.7)  # Reduzido de 0.8
 
     def apply_color_augmentation(self, image):
   
@@ -438,34 +285,42 @@ class JetsonDataSet(torch.utils.data.Dataset):
         if label2 is None:
             raise ValueError(f"Erro ao carregar linhas: {lane_path}")
         
-        # Aplicar augmentações apenas no treino
         if not self.valid:
-            if random.random() < 0.7:
+            # FASE 1: Augmentações Geométricas (uma por vez)
+            geometric_aug_prob = 0.6  # Reduzido de 0.7
+            if random.random() < geometric_aug_prob:
                 combination = (image, label1, label2)
                 (image, label1, label2) = random_perspective(
                     combination=combination,
-                    degrees=15,
-                    translate=0.15,
-                    scale=0.3,
-                    shear=0.1
+                    degrees=10,      
+                    translate=0.1,    
+                    scale=0.2,        
+                    shear=0.05       
                 )
             
-            if random.random() < 0.6:
-                augment_hsv(image)
-            if random.random() < 0.3:
-                image = cv2.GaussianBlur(image, (5, 5), 0)
-            
-            if random.random() < 0.2:
-                noise = np.random.normal(0, 25, image.shape).astype(np.uint8)
+            # FASE 2: Augmentações de Qualidade 
+            quality_choice = random.random()
+            if quality_choice < 0.15:  # 15% blur
+                image = cv2.GaussianBlur(image, (3, 3), 0)  # Kernel menor
+            elif quality_choice < 0.25:  # 10% noise
+                noise = np.random.normal(0, 15, image.shape).astype(np.uint8)  # Menos ruído
                 image = cv2.add(image, noise)
+            
             
             if random.random() < 0.5:
                 image = np.fliplr(image)
                 label1 = np.fliplr(label1)
                 label2 = np.fliplr(label2)
-            image = self.apply_color_augmentation(image)
-            image = self.apply_pytorch_color_jitter(image)
-        
+            
+            # FASE 4: Augmentações de Cor  
+            color_choice = random.random()
+            if color_choice < 0.4:  # 40% - Albumentations (mais natural)
+                image = self.apply_color_augmentation(image)
+            elif color_choice < 0.6:  # 20% - ColorJitter (mais agressivo)
+                image = self.apply_pytorch_color_jitter(image)
+            #elif color_choice < 0.8:  # 20% - HSV customizado
+            #    image=augment_hsv_safe(image, hgain=0.01, sgain=0.5, vgain=0.3)  # Mais suave
+    
         # Redimensionar
         label1 = cv2.resize(label1, (W_, H_))
         label2 = cv2.resize(label2, (W_, H_))
