@@ -53,6 +53,13 @@
         "iomanip": "cpp",
         "mutex": "cpp",
         "thread": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "bit": "cpp",
+        "bitset": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "random": "cpp",
+        "ranges": "cpp",
+        "__nullptr": "cpp"
     }
 }
