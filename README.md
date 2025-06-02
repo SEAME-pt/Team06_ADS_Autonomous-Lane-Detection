@@ -148,7 +148,7 @@ This implementation demonstrates how modern deep learning architectures can be c
 **Train Progress**
 ![Epoch 2]( visualizations/predictions_epoch_002.png)
 ![Epoch 20]( visualizations/predictions_epoch_020.png)
-![Epoch 50]( visualizations/predictions_epoch_50.png)
+![Epoch 50]( visualizations/predictions_epoch_050.png)
 ![Epoch 100]( visualizations/predictions_epoch_100.png)
 ![Epoch 125]( visualizations/predictions_epoch_126.png)
 
