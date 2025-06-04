@@ -1,0 +1,29 @@
+{
+  "train_images": "/home/djoker/code/cuda/mixdataset/images",
+  "train_masks": "/home/djoker/code/cuda/mixdataset/masks",
+  "val_images": null,
+  "val_masks": null,
+  "val_split": 0.2,
+  "variant": "medium",
+  "input_channels": 3,
+  "num_classes": 1,
+  "epochs": 200,
+  "batch_size": 4,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0001,
+  "image_size": [
+    224,
+    224
+  ],
+  "bce_weight": 0.5,
+  "dice_weight": 0.3,
+  "focal_weight": 0.2,
+  "output_dir": "./outputs",
+  "experiment_name": "medium",
+  "save_every": 5,
+  "visualize_every": 2,
+  "resume": null,
+  "device": "auto",
+  "use_wandb": false,
+  "wandb_project": "linenet"
+}

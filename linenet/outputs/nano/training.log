@@ -1,0 +1,448 @@
+2025-06-04 11:12:09,093 - INFO - Starting training experiment: nano
+2025-06-04 11:12:09,093 - INFO - Arguments: {'train_images': '/home/djoker/code/cuda/mixdataset/images', 'train_masks': '/home/djoker/code/cuda/mixdataset/masks', 'val_images': None, 'val_masks': None, 'val_split': 0.2, 'variant': 'nano', 'input_channels': 3, 'num_classes': 1, 'epochs': 50, 'batch_size': 2, 'learning_rate': 0.001, 'weight_decay': 0.0001, 'image_size': [224, 224], 'bce_weight': 0.5, 'dice_weight': 0.3, 'focal_weight': 0.2, 'output_dir': './outputs', 'experiment_name': 'nano', 'save_every': 10, 'visualize_every': 2, 'resume': None, 'device': 'auto', 'use_wandb': False, 'wandb_project': 'linenet'}
+2025-06-04 11:12:09,215 - INFO - Model info: {'variant': 'nano', 'total_params': 214273, 'trainable_params': 214273, 'model_size_mb': 0.8173866271972656}
+2025-06-04 11:12:09,234 - INFO - Training samples: 930
+2025-06-04 11:12:09,234 - INFO - Validation samples: 232
+2025-06-04 11:12:09,833 - INFO - Starting training...
+2025-06-04 11:12:09,833 - INFO - 
+Epoch 1/50
+2025-06-04 11:12:09,833 - INFO - Learning rate: 0.001000
+2025-06-04 11:12:28,635 - INFO - Train Loss: 0.2817, Val Loss: 0.2396
+2025-06-04 11:12:28,635 - INFO - Train IoU: 0.1800, Val IoU: 0.2613
+2025-06-04 11:12:28,635 - INFO - Train Dice: 0.2820, Val Dice: 0.3966
+2025-06-04 11:12:28,635 - INFO - Train F1: 0.2820, Val F1: 0.3966
+2025-06-04 11:12:28,673 - INFO - New best model saved! IoU: 0.2613
+2025-06-04 11:12:28,673 - INFO - 
+Epoch 2/50
+2025-06-04 11:12:28,673 - INFO - Learning rate: 0.000525
+2025-06-04 11:12:46,920 - INFO - Train Loss: 0.2363, Val Loss: 0.2206
+2025-06-04 11:12:46,921 - INFO - Train IoU: 0.2683, Val IoU: 0.3036
+2025-06-04 11:12:46,921 - INFO - Train Dice: 0.4066, Val Dice: 0.4478
+2025-06-04 11:12:46,921 - INFO - Train F1: 0.4066, Val F1: 0.4478
+2025-06-04 11:12:46,957 - INFO - New best model saved! IoU: 0.3036
+2025-06-04 11:12:48,323 - INFO - Visualizations saved: outputs/nano/predictions_epoch_2.png
+2025-06-04 11:12:48,323 - INFO - 
+Epoch 3/50
+2025-06-04 11:12:48,323 - INFO - Learning rate: 0.000549
+2025-06-04 11:13:06,867 - INFO - Train Loss: 0.2223, Val Loss: 0.2292
+2025-06-04 11:13:06,867 - INFO - Train IoU: 0.2985, Val IoU: 0.2858
+2025-06-04 11:13:06,867 - INFO - Train Dice: 0.4415, Val Dice: 0.4237
+2025-06-04 11:13:06,867 - INFO - Train F1: 0.4415, Val F1: 0.4237
+2025-06-04 11:13:06,867 - INFO - 
+Epoch 4/50
+2025-06-04 11:13:06,867 - INFO - Learning rate: 0.000977
+2025-06-04 11:13:24,218 - INFO - Train Loss: 0.2201, Val Loss: 0.2109
+2025-06-04 11:13:24,219 - INFO - Train IoU: 0.3039, Val IoU: 0.3296
+2025-06-04 11:13:24,219 - INFO - Train Dice: 0.4484, Val Dice: 0.4803
+2025-06-04 11:13:24,219 - INFO - Train F1: 0.4484, Val F1: 0.4803
+2025-06-04 11:13:24,255 - INFO - New best model saved! IoU: 0.3296
+2025-06-04 11:13:25,650 - INFO - Visualizations saved: outputs/nano/predictions_epoch_4.png
+2025-06-04 11:13:25,650 - INFO - 
+Epoch 5/50
+2025-06-04 11:13:25,650 - INFO - Learning rate: 0.000562
+2025-06-04 11:13:43,221 - INFO - Train Loss: 0.2043, Val Loss: 0.2007
+2025-06-04 11:13:43,221 - INFO - Train IoU: 0.3384, Val IoU: 0.3518
+2025-06-04 11:13:43,221 - INFO - Train Dice: 0.4893, Val Dice: 0.5040
+2025-06-04 11:13:43,221 - INFO - Train F1: 0.4893, Val F1: 0.5040
+2025-06-04 11:13:43,253 - INFO - New best model saved! IoU: 0.3518
+2025-06-04 11:13:45,284 - INFO - 
+Epoch 6/50
+2025-06-04 11:13:45,284 - INFO - Learning rate: 0.000075
+2025-06-04 11:14:02,785 - INFO - Train Loss: 0.2057, Val Loss: 0.2201
+2025-06-04 11:14:02,785 - INFO - Train IoU: 0.3369, Val IoU: 0.3072
+2025-06-04 11:14:02,785 - INFO - Train Dice: 0.4850, Val Dice: 0.4572
+2025-06-04 11:14:02,785 - INFO - Train F1: 0.4850, Val F1: 0.4572
+2025-06-04 11:14:04,086 - INFO - Visualizations saved: outputs/nano/predictions_epoch_6.png
+2025-06-04 11:14:04,087 - INFO - 
+Epoch 7/50
+2025-06-04 11:14:04,087 - INFO - Learning rate: 0.000978
+2025-06-04 11:14:21,912 - INFO - Train Loss: 0.2073, Val Loss: 0.2023
+2025-06-04 11:14:21,912 - INFO - Train IoU: 0.3319, Val IoU: 0.3385
+2025-06-04 11:14:21,913 - INFO - Train Dice: 0.4806, Val Dice: 0.4870
+2025-06-04 11:14:21,913 - INFO - Train F1: 0.4806, Val F1: 0.4870
+2025-06-04 11:14:21,913 - INFO - 
+Epoch 8/50
+2025-06-04 11:14:21,913 - INFO - Learning rate: 0.000824
+2025-06-04 11:14:39,458 - INFO - Train Loss: 0.1992, Val Loss: 0.1953
+2025-06-04 11:14:39,458 - INFO - Train IoU: 0.3497, Val IoU: 0.3589
+2025-06-04 11:14:39,458 - INFO - Train Dice: 0.5014, Val Dice: 0.5105
+2025-06-04 11:14:39,458 - INFO - Train F1: 0.5014, Val F1: 0.5105
+2025-06-04 11:14:39,494 - INFO - New best model saved! IoU: 0.3589
+2025-06-04 11:14:40,835 - INFO - Visualizations saved: outputs/nano/predictions_epoch_8.png
+2025-06-04 11:14:40,835 - INFO - 
+Epoch 9/50
+2025-06-04 11:14:40,835 - INFO - Learning rate: 0.000568
+2025-06-04 11:14:58,351 - INFO - Train Loss: 0.1868, Val Loss: 0.1932
+2025-06-04 11:14:58,352 - INFO - Train IoU: 0.3778, Val IoU: 0.3618
+2025-06-04 11:14:58,352 - INFO - Train Dice: 0.5334, Val Dice: 0.5154
+2025-06-04 11:14:58,352 - INFO - Train F1: 0.5334, Val F1: 0.5154
+2025-06-04 11:14:58,386 - INFO - New best model saved! IoU: 0.3618
+2025-06-04 11:14:58,386 - INFO - 
+Epoch 10/50
+2025-06-04 11:14:58,387 - INFO - Learning rate: 0.000290
+2025-06-04 11:15:16,408 - INFO - Train Loss: 0.1814, Val Loss: 0.1934
+2025-06-04 11:15:16,408 - INFO - Train IoU: 0.3904, Val IoU: 0.3603
+2025-06-04 11:15:16,409 - INFO - Train Dice: 0.5451, Val Dice: 0.5120
+2025-06-04 11:15:16,409 - INFO - Train F1: 0.5451, Val F1: 0.5120
+2025-06-04 11:15:16,444 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_10.pth
+2025-06-04 11:15:17,734 - INFO - Visualizations saved: outputs/nano/predictions_epoch_10.png
+2025-06-04 11:15:19,790 - INFO - 
+Epoch 11/50
+2025-06-04 11:15:19,790 - INFO - Learning rate: 0.000078
+2025-06-04 11:15:37,622 - INFO - Train Loss: 0.1742, Val Loss: 0.1934
+2025-06-04 11:15:37,622 - INFO - Train IoU: 0.4065, Val IoU: 0.3615
+2025-06-04 11:15:37,623 - INFO - Train Dice: 0.5633, Val Dice: 0.5142
+2025-06-04 11:15:37,623 - INFO - Train F1: 0.5633, Val F1: 0.5142
+2025-06-04 11:15:37,623 - INFO - 
+Epoch 12/50
+2025-06-04 11:15:37,623 - INFO - Learning rate: 0.001000
+2025-06-04 11:15:55,339 - INFO - Train Loss: 0.1930, Val Loss: 0.1937
+2025-06-04 11:15:55,339 - INFO - Train IoU: 0.3645, Val IoU: 0.3591
+2025-06-04 11:15:55,339 - INFO - Train Dice: 0.5184, Val Dice: 0.5110
+2025-06-04 11:15:55,339 - INFO - Train F1: 0.5184, Val F1: 0.5110
+2025-06-04 11:15:56,540 - INFO - Visualizations saved: outputs/nano/predictions_epoch_12.png
+2025-06-04 11:15:56,541 - INFO - 
+Epoch 13/50
+2025-06-04 11:15:56,541 - INFO - Learning rate: 0.000979
+2025-06-04 11:16:14,367 - INFO - Train Loss: 0.1910, Val Loss: 0.2004
+2025-06-04 11:16:14,367 - INFO - Train IoU: 0.3691, Val IoU: 0.3516
+2025-06-04 11:16:14,367 - INFO - Train Dice: 0.5211, Val Dice: 0.5030
+2025-06-04 11:16:14,367 - INFO - Train F1: 0.5211, Val F1: 0.5030
+2025-06-04 11:16:14,368 - INFO - 
+Epoch 14/50
+2025-06-04 11:16:14,368 - INFO - Learning rate: 0.000920
+2025-06-04 11:16:32,112 - INFO - Train Loss: 0.1856, Val Loss: 0.2002
+2025-06-04 11:16:32,112 - INFO - Train IoU: 0.3795, Val IoU: 0.3511
+2025-06-04 11:16:32,112 - INFO - Train Dice: 0.5342, Val Dice: 0.5016
+2025-06-04 11:16:32,112 - INFO - Train F1: 0.5342, Val F1: 0.5016
+2025-06-04 11:16:33,348 - INFO - Visualizations saved: outputs/nano/predictions_epoch_14.png
+2025-06-04 11:16:33,348 - INFO - 
+Epoch 15/50
+2025-06-04 11:16:33,348 - INFO - Learning rate: 0.000827
+2025-06-04 11:16:51,054 - INFO - Train Loss: 0.1779, Val Loss: 0.1858
+2025-06-04 11:16:51,055 - INFO - Train IoU: 0.3976, Val IoU: 0.3799
+2025-06-04 11:16:51,055 - INFO - Train Dice: 0.5538, Val Dice: 0.5335
+2025-06-04 11:16:51,055 - INFO - Train F1: 0.5538, Val F1: 0.5335
+2025-06-04 11:16:51,094 - INFO - New best model saved! IoU: 0.3799
+2025-06-04 11:16:53,178 - INFO - 
+Epoch 16/50
+2025-06-04 11:16:53,178 - INFO - Learning rate: 0.000707
+2025-06-04 11:17:11,524 - INFO - Train Loss: 0.1729, Val Loss: 0.1851
+2025-06-04 11:17:11,524 - INFO - Train IoU: 0.4105, Val IoU: 0.3804
+2025-06-04 11:17:11,524 - INFO - Train Dice: 0.5672, Val Dice: 0.5353
+2025-06-04 11:17:11,524 - INFO - Train F1: 0.5672, Val F1: 0.5353
+2025-06-04 11:17:11,570 - INFO - New best model saved! IoU: 0.3804
+2025-06-04 11:17:12,983 - INFO - Visualizations saved: outputs/nano/predictions_epoch_16.png
+2025-06-04 11:17:12,983 - INFO - 
+Epoch 17/50
+2025-06-04 11:17:12,983 - INFO - Learning rate: 0.000571
+2025-06-04 11:17:31,533 - INFO - Train Loss: 0.1663, Val Loss: 0.1908
+2025-06-04 11:17:31,533 - INFO - Train IoU: 0.4252, Val IoU: 0.3720
+2025-06-04 11:17:31,533 - INFO - Train Dice: 0.5833, Val Dice: 0.5224
+2025-06-04 11:17:31,533 - INFO - Train F1: 0.5833, Val F1: 0.5224
+2025-06-04 11:17:31,533 - INFO - 
+Epoch 18/50
+2025-06-04 11:17:31,533 - INFO - Learning rate: 0.000429
+2025-06-04 11:17:49,940 - INFO - Train Loss: 0.1622, Val Loss: 0.1847
+2025-06-04 11:17:49,941 - INFO - Train IoU: 0.4364, Val IoU: 0.3819
+2025-06-04 11:17:49,941 - INFO - Train Dice: 0.5934, Val Dice: 0.5349
+2025-06-04 11:17:49,941 - INFO - Train F1: 0.5934, Val F1: 0.5349
+2025-06-04 11:17:49,981 - INFO - New best model saved! IoU: 0.3819
+2025-06-04 11:17:51,516 - INFO - Visualizations saved: outputs/nano/predictions_epoch_18.png
+2025-06-04 11:17:51,517 - INFO - 
+Epoch 19/50
+2025-06-04 11:17:51,517 - INFO - Learning rate: 0.000292
+2025-06-04 11:18:09,476 - INFO - Train Loss: 0.1566, Val Loss: 0.1855
+2025-06-04 11:18:09,476 - INFO - Train IoU: 0.4501, Val IoU: 0.3793
+2025-06-04 11:18:09,476 - INFO - Train Dice: 0.6066, Val Dice: 0.5316
+2025-06-04 11:18:09,476 - INFO - Train F1: 0.6066, Val F1: 0.5316
+2025-06-04 11:18:09,477 - INFO - 
+Epoch 20/50
+2025-06-04 11:18:09,477 - INFO - Learning rate: 0.000173
+2025-06-04 11:18:27,159 - INFO - Train Loss: 0.1500, Val Loss: 0.1872
+2025-06-04 11:18:27,159 - INFO - Train IoU: 0.4682, Val IoU: 0.3746
+2025-06-04 11:18:27,159 - INFO - Train Dice: 0.6249, Val Dice: 0.5269
+2025-06-04 11:18:27,160 - INFO - Train F1: 0.6249, Val F1: 0.5269
+2025-06-04 11:18:27,193 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_20.pth
+2025-06-04 11:18:28,418 - INFO - Visualizations saved: outputs/nano/predictions_epoch_20.png
+2025-06-04 11:18:30,451 - INFO - 
+Epoch 21/50
+2025-06-04 11:18:30,451 - INFO - Learning rate: 0.000080
+2025-06-04 11:18:47,874 - INFO - Train Loss: 0.1486, Val Loss: 0.1872
+2025-06-04 11:18:47,874 - INFO - Train IoU: 0.4722, Val IoU: 0.3761
+2025-06-04 11:18:47,874 - INFO - Train Dice: 0.6276, Val Dice: 0.5283
+2025-06-04 11:18:47,874 - INFO - Train F1: 0.6276, Val F1: 0.5283
+2025-06-04 11:18:47,874 - INFO - 
+Epoch 22/50
+2025-06-04 11:18:47,874 - INFO - Learning rate: 0.000021
+2025-06-04 11:19:05,653 - INFO - Train Loss: 0.1472, Val Loss: 0.1836
+2025-06-04 11:19:05,653 - INFO - Train IoU: 0.4745, Val IoU: 0.3850
+2025-06-04 11:19:05,653 - INFO - Train Dice: 0.6314, Val Dice: 0.5391
+2025-06-04 11:19:05,653 - INFO - Train F1: 0.6314, Val F1: 0.5391
+2025-06-04 11:19:05,707 - INFO - New best model saved! IoU: 0.3850
+2025-06-04 11:19:07,154 - INFO - Visualizations saved: outputs/nano/predictions_epoch_22.png
+2025-06-04 11:19:07,154 - INFO - 
+Epoch 23/50
+2025-06-04 11:19:07,154 - INFO - Learning rate: 0.001000
+2025-06-04 11:19:24,621 - INFO - Train Loss: 0.1711, Val Loss: 0.1909
+2025-06-04 11:19:24,621 - INFO - Train IoU: 0.4132, Val IoU: 0.3696
+2025-06-04 11:19:24,621 - INFO - Train Dice: 0.5711, Val Dice: 0.5213
+2025-06-04 11:19:24,621 - INFO - Train F1: 0.5711, Val F1: 0.5213
+2025-06-04 11:19:24,621 - INFO - 
+Epoch 24/50
+2025-06-04 11:19:24,621 - INFO - Learning rate: 0.000995
+2025-06-04 11:19:41,986 - INFO - Train Loss: 0.1735, Val Loss: 0.1888
+2025-06-04 11:19:41,986 - INFO - Train IoU: 0.4087, Val IoU: 0.3708
+2025-06-04 11:19:41,986 - INFO - Train Dice: 0.5654, Val Dice: 0.5238
+2025-06-04 11:19:41,986 - INFO - Train F1: 0.5654, Val F1: 0.5238
+2025-06-04 11:19:43,153 - INFO - Visualizations saved: outputs/nano/predictions_epoch_24.png
+2025-06-04 11:19:43,153 - INFO - 
+Epoch 25/50
+2025-06-04 11:19:43,153 - INFO - Learning rate: 0.000980
+2025-06-04 11:26:12,193 - INFO - Starting training experiment: nano
+2025-06-04 11:26:12,194 - INFO - Arguments: {'train_images': '/home/djoker/code/cuda/mixdataset/images', 'train_masks': '/home/djoker/code/cuda/mixdataset/masks', 'val_images': None, 'val_masks': None, 'val_split': 0.2, 'variant': 'nano', 'input_channels': 3, 'num_classes': 1, 'epochs': 50, 'batch_size': 2, 'learning_rate': 0.001, 'weight_decay': 0.0001, 'image_size': [224, 224], 'bce_weight': 0.5, 'dice_weight': 0.3, 'focal_weight': 0.2, 'output_dir': './outputs', 'experiment_name': 'nano', 'save_every': 5, 'visualize_every': 2, 'resume': None, 'device': 'auto', 'use_wandb': False, 'wandb_project': 'linenet'}
+2025-06-04 11:26:12,310 - INFO - Model info: {'variant': 'nano', 'total_params': 214273, 'trainable_params': 214273, 'model_size_mb': 0.8173866271972656}
+2025-06-04 11:26:12,330 - INFO - Training samples: 930
+2025-06-04 11:26:12,330 - INFO - Validation samples: 232
+2025-06-04 11:26:12,963 - INFO - Starting training...
+2025-06-04 11:26:12,963 - INFO - 
+Epoch 1/50
+2025-06-04 11:26:12,963 - INFO - Learning rate: 0.001000
+2025-06-04 11:26:31,840 - INFO - Train Loss: 0.2902, Val Loss: 0.2463
+2025-06-04 11:26:31,840 - INFO - Train IoU: 0.1666, Val IoU: 0.2304
+2025-06-04 11:26:31,840 - INFO - Train Dice: 0.2624, Val Dice: 0.3556
+2025-06-04 11:26:31,841 - INFO - Train F1: 0.2624, Val F1: 0.3556
+2025-06-04 11:26:31,878 - INFO - New best model saved! IoU: 0.2304
+2025-06-04 11:26:31,879 - INFO - 
+Epoch 2/50
+2025-06-04 11:26:31,879 - INFO - Learning rate: 0.000525
+2025-06-04 11:26:50,247 - INFO - Train Loss: 0.2398, Val Loss: 0.2392
+2025-06-04 11:26:50,247 - INFO - Train IoU: 0.2590, Val IoU: 0.2496
+2025-06-04 11:26:50,247 - INFO - Train Dice: 0.3953, Val Dice: 0.3816
+2025-06-04 11:26:50,247 - INFO - Train F1: 0.3953, Val F1: 0.3816
+2025-06-04 11:26:50,283 - INFO - New best model saved! IoU: 0.2496
+2025-06-04 11:26:51,537 - INFO - Visualizations saved: outputs/nano/predictions_epoch_2.png
+2025-06-04 11:26:51,537 - INFO - 
+Epoch 3/50
+2025-06-04 11:26:51,537 - INFO - Learning rate: 0.000549
+2025-06-04 11:27:10,192 - INFO - Train Loss: 0.2234, Val Loss: 0.2437
+2025-06-04 11:27:10,192 - INFO - Train IoU: 0.2926, Val IoU: 0.2485
+2025-06-04 11:27:10,192 - INFO - Train Dice: 0.4371, Val Dice: 0.3843
+2025-06-04 11:27:10,192 - INFO - Train F1: 0.4371, Val F1: 0.3843
+2025-06-04 11:27:10,193 - INFO - 
+Epoch 4/50
+2025-06-04 11:27:10,193 - INFO - Learning rate: 0.000977
+2025-06-04 11:27:28,659 - INFO - Train Loss: 0.2216, Val Loss: 0.2242
+2025-06-04 11:27:28,659 - INFO - Train IoU: 0.3001, Val IoU: 0.2844
+2025-06-04 11:27:28,659 - INFO - Train Dice: 0.4446, Val Dice: 0.4235
+2025-06-04 11:27:28,659 - INFO - Train F1: 0.4446, Val F1: 0.4235
+2025-06-04 11:27:28,694 - INFO - New best model saved! IoU: 0.2844
+2025-06-04 11:27:30,019 - INFO - Visualizations saved: outputs/nano/predictions_epoch_4.png
+2025-06-04 11:27:30,019 - INFO - 
+Epoch 5/50
+2025-06-04 11:27:30,019 - INFO - Learning rate: 0.000562
+2025-06-04 11:27:48,330 - INFO - Train Loss: 0.2054, Val Loss: 0.2049
+2025-06-04 11:27:48,331 - INFO - Train IoU: 0.3328, Val IoU: 0.3291
+2025-06-04 11:27:48,331 - INFO - Train Dice: 0.4829, Val Dice: 0.4778
+2025-06-04 11:27:48,331 - INFO - Train F1: 0.4829, Val F1: 0.4778
+2025-06-04 11:27:48,373 - INFO - New best model saved! IoU: 0.3291
+2025-06-04 11:27:48,402 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_5.pth
+2025-06-04 11:27:50,626 - INFO - 
+Epoch 6/50
+2025-06-04 11:27:50,627 - INFO - Learning rate: 0.000075
+2025-06-04 11:28:08,179 - INFO - Train Loss: 0.2053, Val Loss: 0.2095
+2025-06-04 11:28:08,180 - INFO - Train IoU: 0.3350, Val IoU: 0.3242
+2025-06-04 11:28:08,180 - INFO - Train Dice: 0.4841, Val Dice: 0.4751
+2025-06-04 11:28:08,180 - INFO - Train F1: 0.4841, Val F1: 0.4751
+2025-06-04 11:28:09,458 - INFO - Visualizations saved: outputs/nano/predictions_epoch_6.png
+2025-06-04 11:28:09,458 - INFO - 
+Epoch 7/50
+2025-06-04 11:28:09,458 - INFO - Learning rate: 0.000978
+2025-06-04 11:28:27,262 - INFO - Train Loss: 0.2088, Val Loss: 0.2050
+2025-06-04 11:28:27,262 - INFO - Train IoU: 0.3253, Val IoU: 0.3317
+2025-06-04 11:28:27,262 - INFO - Train Dice: 0.4744, Val Dice: 0.4807
+2025-06-04 11:28:27,262 - INFO - Train F1: 0.4744, Val F1: 0.4807
+2025-06-04 11:28:27,295 - INFO - New best model saved! IoU: 0.3317
+2025-06-04 11:28:27,296 - INFO - 
+Epoch 8/50
+2025-06-04 11:28:27,296 - INFO - Learning rate: 0.000824
+2025-06-04 11:28:46,027 - INFO - Train Loss: 0.1974, Val Loss: 0.2031
+2025-06-04 11:28:46,027 - INFO - Train IoU: 0.3508, Val IoU: 0.3348
+2025-06-04 11:28:46,027 - INFO - Train Dice: 0.5033, Val Dice: 0.4847
+2025-06-04 11:28:46,027 - INFO - Train F1: 0.5033, Val F1: 0.4847
+2025-06-04 11:28:46,072 - INFO - New best model saved! IoU: 0.3348
+2025-06-04 11:28:47,397 - INFO - Visualizations saved: outputs/nano/predictions_epoch_8.png
+2025-06-04 11:28:47,397 - INFO - 
+Epoch 9/50
+2025-06-04 11:28:47,397 - INFO - Learning rate: 0.000568
+2025-06-04 11:29:05,541 - INFO - Train Loss: 0.1886, Val Loss: 0.2001
+2025-06-04 11:29:05,541 - INFO - Train IoU: 0.3708, Val IoU: 0.3388
+2025-06-04 11:29:05,541 - INFO - Train Dice: 0.5259, Val Dice: 0.4871
+2025-06-04 11:29:05,541 - INFO - Train F1: 0.5259, Val F1: 0.4871
+2025-06-04 11:29:05,603 - INFO - New best model saved! IoU: 0.3388
+2025-06-04 11:29:05,603 - INFO - 
+Epoch 10/50
+2025-06-04 11:29:05,603 - INFO - Learning rate: 0.000290
+2025-06-04 11:29:24,916 - INFO - Train Loss: 0.1788, Val Loss: 0.1958
+2025-06-04 11:29:24,916 - INFO - Train IoU: 0.3941, Val IoU: 0.3472
+2025-06-04 11:29:24,916 - INFO - Train Dice: 0.5517, Val Dice: 0.4970
+2025-06-04 11:29:24,916 - INFO - Train F1: 0.5517, Val F1: 0.4970
+2025-06-04 11:29:24,975 - INFO - New best model saved! IoU: 0.3472
+2025-06-04 11:29:25,024 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_10.pth
+2025-06-04 11:29:26,477 - INFO - Visualizations saved: outputs/nano/predictions_epoch_10.png
+2025-06-04 11:29:28,992 - INFO - 
+Epoch 11/50
+2025-06-04 11:29:28,992 - INFO - Learning rate: 0.000078
+2025-06-04 11:29:47,242 - INFO - Train Loss: 0.1736, Val Loss: 0.1931
+2025-06-04 11:29:47,242 - INFO - Train IoU: 0.4065, Val IoU: 0.3566
+2025-06-04 11:29:47,242 - INFO - Train Dice: 0.5649, Val Dice: 0.5087
+2025-06-04 11:29:47,242 - INFO - Train F1: 0.5649, Val F1: 0.5087
+2025-06-04 11:29:47,276 - INFO - New best model saved! IoU: 0.3566
+2025-06-04 11:29:47,276 - INFO - 
+Epoch 12/50
+2025-06-04 11:29:47,276 - INFO - Learning rate: 0.001000
+2025-06-04 11:30:05,091 - INFO - Train Loss: 0.1949, Val Loss: 0.1964
+2025-06-04 11:30:05,091 - INFO - Train IoU: 0.3561, Val IoU: 0.3483
+2025-06-04 11:30:05,091 - INFO - Train Dice: 0.5104, Val Dice: 0.5004
+2025-06-04 11:30:05,091 - INFO - Train F1: 0.5104, Val F1: 0.5004
+2025-06-04 11:30:06,555 - INFO - Visualizations saved: outputs/nano/predictions_epoch_12.png
+2025-06-04 11:30:06,555 - INFO - 
+Epoch 13/50
+2025-06-04 11:30:06,555 - INFO - Learning rate: 0.000979
+2025-06-04 11:30:24,602 - INFO - Train Loss: 0.1892, Val Loss: 0.1923
+2025-06-04 11:30:24,603 - INFO - Train IoU: 0.3694, Val IoU: 0.3587
+2025-06-04 11:30:24,603 - INFO - Train Dice: 0.5240, Val Dice: 0.5131
+2025-06-04 11:30:24,603 - INFO - Train F1: 0.5240, Val F1: 0.5131
+2025-06-04 11:30:24,653 - INFO - New best model saved! IoU: 0.3587
+2025-06-04 11:30:24,653 - INFO - 
+Epoch 14/50
+2025-06-04 11:30:24,653 - INFO - Learning rate: 0.000920
+2025-06-04 11:30:42,845 - INFO - Train Loss: 0.1829, Val Loss: 0.1909
+2025-06-04 11:30:42,846 - INFO - Train IoU: 0.3831, Val IoU: 0.3599
+2025-06-04 11:30:42,846 - INFO - Train Dice: 0.5395, Val Dice: 0.5124
+2025-06-04 11:30:42,846 - INFO - Train F1: 0.5395, Val F1: 0.5124
+2025-06-04 11:30:42,902 - INFO - New best model saved! IoU: 0.3599
+2025-06-04 11:30:44,175 - INFO - Visualizations saved: outputs/nano/predictions_epoch_14.png
+2025-06-04 11:30:44,176 - INFO - 
+Epoch 15/50
+2025-06-04 11:30:44,176 - INFO - Learning rate: 0.000827
+2025-06-04 11:31:02,171 - INFO - Train Loss: 0.1779, Val Loss: 0.1973
+2025-06-04 11:31:02,171 - INFO - Train IoU: 0.3954, Val IoU: 0.3550
+2025-06-04 11:31:02,171 - INFO - Train Dice: 0.5532, Val Dice: 0.5068
+2025-06-04 11:31:02,171 - INFO - Train F1: 0.5532, Val F1: 0.5068
+2025-06-04 11:31:02,205 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_15.pth
+2025-06-04 11:31:04,628 - INFO - 
+Epoch 16/50
+2025-06-04 11:31:04,628 - INFO - Learning rate: 0.000707
+2025-06-04 11:31:22,697 - INFO - Train Loss: 0.1717, Val Loss: 0.1924
+2025-06-04 11:31:22,697 - INFO - Train IoU: 0.4124, Val IoU: 0.3535
+2025-06-04 11:31:22,697 - INFO - Train Dice: 0.5704, Val Dice: 0.5052
+2025-06-04 11:31:22,697 - INFO - Train F1: 0.5704, Val F1: 0.5052
+2025-06-04 11:31:23,981 - INFO - Visualizations saved: outputs/nano/predictions_epoch_16.png
+2025-06-04 11:31:23,981 - INFO - 
+Epoch 17/50
+2025-06-04 11:31:23,982 - INFO - Learning rate: 0.000571
+2025-06-04 11:31:42,185 - INFO - Train Loss: 0.1667, Val Loss: 0.1837
+2025-06-04 11:31:42,186 - INFO - Train IoU: 0.4247, Val IoU: 0.3781
+2025-06-04 11:31:42,186 - INFO - Train Dice: 0.5814, Val Dice: 0.5325
+2025-06-04 11:31:42,186 - INFO - Train F1: 0.5814, Val F1: 0.5325
+2025-06-04 11:31:42,232 - INFO - New best model saved! IoU: 0.3781
+2025-06-04 11:31:42,232 - INFO - 
+Epoch 18/50
+2025-06-04 11:31:42,232 - INFO - Learning rate: 0.000429
+2025-06-04 11:32:00,405 - INFO - Train Loss: 0.1603, Val Loss: 0.1824
+2025-06-04 11:32:00,406 - INFO - Train IoU: 0.4400, Val IoU: 0.3823
+2025-06-04 11:32:00,406 - INFO - Train Dice: 0.5971, Val Dice: 0.5365
+2025-06-04 11:32:00,406 - INFO - Train F1: 0.5971, Val F1: 0.5365
+2025-06-04 11:32:00,455 - INFO - New best model saved! IoU: 0.3823
+2025-06-04 11:32:01,826 - INFO - Visualizations saved: outputs/nano/predictions_epoch_18.png
+2025-06-04 11:32:01,826 - INFO - 
+Epoch 19/50
+2025-06-04 11:32:01,826 - INFO - Learning rate: 0.000292
+2025-06-04 11:32:20,154 - INFO - Train Loss: 0.1539, Val Loss: 0.1794
+2025-06-04 11:32:20,154 - INFO - Train IoU: 0.4570, Val IoU: 0.3899
+2025-06-04 11:32:20,154 - INFO - Train Dice: 0.6151, Val Dice: 0.5453
+2025-06-04 11:32:20,154 - INFO - Train F1: 0.6151, Val F1: 0.5453
+2025-06-04 11:32:20,202 - INFO - New best model saved! IoU: 0.3899
+2025-06-04 11:32:20,203 - INFO - 
+Epoch 20/50
+2025-06-04 11:32:20,203 - INFO - Learning rate: 0.000173
+2025-06-04 11:32:38,382 - INFO - Train Loss: 0.1491, Val Loss: 0.1820
+2025-06-04 11:32:38,382 - INFO - Train IoU: 0.4694, Val IoU: 0.3843
+2025-06-04 11:32:38,382 - INFO - Train Dice: 0.6265, Val Dice: 0.5379
+2025-06-04 11:32:38,382 - INFO - Train F1: 0.6265, Val F1: 0.5379
+2025-06-04 11:32:38,419 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_20.pth
+2025-06-04 11:32:39,642 - INFO - Visualizations saved: outputs/nano/predictions_epoch_20.png
+2025-06-04 11:32:42,199 - INFO - 
+Epoch 21/50
+2025-06-04 11:32:42,199 - INFO - Learning rate: 0.000080
+2025-06-04 11:33:00,349 - INFO - Train Loss: 0.1473, Val Loss: 0.1823
+2025-06-04 11:33:00,349 - INFO - Train IoU: 0.4743, Val IoU: 0.3819
+2025-06-04 11:33:00,349 - INFO - Train Dice: 0.6319, Val Dice: 0.5365
+2025-06-04 11:33:00,349 - INFO - Train F1: 0.6319, Val F1: 0.5365
+2025-06-04 11:33:00,349 - INFO - 
+Epoch 22/50
+2025-06-04 11:33:00,349 - INFO - Learning rate: 0.000021
+2025-06-04 11:33:18,525 - INFO - Train Loss: 0.1426, Val Loss: 0.1837
+2025-06-04 11:33:18,525 - INFO - Train IoU: 0.4886, Val IoU: 0.3786
+2025-06-04 11:33:18,525 - INFO - Train Dice: 0.6453, Val Dice: 0.5321
+2025-06-04 11:33:18,525 - INFO - Train F1: 0.6453, Val F1: 0.5321
+2025-06-04 11:33:19,789 - INFO - Visualizations saved: outputs/nano/predictions_epoch_22.png
+2025-06-04 11:33:19,789 - INFO - 
+Epoch 23/50
+2025-06-04 11:33:19,789 - INFO - Learning rate: 0.001000
+2025-06-04 11:33:38,025 - INFO - Train Loss: 0.1679, Val Loss: 0.1942
+2025-06-04 11:33:38,025 - INFO - Train IoU: 0.4218, Val IoU: 0.3580
+2025-06-04 11:33:38,025 - INFO - Train Dice: 0.5782, Val Dice: 0.5087
+2025-06-04 11:33:38,025 - INFO - Train F1: 0.5782, Val F1: 0.5087
+2025-06-04 11:33:38,025 - INFO - 
+Epoch 24/50
+2025-06-04 11:33:38,026 - INFO - Learning rate: 0.000995
+2025-06-04 11:33:56,108 - INFO - Train Loss: 0.1674, Val Loss: 0.1888
+2025-06-04 11:33:56,108 - INFO - Train IoU: 0.4209, Val IoU: 0.3696
+2025-06-04 11:33:56,108 - INFO - Train Dice: 0.5800, Val Dice: 0.5233
+2025-06-04 11:33:56,108 - INFO - Train F1: 0.5800, Val F1: 0.5233
+2025-06-04 11:33:57,355 - INFO - Visualizations saved: outputs/nano/predictions_epoch_24.png
+2025-06-04 11:33:57,355 - INFO - 
+Epoch 25/50
+2025-06-04 11:33:57,355 - INFO - Learning rate: 0.000980
+2025-06-04 11:34:15,610 - INFO - Train Loss: 0.1659, Val Loss: 0.1875
+2025-06-04 11:34:15,610 - INFO - Train IoU: 0.4245, Val IoU: 0.3719
+2025-06-04 11:34:15,610 - INFO - Train Dice: 0.5836, Val Dice: 0.5269
+2025-06-04 11:34:15,610 - INFO - Train F1: 0.5836, Val F1: 0.5269
+2025-06-04 11:34:15,658 - INFO - Checkpoint saved: outputs/nano/checkpoint_epoch_25.pth
+2025-06-04 11:34:18,265 - INFO - 
+Epoch 26/50
+2025-06-04 11:34:18,266 - INFO - Learning rate: 0.000955
+2025-06-04 11:34:36,264 - INFO - Train Loss: 0.1659, Val Loss: 0.1920
+2025-06-04 11:34:36,265 - INFO - Train IoU: 0.4255, Val IoU: 0.3556
+2025-06-04 11:34:36,265 - INFO - Train Dice: 0.5836, Val Dice: 0.5071
+2025-06-04 11:34:36,265 - INFO - Train F1: 0.5836, Val F1: 0.5071
+2025-06-04 11:34:37,609 - INFO - Visualizations saved: outputs/nano/predictions_epoch_26.png
+2025-06-04 11:34:37,609 - INFO - 
+Epoch 27/50
+2025-06-04 11:34:37,609 - INFO - Learning rate: 0.000921
+2025-06-04 11:34:55,708 - INFO - Train Loss: 0.1595, Val Loss: 0.1784
+2025-06-04 11:34:55,709 - INFO - Train IoU: 0.4413, Val IoU: 0.3935
+2025-06-04 11:34:55,709 - INFO - Train Dice: 0.5991, Val Dice: 0.5466
+2025-06-04 11:34:55,709 - INFO - Train F1: 0.5991, Val F1: 0.5466
+2025-06-04 11:34:55,743 - INFO - New best model saved! IoU: 0.3935
+2025-06-04 11:34:55,743 - INFO - 
+Epoch 28/50
+2025-06-04 11:34:55,743 - INFO - Learning rate: 0.000878
+2025-06-04 11:35:13,943 - INFO - Train Loss: 0.1551, Val Loss: 0.1827
+2025-06-04 11:35:13,943 - INFO - Train IoU: 0.4520, Val IoU: 0.3822
+2025-06-04 11:35:13,943 - INFO - Train Dice: 0.6103, Val Dice: 0.5363
+2025-06-04 11:35:13,943 - INFO - Train F1: 0.6103, Val F1: 0.5363
+2025-06-04 11:35:15,144 - INFO - Visualizations saved: outputs/nano/predictions_epoch_28.png
+2025-06-04 11:35:15,144 - INFO - 
+Epoch 29/50
+2025-06-04 11:35:15,144 - INFO - Learning rate: 0.000828
+2025-06-04 11:35:33,372 - INFO - Train Loss: 0.1514, Val Loss: 0.1799
+2025-06-04 11:35:33,372 - INFO - Train IoU: 0.4622, Val IoU: 0.3846
+2025-06-04 11:35:33,372 - INFO - Train Dice: 0.6204, Val Dice: 0.5394
+2025-06-04 11:35:33,372 - INFO - Train F1: 0.6204, Val F1: 0.5394
+2025-06-04 11:35:33,378 - INFO - Early stopping triggered at epoch 29
+2025-06-04 11:35:35,740 - INFO - Training completed!
+2025-06-04 11:35:35,740 - INFO - Best IoU achieved: 0.3935
+2025-06-04 11:35:35,741 - INFO - Models saved in: outputs/nano
