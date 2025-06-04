@@ -13,7 +13,10 @@ class MaskProcessor {
 public:
     MaskProcessor();
     ~MaskProcessor();
-    void processMask(const cv::Mat& mask, cv::Mat& output, std::vector<cv::Point>& medianPoints);
+    void processMask(const cv::Mat& mask, cv::Mat& output, 
+                    std::vector<cv::Point>& medianPoints,
+                    std::vector<cv::Point>& left_line_points,
+                    std::vector<cv::Point>& right_line_points);
     LineCoefficients linearRegression(const std::vector<cv::Point>& points);
 
 private:

@@ -60,6 +60,10 @@
         "concepts": "cpp",
         "random": "cpp",
         "ranges": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "codecvt": "cpp",
+        "numbers": "cpp",
+        "filesystem": "cpp",
+        "span": "cpp"
     }
 }
