@@ -2,51 +2,56 @@
 #include <iostream>
 #include <chrono>
 
-// Programa principal: Captura vídeo, realiza inferência e exibe resultados
+
 int main() {
-    // Inicializa inferência TensorRT com modelo
     TensorRTInference trt("../model.engine");
-    
-    // Inicializa câmera CSI com resolução 640x360 e 30 FPS
     CSICamera cam(640, 360, 30);
     cam.start();
 
     std::cout << "Pressione 'q' para sair" << std::endl;
-    int frameCount = 0;
-    auto start = std::chrono::steady_clock::now();
 
-    // Loop principal
+    auto lastTime = std::chrono::steady_clock::now();
+    double smoothedFPS = 0.0;
+    const double alpha = 0.9;
+
     while (true) {
-        // Lê frame da câmera
         cv::Mat frame = cam.read();
         if (frame.empty()) continue;
 
-        // Pré-processa frame para entrada do modelo
+        auto currentTime = std::chrono::steady_clock::now();
+        double elapsed = std::chrono::duration<double>(currentTime - lastTime).count();
+        lastTime = currentTime;
+
+        double currentFPS = 1.0 / elapsed;
+        if (smoothedFPS == 0.0)
+            smoothedFPS = currentFPS;
+        else
+            smoothedFPS = alpha * smoothedFPS + (1.0 - alpha) * currentFPS;
+
+        // Inference pipeline
         std::vector<float> input = preprocess_frame(frame);
-        
-        // Realiza inferência
         auto outputs = trt.infer(input);
-        
-        // Processa saídas e calcula mediana
         std::vector<cv::Point> medianPoints;
-        // Chama postprocess, que retorna apenas o frame com linhas
-        cv::Mat result_frame = postprocess(outputs[0].data(), outputs[1].data(), frame, medianPoints);
+        auto result = postprocess(outputs[0].data(), outputs[1].data(), frame, medianPoints);
 
-        // Exibe apenas o frame original com linhas em uma janela
-        cv::imshow("Lane Detection", result_frame);
+        // Desenhar o FPS na imagem
+        std::string fpsText = "FPS: " + std::to_string(static_cast<int>(smoothedFPS));
+        cv::putText(result, fpsText, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1.0,
+                    cv::Scalar(0, 255, 0), 2);
+
+        int centerX = result.cols / 2 + 20;
+        int centerY = result.rows;
+        int lineLength = 200;
+
+        cv::Point lineStart(centerX, centerY - lineLength);
+        cv::Point lineEnd(centerX, centerY - 20);
+        cv::line(result, lineStart, lineEnd, cv::Scalar(250, 250, 250), 2);  
+
+
+        cv::imshow("Lane Detection", result);
         if (cv::waitKey(1) == 'q') break;
-
-        // Calcula e exibe FPS a cada 30 frames
-        frameCount++;
-        if (frameCount % 30 == 0) {
-            auto now = std::chrono::steady_clock::now();
-            double fps = 30.0 / std::chrono::duration<double>(now - start).count();
-            std::cout << "FPS: " << fps << std::endl;
-            start = now;
-        }
     }
 
-    // Para câmera e fecha janelas
     cam.stop();
     cv::destroyAllWindows();
     return 0;

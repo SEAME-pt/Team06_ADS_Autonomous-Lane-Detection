@@ -40,7 +40,6 @@ void TensorRTInference::allocateBuffers() {
         size_t vol = 1;
         for (int j = 0; j < dims.nbDims; ++j) vol *= dims.d[j];
 
-        // Removido dtype não utilizado para evitar warning
         size_t typeSize = sizeof(float);
 
         void* deviceMem;
@@ -72,7 +71,7 @@ std::vector<std::vector<float>> TensorRTInference::infer(const std::vector<float
 // Construtor: Configura pipeline GStreamer para câmera CSI
 CSICamera::CSICamera(int width, int height, int fps) {
     std::ostringstream pipeline;
-    pipeline << "nvarguscamerasrc sensor-mode=4 !"
+    pipeline << "nvarguscamerasrc sensor-mode=4 ! "
              << "video/x-raw(memory:NVMM), width=" << width << ", height=" << height
              << ", format=NV12, framerate=" << fps << "/1 ! "
              << "nvvidconv flip-method=0 ! video/x-raw, width=" << width
@@ -125,10 +124,18 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
     return inputData;
 }
 
-// Pós-processa saídas do modelo: Gera frame com apenas as linhas de regressão e mediana
+// Pós-processa saídas do modelo: Gera frame com linhas apenas na ROI
 cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints) {
-    const int height = 360;
-    const int width = 640;
+    const int height = original_frame.rows;
+    const int width = original_frame.cols;
+
+    // Definir ROI: 60% da altura, descartando 35% do topo e 5% da base
+    int roi_start_y = static_cast<int>(0.50 * height); // 35% do topo
+    int roi_end_y = static_cast<int>(0.95 * height);   // Até 95% (descartar 5% da base)
+    int roi_height = roi_end_y - roi_start_y;          // 60% da altura
+
+    // Criar retângulo para a ROI
+    cv::Rect roi(0, roi_start_y, width, roi_height);
 
     // Criar máscaras a partir das saídas do modelo (logits)
     cv::Mat da_logits(2, height * width, CV_32FC1, da_output);
@@ -144,9 +151,15 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         float ll0 = ll_logits.at<float>(0, i);
         float ll1 = ll_logits.at<float>(1, i);
 
-        da_mask.at<uchar>(i / width, i % width) = (da1 > da0) ? 255 : 0; // Máscara da área transitável
-        ll_mask.at<uchar>(i / width, i % width) = (ll1 > ll0) ? 255 : 0; // Máscara das linhas
+        da_mask.at<uchar>(i / width, i % width) = (da1 > da0) ? 255 : 0;
+        ll_mask.at<uchar>(i / width, i % width) = (ll1 > ll0) ? 255 : 0;
     }
+
+    // Zerar pixels fora da ROI nas máscaras
+    da_mask(cv::Rect(0, 0, width, roi_start_y)) = 0; // Topo
+    da_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0; // Base
+    ll_mask(cv::Rect(0, 0, width, roi_start_y)) = 0; // Topo
+    ll_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0; // Base
 
     // Redimensionar máscaras para o tamanho do frame original
     cv::Mat da_resized;
@@ -158,16 +171,15 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
     cv::Mat mask_output;
     processor.processMask(da_resized, mask_output, medianPoints);
 
-    // Criar frame apenas com a imagem original
+    // Criar frame com a imagem original
     cv::Mat result_frame = original_frame.clone();
 
-    // Desenhar linhas das bordas e mediana no frame original
+    // Desenhar linhas das bordas e mediana apenas na ROI
     if (!medianPoints.empty()) {
-        // Recalcular coeficientes das bordas usando a lógica de processMask
+        // Recalcular coeficientes das bordas usando apenas pontos na ROI
         std::vector<cv::Point> left_edge_points, right_edge_points;
-        int top_y = -1, bottom_y = -1;
-        cv::Mat mask_bin;
-        cv::threshold(da_resized, mask_bin, 127, 255, cv::THRESH_BINARY);
+        cv::Mat mask_bin = da_resized(roi); // Usar apenas a ROI
+        cv::threshold(mask_bin, mask_bin, 127, 255, cv::THRESH_BINARY);
         for (int y = 0; y < mask_bin.rows; y++) {
             const cv::Mat row = mask_bin.row(y);
             int left_x = -1, right_x = -1;
@@ -184,10 +196,9 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
                 }
             }
             if (left_x != -1) {
-                if (top_y == -1) top_y = y;
-                bottom_y = y;
-                left_edge_points.push_back(cv::Point(left_x, y));
-                right_edge_points.push_back(cv::Point(right_x, y));
+                // Ajustar y para a posição global (relativa ao frame original)
+                left_edge_points.push_back(cv::Point(left_x, y + roi_start_y));
+                right_edge_points.push_back(cv::Point(right_x, y + roi_start_y));
             }
         }
 
@@ -196,7 +207,7 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
 
         if (left_coeffs.valid && right_coeffs.valid) {
             std::vector<cv::Point> left_line_points, right_line_points;
-            for (int y = top_y; y <= bottom_y; y++) {
+            for (int y = roi_start_y; y < roi_end_y; y++) {
                 int left_x = static_cast<int>(left_coeffs.m * y + left_coeffs.b);
                 int right_x = static_cast<int>(right_coeffs.m * y + right_coeffs.b);
                 if (left_x >= 0 && left_x < result_frame.cols)
@@ -205,19 +216,27 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
                     right_line_points.push_back(cv::Point(right_x, y));
             }
 
-            // Desenhar bordas no frame original
+            // Desenhar bordas apenas na ROI
             if (!left_line_points.empty() && !right_line_points.empty()) {
                 cv::line(result_frame, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2); // Vermelho
                 cv::line(result_frame, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2); // Azul
             }
 
-            // Desenhar mediana no frame original
+            // Desenhar mediana apenas na ROI
             if (!medianPoints.empty()) {
-                cv::line(result_frame, medianPoints.front(), medianPoints.back(), cv::Scalar(0, 255, 0), 2); // Verde
+                std::vector<cv::Point> roi_median_points;
+                for (const auto& p : medianPoints) {
+                    if (p.y >= roi_start_y && p.y < roi_end_y) {
+                        roi_median_points.push_back(p);
+                    }
+                }
+                if (roi_median_points.size() >= 2) {
+                    cv::line(result_frame, roi_median_points.front(), roi_median_points.back(), cv::Scalar(0, 255, 0), 2); // Verde
+                }
             }
         }
     }
 
-    // Retornar apenas o frame com linhas
+    // Retornar frame completo com linhas na ROI
     return result_frame;
 }

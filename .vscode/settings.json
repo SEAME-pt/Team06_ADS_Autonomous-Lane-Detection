@@ -64,6 +64,8 @@
         "codecvt": "cpp",
         "numbers": "cpp",
         "filesystem": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     }
 }
