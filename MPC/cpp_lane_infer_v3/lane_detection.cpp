@@ -139,27 +139,27 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
 
     // Criar máscaras a partir das saídas do modelo (logits)
     cv::Mat da_logits(2, height * width, CV_32FC1, da_output);
-    cv::Mat ll_logits(2, height * width, CV_32FC1, ll_output);
+    //cv::Mat ll_logits(2, height * width, CV_32FC1, ll_output);
 
     cv::Mat da_mask(height, width, CV_8UC1, cv::Scalar(0));
-    cv::Mat ll_mask(height, width, CV_8UC1, cv::Scalar(0));
+    //cv::Mat ll_mask(height, width, CV_8UC1, cv::Scalar(0));
 
     // Aplicar argmax para criar máscaras binárias
     for (int i = 0; i < height * width; ++i) {
         float da0 = da_logits.at<float>(0, i);
         float da1 = da_logits.at<float>(1, i);
-        float ll0 = ll_logits.at<float>(0, i);
-        float ll1 = ll_logits.at<float>(1, i);
+        //float ll0 = ll_logits.at<float>(0, i);
+        //float ll1 = ll_logits.at<float>(1, i);
 
         da_mask.at<uchar>(i / width, i % width) = (da1 > da0) ? 255 : 0;
-        ll_mask.at<uchar>(i / width, i % width) = (ll1 > ll0) ? 255 : 0;
+        //ll_mask.at<uchar>(i / width, i % width) = (ll1 > ll0) ? 255 : 0;
     }
 
     // Zerar pixels fora da ROI nas máscaras
     da_mask(cv::Rect(0, 0, width, roi_start_y)) = 0; // Topo
     da_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0; // Base
-    ll_mask(cv::Rect(0, 0, width, roi_start_y)) = 0; // Topo
-    ll_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0; // Base
+    //ll_mask(cv::Rect(0, 0, width, roi_start_y)) = 0; // Topo
+    //ll_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0; // Base
 
     // Redimensionar máscaras para o tamanho do frame original
     cv::Mat da_resized;

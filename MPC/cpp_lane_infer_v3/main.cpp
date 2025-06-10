@@ -39,7 +39,7 @@ int main() {
         cv::putText(result, fpsText, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1.0,
                     cv::Scalar(0, 255, 0), 2);
 
-        int centerX = result.cols / 2 + 20;
+        int centerX = result.cols / 2 + 10 ;
         int centerY = result.rows;
         int lineLength = 200;
 
