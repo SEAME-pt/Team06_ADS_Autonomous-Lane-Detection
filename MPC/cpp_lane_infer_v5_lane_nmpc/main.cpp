@@ -22,7 +22,7 @@ std::vector<std::vector<double>> generateReference(const LaneData& laneData, dou
         double dx = laneData.points[next_idx].x - x;
         double dy = laneData.points[next_idx].y - y;
         double psi = atan2(dy, dx);
-        x_ref[k] = {x, y, psi, v_ref};
+        x_ref[k] = {y, -x, psi, v_ref};
     }
     return x_ref;
 }
@@ -34,18 +34,18 @@ int main() {
 
     // Inicializar NMPC
     NMPCController nmpc(0.15, 0.1, 10, 5, 0.5, 1.0); // L=0.15m, dt=0.1s, Np=10, Nc=5, delta_max=0.5rad, a_max=1m/s²
-    std::vector<double> x0 = {0.0, 0.0, 0.0, 1.0}; // Estado inicial: [x, y, psi, v]
+    std::vector<double> x0 = {0.0, 0.0, 1.57, 0.0}; // Estado inicial: [x, y, psi, v]
 
     std::cout << "Pressione 'q' para sair" << std::endl;
 
     auto lastTime = std::chrono::steady_clock::now();
     double smoothedFPS = 0.0;
     const double alpha = 0.9;
+    int frameCount = 0;
 
     while (true) {
         cv::Mat frame = cam.read();
         if (frame.empty()) continue;
-
         auto currentTime = std::chrono::steady_clock::now();
         double elapsed = std::chrono::duration<double>(currentTime - lastTime).count();
         lastTime = currentTime;
@@ -86,15 +86,16 @@ int main() {
         cv::Point lineEnd(centerX, centerY - 20);
         cv::line(result, lineStart, lineEnd, cv::Scalar(250, 250, 250), 2);
 
-        if (laneData.valid) {
-            std::cout << "LaneData: " << laneData.num_points << " pontos, timestamp: " << laneData.timestamp << "\n";
+        frameCount++;
+        if (laneData.valid && frameCount % 10 == 0 ) {
+            //std::cout << "LaneData: " << laneData.num_points << " pontos, timestamp: " << laneData.timestamp << "\n";
             for (int i = 0; i < laneData.num_points; ++i) {
                 std::cout << "  Ponto " << i << ": (" << laneData.points[i].x << ", " << laneData.points[i].y << ")\n";
             }
-            std::cout << "NMPC: delta = " << delta * 180.0 / M_PI << " deg, a = " << a << " m/s^2\n";
-        } else {
+            //std::cout << "NMPC: delta = " << delta * 180.0 / M_PI << " deg, a = " << a << " m/s^2\n";
+        } /* else {
             std::cout << "LaneData inválido\n";
-        }
+        } */
 
         cv::imshow("Lane Detection", result);
         if (cv::waitKey(1) == 'q') break;

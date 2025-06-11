@@ -149,14 +149,14 @@ private:
 
 std::vector<float> preprocess_frame(const cv::Mat& frame) {
     cv::Mat resized;
-    cv::resize(frame, resized, cv::Size(640, 360));
-    cv::Mat chw(3, 640 * 360, CV_32FC1);
+    cv::resize(frame, resized, cv::Size(224, 224));
+    cv::Mat chw(3, 224 * 224, CV_32FC1);
 
-    std::vector<float> inputData(3 * 640 * 360);
+    std::vector<float> inputData(3 * 224 * 224);
     int idx = 0;
     for (int c = 0; c < 3; ++c) {
-        for (int i = 0; i < 360; ++i) {
-            for (int j = 0; j < 640; ++j) {
+        for (int i = 0; i < 224; ++i) {
+            for (int j = 0; j < 224; ++j) {
                 inputData[idx++] = resized.at<cv::Vec3b>(i, j)[2 - c] / 255.0f;  // BGR -> RGB
             }
         }
@@ -165,10 +165,10 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
 }
 
 cv::Mat postprocess_outputs(const std::vector<std::vector<float>>& outputs, const cv::Mat& original_frame) {
-    cv::Mat da_mask(360, 640, CV_8UC1);
-    cv::Mat ll_mask(360, 640, CV_8UC1);
+    cv::Mat da_mask(224, 224, CV_8UC1);
+    cv::Mat ll_mask(224, 224, CV_8UC1);
 
-    for (int i = 0; i < 360 * 640; ++i) {
+    for (int i = 0; i < 224 * 224; ++i) {
         da_mask.data[i] = outputs[0][i * 2 + 1] > outputs[0][i * 2] ? 255 : 0;
         ll_mask.data[i] = outputs[1][i * 2 + 1] > outputs[1][i * 2] ? 255 : 0;
     }
@@ -190,10 +190,10 @@ cv::Mat postprocess_outputs(const std::vector<std::vector<float>>& outputs, cons
 }
 
 cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame) {
-    const int height = 360;
-    const int width = 640;
+    const int height = 224;
+    const int width = 224;
 
-    // Criar as máscaras com shape (2, 360, 640)
+    // Criar as máscaras com shape (2, 224, 224)
     cv::Mat da_logits(2, height * width, CV_32FC1, da_output);
     cv::Mat ll_logits(2, height * width, CV_32FC1, ll_output);
 
@@ -235,7 +235,7 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame)
 
 int main() {
     TensorRTInference trt("model.engine");
-    CSICamera cam(640, 360, 30);
+    CSICamera cam(224, 224, 30);
     cam.start();
 
     std::cout << "Pressione 'q' para sair" << std::endl;

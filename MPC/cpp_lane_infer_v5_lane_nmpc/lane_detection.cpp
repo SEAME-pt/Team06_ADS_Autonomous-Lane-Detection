@@ -154,11 +154,8 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
             if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
                 // Nova projeção: 0.00617 m/pixel baseada em 0.25 m entre linhas
-                laneData.points[laneData.num_points].x = 0.00617 * (medianPoints[i].x - 320);
-                laneData.points[laneData.num_points].y = 0.00617 * (342 - medianPoints[i].y);
-                // Projeção antiga (para referência):
-                // laneData.points[laneData.num_points].x = 0.05 * (medianPoints[i].x - 320);
-                // laneData.points[laneData.num_points].y = 0.05 * (342 - medianPoints[i].y);
+                laneData.points[laneData.num_points].x = 0.0006 * (medianPoints[i].x - (640/2));
+                laneData.points[laneData.num_points].y = 0.001623 * ((360*0.95) - medianPoints[i].y);
                 laneData.num_points++;
             }
         }
@@ -168,6 +165,34 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         std::vector<cv::Point> left_edge_points, right_edge_points;
         cv::Mat mask_bin = da_resized(roi);
         cv::threshold(mask_bin, mask_bin, 127, 255, cv::THRESH_BINARY);
+
+
+/*         // Verificar a distância em pixels na base da ROI (y = mask_bin.rows - 1)
+        int left_x_base = -1, right_x_base = -1;
+        int base_y = mask_bin.rows - 5; // Última linha da ROI (y = 342 na imagem original)
+        const cv::Mat row = mask_bin.row(base_y);
+        for (int x = 0; x < row.cols; x++) {
+            if (row.at<uchar>(0, x) == 255) {
+                left_x_base = x;
+                break;
+            }
+        }
+        for (int x = row.cols - 1; x >= 0; x--) {
+            if (row.at<uchar>(0, x) == 255) {
+                right_x_base = x;
+                break;
+            }
+        }
+        if (left_x_base != -1 && right_x_base != -1) {
+            int width_pixels = right_x_base - left_x_base;
+            std::cout << "Largura da faixa em pixels na base da ROI (y=342): " << width_pixels << std::endl;
+            // Calcular o fator de conversão para x
+            double factor_x = 0.25 / width_pixels;
+            std::cout << "Fator de conversão para x (m/pixel): " << factor_x << std::endl;
+        } else {
+            std::cout << "Não foi possível detectar as bordas na base da ROI." << std::endl;
+        }
+ */
         for (int y = 0; y < mask_bin.rows; y++) {
             const cv::Mat row = mask_bin.row(y);
             int left_x = -1, right_x = -1;
@@ -219,6 +244,5 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
             }
         }
     }
-
     return result_frame;
 }
