@@ -1,25 +1,25 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-Igcpgt
+Change Dir: /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-odAFJZ
 
-Run Build Command(s):/usr/bin/make -f Makefile cmTC_b5e0a/fast && /usr/bin/make  -f CMakeFiles/cmTC_b5e0a.dir/build.make CMakeFiles/cmTC_b5e0a.dir/build
-make[1]: Entering directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-Igcpgt'
-Building C object CMakeFiles/cmTC_b5e0a.dir/src.c.o
-/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -fPIC  -o CMakeFiles/cmTC_b5e0a.dir/src.c.o -c /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-Igcpgt/src.c
-Linking C executable cmTC_b5e0a
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b5e0a.dir/link.txt --verbose=1
-/usr/bin/cc -fPIC  CMakeFiles/cmTC_b5e0a.dir/src.c.o -o cmTC_b5e0a 
-CMakeFiles/cmTC_b5e0a.dir/src.c.o: In function `main':
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_1ff61/fast && /usr/bin/make  -f CMakeFiles/cmTC_1ff61.dir/build.make CMakeFiles/cmTC_1ff61.dir/build
+make[1]: Entering directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-odAFJZ'
+Building C object CMakeFiles/cmTC_1ff61.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -fPIC  -o CMakeFiles/cmTC_1ff61.dir/src.c.o -c /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-odAFJZ/src.c
+Linking C executable cmTC_1ff61
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1ff61.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC  CMakeFiles/cmTC_1ff61.dir/src.c.o -o cmTC_1ff61 
+CMakeFiles/cmTC_1ff61.dir/src.c.o: In function `main':
 src.c:(.text+0x48): undefined reference to `pthread_create'
 src.c:(.text+0x50): undefined reference to `pthread_detach'
 src.c:(.text+0x58): undefined reference to `pthread_cancel'
 src.c:(.text+0x64): undefined reference to `pthread_join'
 src.c:(.text+0x74): undefined reference to `pthread_atfork'
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_b5e0a.dir/build.make:98: recipe for target 'cmTC_b5e0a' failed
-make[1]: *** [cmTC_b5e0a] Error 1
-make[1]: Leaving directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-Igcpgt'
-Makefile:127: recipe for target 'cmTC_b5e0a/fast' failed
-make: *** [cmTC_b5e0a/fast] Error 2
+CMakeFiles/cmTC_1ff61.dir/build.make:98: recipe for target 'cmTC_1ff61' failed
+make[1]: *** [cmTC_1ff61] Error 1
+make[1]: Leaving directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-odAFJZ'
+Makefile:127: recipe for target 'cmTC_1ff61/fast' failed
+make: *** [cmTC_1ff61/fast] Error 2
 
 
 Source file was:
@@ -45,22 +45,22 @@ int main(void)
 
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-RbhWJ6
+Change Dir: /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-77vP33
 
-Run Build Command(s):/usr/bin/make -f Makefile cmTC_c6fca/fast && /usr/bin/make  -f CMakeFiles/cmTC_c6fca.dir/build.make CMakeFiles/cmTC_c6fca.dir/build
-make[1]: Entering directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-RbhWJ6'
-Building C object CMakeFiles/cmTC_c6fca.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_c6fca.dir/CheckFunctionExists.c.o -c /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-RbhWJ6/CheckFunctionExists.c
-Linking C executable cmTC_c6fca
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c6fca.dir/link.txt --verbose=1
-/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_c6fca.dir/CheckFunctionExists.c.o -o cmTC_c6fca  -lpthreads 
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_44ba6/fast && /usr/bin/make  -f CMakeFiles/cmTC_44ba6.dir/build.make CMakeFiles/cmTC_44ba6.dir/build
+make[1]: Entering directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-77vP33'
+Building C object CMakeFiles/cmTC_44ba6.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_44ba6.dir/CheckFunctionExists.c.o -c /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-77vP33/CheckFunctionExists.c
+Linking C executable cmTC_44ba6
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_44ba6.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_44ba6.dir/CheckFunctionExists.c.o -o cmTC_44ba6  -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_c6fca.dir/build.make:98: recipe for target 'cmTC_c6fca' failed
-make[1]: *** [cmTC_c6fca] Error 1
-make[1]: Leaving directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-RbhWJ6'
-Makefile:127: recipe for target 'cmTC_c6fca/fast' failed
-make: *** [cmTC_c6fca/fast] Error 2
+CMakeFiles/cmTC_44ba6.dir/build.make:98: recipe for target 'cmTC_44ba6' failed
+make[1]: *** [cmTC_44ba6] Error 1
+make[1]: Leaving directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-77vP33'
+Makefile:127: recipe for target 'cmTC_44ba6/fast' failed
+make: *** [cmTC_44ba6/fast] Error 2
 
 
 

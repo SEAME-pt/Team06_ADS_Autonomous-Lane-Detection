@@ -1,0 +1,66 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-gZt6sU
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_080ff/fast && /usr/bin/make  -f CMakeFiles/cmTC_080ff.dir/build.make CMakeFiles/cmTC_080ff.dir/build
+make[1]: Entering directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-gZt6sU'
+Building C object CMakeFiles/cmTC_080ff.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -fPIC  -o CMakeFiles/cmTC_080ff.dir/src.c.o -c /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-gZt6sU/src.c
+Linking C executable cmTC_080ff
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_080ff.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC  CMakeFiles/cmTC_080ff.dir/src.c.o -o cmTC_080ff 
+CMakeFiles/cmTC_080ff.dir/src.c.o: In function `main':
+src.c:(.text+0x48): undefined reference to `pthread_create'
+src.c:(.text+0x50): undefined reference to `pthread_detach'
+src.c:(.text+0x58): undefined reference to `pthread_cancel'
+src.c:(.text+0x64): undefined reference to `pthread_join'
+src.c:(.text+0x74): undefined reference to `pthread_atfork'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_080ff.dir/build.make:98: recipe for target 'cmTC_080ff' failed
+make[1]: *** [cmTC_080ff] Error 1
+make[1]: Leaving directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-gZt6sU'
+Makefile:127: recipe for target 'cmTC_080ff/fast' failed
+make: *** [cmTC_080ff/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-FMYmGI
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_0fc2b/fast && /usr/bin/make  -f CMakeFiles/cmTC_0fc2b.dir/build.make CMakeFiles/cmTC_0fc2b.dir/build
+make[1]: Entering directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-FMYmGI'
+Building C object CMakeFiles/cmTC_0fc2b.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_0fc2b.dir/CheckFunctionExists.c.o -c /home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-FMYmGI/CheckFunctionExists.c
+Linking C executable cmTC_0fc2b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0fc2b.dir/link.txt --verbose=1
+/usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_0fc2b.dir/CheckFunctionExists.c.o -o cmTC_0fc2b  -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_0fc2b.dir/build.make:98: recipe for target 'cmTC_0fc2b' failed
+make[1]: *** [cmTC_0fc2b] Error 1
+make[1]: Leaving directory '/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/CMakeScratch/TryCompile-FMYmGI'
+Makefile:127: recipe for target 'cmTC_0fc2b/fast' failed
+make: *** [cmTC_0fc2b/fast] Error 2
+
+
+

@@ -66,6 +66,12 @@
         "filesystem": "cpp",
         "span": "cpp",
         "semaphore": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "__locale": "cpp",
+        "regex": "cpp",
+        "strstream": "cpp",
+        "__string": "cpp",
+        "ios": "cpp",
+        "locale": "cpp"
     }
 }

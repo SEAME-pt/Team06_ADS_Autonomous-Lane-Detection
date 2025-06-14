@@ -158,3 +158,10 @@ g++ -o mpc_integrated mpc_integrated.cpp `pkg-config --cflags --libs opencv4` -I
 g++ -o mpc_carla mpc_carla.cpp `pkg-config --cflags --libs opencv4` -I/home/ndo-vale/Desktop/carla/include -L/home/ndo-vale/Desktop/carla/lib -lcarla_client -lboost_python
 ./mpc_carla
 
+## Compile cpp_infer
+g++ -o lane_detec lane_detection.cpp `pkg-config --cflags --libs opencv4` \
+-I/usr/local/cuda/include -L/usr/local/cuda/lib64 -lcudart \
+-I/usr/include/aarch64-linux-gnu -L/usr/lib/aarch64-linux-gnu \
+-lnvinfer -lnvinfer_plugin -lpthread
+
+

@@ -6,7 +6,6 @@ NMPCController::NMPCController(double L, double dt, int Np, int Nc, double delta
     setup_nmpc();
 }
 
-// ... (outras funções permanecem iguais)
 casadi::MX NMPCController::vehicle_model(const casadi::MX& x, const casadi::MX& u) {
     // Estados: x = [x, y, psi, v]
     casadi::MX x_pos = x(0), y_pos = x(1), psi = x(2), v = x(3);
@@ -38,6 +37,7 @@ void NMPCController::setup_nmpc() {
     casadi::DM R = casadi::DM::diag({0.1, 0.1});
     casadi::DM P = Q;
 
+    // custo
     casadi::MX cost = 0;
     x_ref_params_.resize(Np_);
     for (int k = 0; k < Np_; ++k) {

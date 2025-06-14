@@ -101,12 +101,12 @@ void CSICamera::update() {
 
 std::vector<float> preprocess_frame(const cv::Mat& frame) {
     cv::Mat resized;
-    cv::resize(frame, resized, cv::Size(640, 360));
-    std::vector<float> inputData(3 * 640 * 360);
+    cv::resize(frame, resized, cv::Size(360, 360));
+    std::vector<float> inputData(3 * 360 * 360);
     int idx = 0;
     for (int c = 0; c < 3; ++c) {
         for (int i = 0; i < 360; ++i) {
-            for (int j = 0; j < 640; ++j) {
+            for (int j = 0; j < 360; ++j) {
                 inputData[idx++] = resized.at<cv::Vec3b>(i, j)[2 - c] / 255.0f;
             }
         }
@@ -153,9 +153,9 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
         for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
             if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
-                // Nova projeção: 0.00617 m/pixel baseada em 0.25 m entre linhas
-                laneData.points[laneData.num_points].x = 0.0006 * (medianPoints[i].x - (640/2));
-                laneData.points[laneData.num_points].y = 0.001623 * ((360*0.95) - medianPoints[i].y);
+                // Nova projeção: 0.0006 m/pixel baseada em 0.25 m entre linhas
+                laneData.points[laneData.num_points].x = 0.0006 * (medianPoints[i].x - (width/2));
+                laneData.points[laneData.num_points].y = 0.001623 * ((height*0.95) - medianPoints[i].y);
                 laneData.num_points++;
             }
         }
@@ -166,6 +166,61 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         cv::Mat mask_bin = da_resized(roi);
         cv::threshold(mask_bin, mask_bin, 127, 255, cv::THRESH_BINARY);
 
+
+        
+        for (int y = 0; y < mask_bin.rows; y++) {
+            const cv::Mat row = mask_bin.row(y);
+            int left_x = -1, right_x = -1;
+            for (int x = 0; x < row.cols; x++) {
+                if (row.at<uchar>(0, x) == 255) {
+                    left_x = x;
+                    break;
+                }
+            }
+            for (int x = row.cols - 1; x >= 0; x--) {
+                if (row.at<uchar>(0, x) == 255) {
+                    right_x = x;
+                    break;
+                }
+            }
+            if (left_x != -1) {
+                left_edge_points.push_back(cv::Point(left_x, y + roi_start_y));
+                right_edge_points.push_back(cv::Point(right_x, y + roi_start_y));
+            }
+        }
+        
+        LineCoefficients left_coeffs = processor.linearRegression(left_edge_points);
+        LineCoefficients right_coeffs = processor.linearRegression(right_edge_points);
+        
+        if (left_coeffs.valid && right_coeffs.valid) {
+            std::vector<cv::Point> left_line_points, right_line_points;
+            for (int y = roi_start_y; y < roi_end_y; y++) {
+                int left_x = static_cast<int>(left_coeffs.m * y + left_coeffs.b);
+                int right_x = static_cast<int>(right_coeffs.m * y + right_coeffs.b);
+                if (left_x >= 0 && left_x < result_frame.cols)
+                left_line_points.push_back(cv::Point(left_x, y));
+                if (right_x >= 0 && right_x < result_frame.cols)
+                right_line_points.push_back(cv::Point(right_x, y));
+            }
+            
+            if (!left_line_points.empty() && !right_line_points.empty()) {
+                cv::line(result_frame, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2);
+                cv::line(result_frame, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2);
+            }
+            
+            std::vector<cv::Point> roi_median_points;
+            for (const auto& p : medianPoints) {
+                if (p.y >= roi_start_y && p.y < roi_end_y) {
+                    roi_median_points.push_back(p);
+                }
+            }
+            if (roi_median_points.size() >= 2) {
+                cv::line(result_frame, roi_median_points.front(), roi_median_points.back(), cv::Scalar(0, 255, 0), 2);
+            }
+        }
+    }
+    return result_frame;
+}
 
 /*         // Verificar a distância em pixels na base da ROI (y = mask_bin.rows - 1)
         int left_x_base = -1, right_x_base = -1;
@@ -193,56 +248,3 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
             std::cout << "Não foi possível detectar as bordas na base da ROI." << std::endl;
         }
  */
-        for (int y = 0; y < mask_bin.rows; y++) {
-            const cv::Mat row = mask_bin.row(y);
-            int left_x = -1, right_x = -1;
-            for (int x = 0; x < row.cols; x++) {
-                if (row.at<uchar>(0, x) == 255) {
-                    left_x = x;
-                    break;
-                }
-            }
-            for (int x = row.cols - 1; x >= 0; x--) {
-                if (row.at<uchar>(0, x) == 255) {
-                    right_x = x;
-                    break;
-                }
-            }
-            if (left_x != -1) {
-                left_edge_points.push_back(cv::Point(left_x, y + roi_start_y));
-                right_edge_points.push_back(cv::Point(right_x, y + roi_start_y));
-            }
-        }
-
-        LineCoefficients left_coeffs = processor.linearRegression(left_edge_points);
-        LineCoefficients right_coeffs = processor.linearRegression(right_edge_points);
-
-        if (left_coeffs.valid && right_coeffs.valid) {
-            std::vector<cv::Point> left_line_points, right_line_points;
-            for (int y = roi_start_y; y < roi_end_y; y++) {
-                int left_x = static_cast<int>(left_coeffs.m * y + left_coeffs.b);
-                int right_x = static_cast<int>(right_coeffs.m * y + right_coeffs.b);
-                if (left_x >= 0 && left_x < result_frame.cols)
-                    left_line_points.push_back(cv::Point(left_x, y));
-                if (right_x >= 0 && right_x < result_frame.cols)
-                    right_line_points.push_back(cv::Point(right_x, y));
-            }
-
-            if (!left_line_points.empty() && !right_line_points.empty()) {
-                cv::line(result_frame, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2);
-                cv::line(result_frame, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2);
-            }
-
-            std::vector<cv::Point> roi_median_points;
-            for (const auto& p : medianPoints) {
-                if (p.y >= roi_start_y && p.y < roi_end_y) {
-                    roi_median_points.push_back(p);
-                }
-            }
-            if (roi_median_points.size() >= 2) {
-                cv::line(result_frame, roi_median_points.front(), roi_median_points.back(), cv::Scalar(0, 255, 0), 2);
-            }
-        }
-    }
-    return result_frame;
-}

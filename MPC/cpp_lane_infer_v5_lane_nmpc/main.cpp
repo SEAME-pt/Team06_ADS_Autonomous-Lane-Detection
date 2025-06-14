@@ -29,7 +29,7 @@ std::vector<std::vector<double>> generateReference(const LaneData& laneData, dou
 
 int main() {
     TensorRTInference trt("../model.engine");
-    CSICamera cam(640, 360, 30);
+    CSICamera cam(360, 360, 30);
     cam.start();
 
     // Inicializar NMPC
@@ -79,15 +79,14 @@ int main() {
         std::string aText = "Accel: " + std::to_string(a) + " m/s^2";
         cv::putText(result, aText, cv::Point(10, 90), cv::FONT_HERSHEY_SIMPLEX, 0.8, cv::Scalar(255, 255, 0), 2);
 
-        int centerX = result.cols / 2 + 10;
+        int centerX = result.cols / 2;
         int centerY = result.rows;
         int lineLength = 200;
         cv::Point lineStart(centerX, centerY - lineLength);
         cv::Point lineEnd(centerX, centerY - 20);
         cv::line(result, lineStart, lineEnd, cv::Scalar(250, 250, 250), 2);
 
-        frameCount++;
-        if (laneData.valid && frameCount % 10 == 0 ) {
+        if (laneData.valid && frameCount % 20 == 0 ) {
             //std::cout << "LaneData: " << laneData.num_points << " pontos, timestamp: " << laneData.timestamp << "\n";
             for (int i = 0; i < laneData.num_points; ++i) {
                 std::cout << "  Ponto " << i << ": (" << laneData.points[i].x << ", " << laneData.points[i].y << ")\n";
@@ -95,8 +94,9 @@ int main() {
             //std::cout << "NMPC: delta = " << delta * 180.0 / M_PI << " deg, a = " << a << " m/s^2\n";
         } /* else {
             std::cout << "LaneData inválido\n";
-        } */
-
+            } */
+           
+        frameCount++;
         cv::imshow("Lane Detection", result);
         if (cv::waitKey(1) == 'q') break;
     }
