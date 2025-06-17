@@ -30,7 +30,7 @@ std::vector<std::vector<double>> generateReference(const LaneData& laneData, dou
 
 // Função para marcar pixels de 10 em 10 a 95% da altura da imagem
 void visualize_pixel_markers(cv::Mat& frame) {
-    int y_pos = static_cast<int>(0.95 * frame.rows); // 95% da altura (y = 342 para 360px)
+    int y_pos = static_cast<int>(0.95 * frame.rows); // 95% da altura (y = 342 para 448px)
     cv::Mat marker_frame = frame.clone(); // Criar uma cópia para não modificar o original
 
     // Desenhar marcadores a cada 10 pixels ao longo da largura
@@ -49,7 +49,7 @@ void visualize_pixel_markers(cv::Mat& frame) {
 
 int main() {
     TensorRTInference trt("../model.engine");
-    CSICamera cam(360, 360, 30);
+    CSICamera cam(448, 448, 30);
     cam.start();
 
     // Inicializar NMPC
@@ -65,12 +65,12 @@ int main() {
         }
         std::cout << "Servo inicializado com sucesso\n";
         // Calibração inicial (opcional)
-        servo.set_steering(0);
+/*         servo.set_steering(0);
         sleep(1);
         servo.set_steering(-45);
         sleep(1);
         servo.set_steering(45);
-        sleep(1);
+        sleep(1); */
         servo.set_steering(0);
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;

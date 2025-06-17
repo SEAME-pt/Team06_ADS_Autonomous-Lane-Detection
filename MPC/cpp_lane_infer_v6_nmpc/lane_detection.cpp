@@ -101,12 +101,12 @@ void CSICamera::update() {
 
 std::vector<float> preprocess_frame(const cv::Mat& frame) {
     cv::Mat resized;
-    cv::resize(frame, resized, cv::Size(360, 360));
-    std::vector<float> inputData(3 * 360 * 360);
+    cv::resize(frame, resized, cv::Size(448, 448));
+    std::vector<float> inputData(3 * 448 * 448);
     int idx = 0;
     for (int c = 0; c < 3; ++c) {
-        for (int i = 0; i < 360; ++i) {
-            for (int j = 0; j < 360; ++j) {
+        for (int i = 0; i < 448; ++i) {
+            for (int j = 0; j < 448; ++j) {
                 inputData[idx++] = resized.at<cv::Vec3b>(i, j)[2 - c] / 255.0f;
             }
         }
