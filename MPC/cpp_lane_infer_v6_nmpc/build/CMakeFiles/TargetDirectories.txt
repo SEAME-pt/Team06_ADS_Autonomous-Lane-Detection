@@ -1,3 +1,0 @@
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/rebuild_cache.dir
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/edit_cache.dir
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles/lane_detection.dir
