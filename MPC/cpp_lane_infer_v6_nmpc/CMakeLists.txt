@@ -44,6 +44,7 @@ add_executable(lane_detection
     lane_detection.cpp
     mask_processor.cpp
     nmpc_controller.cpp
+    polyfit.cpp
     ../FServo/FServo.cpp
 )
 
