@@ -78,6 +78,11 @@ std::vector<std::vector<double>> generateReference(const LaneData& laneData, int
         x_ref[k][1] = y_k; // y
         x_ref[k][2] = psi_k; // psi
         x_ref[k][3] = v_ref; // v
+
+		if (frameCount % 20 == 0) {
+			std::cout << "k: " << k << "| x: " << x_k << "| y: " << y_k;
+			std::cout << "| psi_ref: " << psi_k << std::endl;
+		}
     }
 
     return x_ref;

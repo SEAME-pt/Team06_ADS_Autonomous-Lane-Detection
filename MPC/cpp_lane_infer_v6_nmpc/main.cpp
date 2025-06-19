@@ -143,7 +143,7 @@ int main() {
         } */
        
        frameCount++;
-       cv::imshow("Lane Detection", result);
+       //cv::imshow("Lane Detection", result);
        if (cv::waitKey(1) == 'q') break;
        
        frame.release();
