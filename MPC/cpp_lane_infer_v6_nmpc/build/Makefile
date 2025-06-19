@@ -258,6 +258,33 @@ nmpc_controller.cpp.s:
 	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/nmpc_controller.cpp.s
 .PHONY : nmpc_controller.cpp.s
 
+polyfit.o: polyfit.cpp.o
+
+.PHONY : polyfit.o
+
+# target to build an object file
+polyfit.cpp.o:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/polyfit.cpp.o
+.PHONY : polyfit.cpp.o
+
+polyfit.i: polyfit.cpp.i
+
+.PHONY : polyfit.i
+
+# target to preprocess a source file
+polyfit.cpp.i:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/polyfit.cpp.i
+.PHONY : polyfit.cpp.i
+
+polyfit.s: polyfit.cpp.s
+
+.PHONY : polyfit.s
+
+# target to generate assembly for a file
+polyfit.cpp.s:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/polyfit.cpp.s
+.PHONY : polyfit.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -282,6 +309,9 @@ help:
 	@echo "... nmpc_controller.o"
 	@echo "... nmpc_controller.i"
 	@echo "... nmpc_controller.s"
+	@echo "... polyfit.o"
+	@echo "... polyfit.i"
+	@echo "... polyfit.s"
 .PHONY : help
 
 

@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/lane_detection.dir/main.cpp.o"
   "CMakeFiles/lane_detection.dir/mask_processor.cpp.o"
   "CMakeFiles/lane_detection.dir/nmpc_controller.cpp.o"
+  "CMakeFiles/lane_detection.dir/polyfit.cpp.o"
   "lane_detection"
   "lane_detection.pdb"
 )

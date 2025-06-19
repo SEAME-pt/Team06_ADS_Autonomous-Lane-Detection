@@ -109,9 +109,22 @@ CMakeFiles/lane_detection.dir/nmpc_controller.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/nmpc_controller.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/nmpc_controller.cpp -o CMakeFiles/lane_detection.dir/nmpc_controller.cpp.s
 
+CMakeFiles/lane_detection.dir/polyfit.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/polyfit.cpp.o: ../polyfit.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lane_detection.dir/polyfit.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lane_detection.dir/polyfit.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/polyfit.cpp
+
+CMakeFiles/lane_detection.dir/polyfit.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/polyfit.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/polyfit.cpp > CMakeFiles/lane_detection.dir/polyfit.cpp.i
+
+CMakeFiles/lane_detection.dir/polyfit.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/polyfit.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/polyfit.cpp -o CMakeFiles/lane_detection.dir/polyfit.cpp.s
+
 CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o: CMakeFiles/lane_detection.dir/flags.make
 CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp
 
 CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.i: cmake_force
@@ -128,6 +141,7 @@ lane_detection_OBJECTS = \
 "CMakeFiles/lane_detection.dir/lane_detection.cpp.o" \
 "CMakeFiles/lane_detection.dir/mask_processor.cpp.o" \
 "CMakeFiles/lane_detection.dir/nmpc_controller.cpp.o" \
+"CMakeFiles/lane_detection.dir/polyfit.cpp.o" \
 "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o"
 
 # External object files for target lane_detection
@@ -137,6 +151,7 @@ lane_detection: CMakeFiles/lane_detection.dir/main.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/lane_detection.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/mask_processor.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/nmpc_controller.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/polyfit.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/build.make
 lane_detection: /usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.8.0
@@ -218,7 +233,7 @@ lane_detection: /usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so
 lane_detection: /usr/lib/aarch64-linux-gnu/libnvonnxparser.so
 lane_detection: /usr/local/lib/libcasadi.so
 lane_detection: CMakeFiles/lane_detection.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable lane_detection"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable lane_detection"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lane_detection.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
