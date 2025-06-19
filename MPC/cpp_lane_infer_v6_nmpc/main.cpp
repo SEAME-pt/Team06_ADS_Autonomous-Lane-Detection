@@ -1,6 +1,6 @@
 #include "lane_detection.hpp"
 #include "nmpc_controller.hpp"
-#include "polyfit.cpp"
+#include "polyfit.hpp"
 #include <iostream>
 #include <chrono>
 #include <vector>

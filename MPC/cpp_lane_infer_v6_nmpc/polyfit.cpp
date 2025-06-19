@@ -1,8 +1,5 @@
-#include <opencv2/opencv.hpp> // Para cv::Point
-#include "lane_detection.hpp"
+#include "polyfit.hpp"
 
-#include <vector>
-#include <cmath>
 
 // Estrutura para coeficientes do polinômio
 struct PolyCoefficients {
