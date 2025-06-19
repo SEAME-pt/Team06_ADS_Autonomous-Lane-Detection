@@ -1,11 +1,6 @@
 #include "polyfit.hpp"
 
 
-// Estrutura para coeficientes do polinômio
-struct PolyCoefficients {
-    double a0, a1, a2; // y = a0 + a1*x + a2*x^2
-    bool valid;
-};
 
 // Função para ajustar um polinômio de 2º grau via regressão linear
 PolyCoefficients fitPolynomial(const LaneData& laneData) {
