@@ -146,7 +146,6 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
     cv::Mat result_frame = original_frame.clone();
 
     laneData.valid = !medianPoints.empty();
-    laneData.timestamp = std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
     laneData.num_points = 0;
 
     if (laneData.valid) {
@@ -154,7 +153,7 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
             if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
                 // Nova projeção: 0.0006 m/pixel baseada em 0.25 m entre linhas
-                laneData.points[laneData.num_points].x = 0.001020408 * (medianPoints[i].x - (width/2));
+                laneData.points[laneData.num_points].x = 0.0015625 * (medianPoints[i].x - (width/2));
                 laneData.points[laneData.num_points].y = 0.001623 * ((height*0.95) - medianPoints[i].y);
                 laneData.num_points++;
             }

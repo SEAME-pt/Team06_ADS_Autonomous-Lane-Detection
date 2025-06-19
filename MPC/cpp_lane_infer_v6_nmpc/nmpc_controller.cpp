@@ -62,7 +62,7 @@ void NMPCController::setup_nmpc() {
         opti_.subject_to(-delta_max_ <= u_k(0) <= delta_max_);
         opti_.subject_to(-a_max_ <= u_k(1) <= a_max_);
     }
-    
+
     opti_.minimize(cost);
     casadi::Dict opts;
     opts["ipopt.print_level"] = 0;
@@ -79,19 +79,19 @@ std::vector<double> NMPCController::compute_control(const std::vector<double>& x
 
     // Define estado inicial
     opti_.set_value(x0_param_, x0);
-    
+
     // Define trajetória de referência
     for (int k = 0; k < Np_; ++k) {
         opti_.set_value(x_ref_params_[k], x_ref[k]);
     }
-    opti_.set_value(x_ref_N_, x_ref[Np_ - 1]); // Última referência
-    
+    opti_.set_value(x_ref_N_, x_ref[0]); // Última referência
+
     // Resolve o problema
     auto sol = opti_.solve();
-    
+
     // Extrai o primeiro controle
     casadi::DM u_opt = sol.value(U_); // Acessa a variável U
     std::vector<double> result = {u_opt(0, 0).scalar(), u_opt(1, 0).scalar()};
-    
+
     return result;
 }

@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp
-FServo.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.hpp
-
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.hpp
 cmath
 -
@@ -32,16 +28,6 @@ unistd.h
 csignal
 -
 atomic
--
-chrono
--
-
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/lane_detection.cpp
-lane_detection.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/lane_detection.hpp
-mask_processor.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/mask_processor.hpp
-iostream
 -
 chrono
 -
@@ -75,22 +61,6 @@ vector
 -
 ../FServo/FServo.hpp
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.hpp
-
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/mask_processor.cpp
-mask_processor.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/mask_processor.hpp
-
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/mask_processor.hpp
-opencv2/opencv.hpp
--
-vector
--
-
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/nmpc_controller.cpp
-nmpc_controller.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/nmpc_controller.hpp
-cmath
--
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v6_nmpc/nmpc_controller.hpp
 casadi/casadi.hpp
