@@ -7,7 +7,15 @@
 #include <vector>
 #include <cmath>
 
-LaneData fitPolynomial(const LaneData& data);
-LaneData generateReference(const LaneData& data, int someParam);
+
+// Estrutura para coeficientes do polinômio
+struct PolyCoefficients {
+    double a0, a1, a2; // y = a0 + a1*x + a2*x^2
+    bool valid;
+};
+
+
+PolyCoefficients fitPolynomial(const LaneData& data);
+std::vector<std::vector<double>> generateReference(const LaneData& data, int someParam);
 
 #endif
