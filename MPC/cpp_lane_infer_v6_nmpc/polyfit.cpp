@@ -1,4 +1,6 @@
 #include <opencv2/opencv.hpp> // Para cv::Point
+#include "lane_detection.hpp"
+
 #include <vector>
 #include <cmath>
 
