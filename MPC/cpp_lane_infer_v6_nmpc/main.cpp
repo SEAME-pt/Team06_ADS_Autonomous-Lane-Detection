@@ -1,11 +1,30 @@
 #include "lane_detection.hpp"
 #include "nmpc_controller.hpp"
-#include "polyfit.hpp"
 #include <iostream>
 #include <chrono>
 #include <vector>
 #include "../FServo/FServo.hpp"
 
+// Gerar trajetória de referência
+std::vector<std::vector<double>> generateReference(const LaneData& laneData, int frameCount, LineIntersect intersect, double v_ref = 1.0, int Np = 10) {
+    std::vector<std::vector<double>> x_ref(Np);
+    if (!laneData.valid || laneData.num_points < 2) {
+        std::cout << " laneData invalid!!!" << "\n";
+        for (int k = 0; k < Np; ++k) {
+            x_ref[k] = {0.0, 0.0, 0.0, v_ref};
+        }
+        return x_ref;
+    }
+
+    for (int k = 0; k < Np; ++k) {
+        int idx = std::min(k * laneData.num_points / Np, laneData.num_points - 1);
+        double x = laneData.points[idx].x;
+        double y = laneData.points[idx].y;
+        double psi = intersect.psi;
+        x_ref[k] = {y, -x, psi, v_ref};
+    }
+    return x_ref;
+}
 
 void visualize_pixel_markers(cv::Mat& frame) {
     int y_pos = static_cast<int>(0.95 * frame.rows); // 95% da altura (y = 342 para 448px)
@@ -37,6 +56,39 @@ void visualize_pixel_markers(cv::Mat& frame) {
     }
     cv::imshow("Pixel Markers", marker_frame);
 }
+
+void deBug(LineIntersect intersect, int frameCount){
+
+/*     if (intersect.valid && frameCount % 20 == 0) {
+        std::cout << "Left Top: (" << intersect.left_top.x << ", " << intersect.left_top.y << ")" << std::endl;
+        std::cout << "Left Bottom: (" << intersect.left_bottom.x << ", " << intersect.left_bottom.y << ")" << std::endl;
+        std::cout << "Right Top: (" << intersect.right_top.x << ", " << intersect.right_top.y << ")" << std::endl;
+        std::cout << "Right Bottom: (" << intersect.right_bottom.x << ", " << intersect.right_bottom.y << ")" << std::endl;
+    } */
+        
+    if (intersect.valid && frameCount % 20 == 0) {
+    
+        std::cout << "ratio: " << intersect.ratio_top << std::endl;
+        std::cout << "xs_b: " << intersect.xs_b << std::endl;
+        std::cout << "slope: " << intersect.slope << std::endl;
+        std::cout << "Psi: " << intersect.psi << std::endl;
+        std::cout << "Psi_rad: " << intersect.psi * 180.0 / M_PI << " deg" << std::endl << std::endl;
+    }
+    /*         if (laneData.valid && frameCount % 20 == 0) {
+    for (int i = 0; i < laneData.num_points; ++i) {
+        std::cout << "  Ponto " << i << ": (" << laneData.points[i].x << ", " << laneData.points[i].y << ")" << std::endl;
+        std::cout << "x: " << x_ref[i][1] << ", y: " << x_ref[i][0] << ", psi_ref: " << x_ref[i][2] << std::endl;
+    }
+    //std::cout << "  Ponto: (" << laneData.points[9].x << ", " << laneData.points[9].y << ")" << std::endl;
+    std::cout << "  Delta: " + std::to_string(delta * 180.0 / M_PI) + "deg" << std::endl;
+    std::cout << " ******************************** X   " << x0[0] << ")" << std::endl;
+    std::cout << " ******************************** Y   " << x0[1] << ")" << std::endl;
+    std::cout << " ******************************** Psi " << x0[2] << ")" << std::endl;
+    std::cout << " ******************************** Vel " << x0[3] << ")" << std::endl;
+    std::cout << " ******************************** Acel " << a << ")" << std::endl;
+    } */
+}
+
 
 void bicicleModel(std::vector<double>& x0, double a, double delta){
     // Atualizar estado (para próxima iteração) - Dinamic Model
@@ -90,13 +142,14 @@ int main() {
         auto outputs = trt.infer(input);
         std::vector<cv::Point> medianPoints;
         LaneData laneData;
-        auto result = postprocess(outputs[0].data(), outputs[1].data(), frame, medianPoints, laneData);
+        LineIntersect intersect;
+        auto result = postprocess(outputs[0].data(), outputs[1].data(), frame, medianPoints, laneData, intersect);
         
         // Visualizar marcadores de pixels
         //visualize_pixel_markers(result);
         
         // Executar NMPC
-        std::vector<std::vector<double>> x_ref = generateReference(laneData, frameCount);
+        std::vector<std::vector<double>> x_ref = generateReference(laneData, frameCount, intersect);
         std::vector<double> control = nmpc.compute_control(x0, x_ref);
         double delta = control[0]; // rad
         double a = 0; //control[1];     // m/s² (não usado por enquanto)
@@ -128,26 +181,13 @@ int main() {
         cv::Point lineEnd(centerX, centerY - 20);
         cv::line(result, lineStart, lineEnd, cv::Scalar(250, 250, 250), 2);
         
-        /*         if (laneData.valid && frameCount % 20 == 0) {
-            for (int i = 0; i < laneData.num_points; ++i) {
-                std::cout << "  Ponto " << i << ": (" << laneData.points[i].x << ", " << laneData.points[i].y << ")" << std::endl;
-                std::cout << "x: " << x_ref[i][1] << ", y: " << x_ref[i][0] << ", psi_ref: " << x_ref[i][2] << std::endl;
-            }
-            //std::cout << "  Ponto: (" << laneData.points[9].x << ", " << laneData.points[9].y << ")" << std::endl;
-            std::cout << "  Delta: " + std::to_string(delta * 180.0 / M_PI) + "deg" << std::endl;
-            std::cout << " ******************************** X   " << x0[0] << ")" << std::endl;
-            std::cout << " ******************************** Y   " << x0[1] << ")" << std::endl;
-            std::cout << " ******************************** Psi " << x0[2] << ")" << std::endl;
-            std::cout << " ******************************** Vel " << x0[3] << ")" << std::endl;
-            std::cout << " ******************************** Acel " << a << ")" << std::endl;
-        } */
+        deBug(intersect, frameCount);
+        frameCount++;
+        cv::imshow("Lane Detection", result);
+        if (cv::waitKey(1) == 'q') break;
        
-       frameCount++;
-       //cv::imshow("Lane Detection", result);
-       if (cv::waitKey(1) == 'q') break;
-       
-       frame.release();
-       result.release();
+        frame.release();
+        result.release();
     }
     
     servo.set_steering(0);
@@ -156,35 +196,6 @@ int main() {
     return 0;
 }
 
-/* // Gerar trajetória de referência
-std::vector<std::vector<double>> generateReference(const LaneData& laneData, int frameCount, double v_ref = 1.0, int Np = 10) {
-    std::vector<std::vector<double>> x_ref(Np);
-    if (!laneData.valid || laneData.num_points < 2) {
-        std::cout << " laneData invalid!!!" << "\n";
-        for (int k = 0; k < Np; ++k) {
-            x_ref[k] = {0.0, 0.0, 0.0, v_ref};
-        }
-        return x_ref;
-    }
-
-    for (int k = 0; k < Np; ++k) {
-        int idx = std::min(k * laneData.num_points / Np, laneData.num_points - 1);
-        double x = laneData.points[idx].x;
-        double y = laneData.points[idx].y;
-        int next_idx = std::min(idx + 1, laneData.num_points - 1);
-        double dx = laneData.points[next_idx].x - x;
-        double dy = laneData.points[next_idx].y - y;
-        double psi = atan2(dx, 0);
-        x_ref[k] = {y, -x, psi, v_ref};
-        if (frameCount % 20 == 0){
-            std::cout << "k: " << k << "| x: " << x << "| y: " << y; 
-            std::cout << "|  dx: " << dx << "| psi_ref: " << psi << std::endl;
-        }
-    }
-    if (frameCount % 20 == 0)
-        std::cout << "************************------*********************" << std::endl;
-    return x_ref;
-} */
 
 
 /* std::vector<std::vector<double>> generateReference(const LaneData& laneData, int frameCount, double v_ref = 1.0, int Np = 10) {

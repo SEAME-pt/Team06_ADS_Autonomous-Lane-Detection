@@ -84,7 +84,7 @@ std::vector<double> NMPCController::compute_control(const std::vector<double>& x
     for (int k = 0; k < Np_; ++k) {
         opti_.set_value(x_ref_params_[k], x_ref[k]);
     }
-    opti_.set_value(x_ref_N_, x_ref[0]); // Última referência
+    opti_.set_value(x_ref_N_, x_ref[9]); // Última referência
 
     // Resolve o problema
     auto sol = opti_.solve();

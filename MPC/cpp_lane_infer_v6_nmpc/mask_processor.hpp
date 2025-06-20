@@ -3,18 +3,14 @@
 
 #include <opencv2/opencv.hpp>
 #include <vector>
-
-struct LineCoefficients {
-    double m, b;
-    bool valid;
-};
+#include "lane_detection.hpp"
 
 class MaskProcessor {
 public:
     MaskProcessor();
     ~MaskProcessor();
     void processMask(const cv::Mat& mask, cv::Mat& output, std::vector<cv::Point>& medianPoints);
-    LineCoefficients linearRegression(const std::vector<cv::Point>& points);
+    LineCoef linearRegression(const std::vector<cv::Point>& points);
 
 private:
     int findFirstWhite(const cv::Mat& row);

@@ -3,8 +3,8 @@
 MaskProcessor::MaskProcessor() {}
 MaskProcessor::~MaskProcessor() {}
 
-LineCoefficients MaskProcessor::linearRegression(const std::vector<cv::Point>& points) {
-    LineCoefficients coeffs = {0.0, 0.0, false};
+LineCoef MaskProcessor::linearRegression(const std::vector<cv::Point>& points) {
+    LineCoef coeffs = {0.0, 0.0, false};
     if (points.size() < 2) return coeffs;
 
     double sumX = 0.0, sumY = 0.0, sumXY = 0.0, sumXX = 0.0;
@@ -70,8 +70,8 @@ void MaskProcessor::processMask(const cv::Mat& mask, cv::Mat& output, std::vecto
         if (right_x != -1) right_edge_points.push_back(cv::Point(right_x, y));
     }
 
-    LineCoefficients left_coeffs = linearRegression(left_edge_points);
-    LineCoefficients right_coeffs = linearRegression(right_edge_points);
+    LineCoef left_coeffs = linearRegression(left_edge_points);
+    LineCoef right_coeffs = linearRegression(right_edge_points);
 
     cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
 
