@@ -56,7 +56,6 @@ void TensorRTInference::allocateBuffers() {
 std::vector<std::vector<float>> TensorRTInference::infer(const std::vector<float>& inputData) {
     cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
     context->executeV2(bindings.data());
-
     std::vector<std::vector<float>> outputs;
     for (auto& out : outputBuffers) {
         cudaMemcpy(out.host, out.device, out.size, cudaMemcpyDeviceToHost);
@@ -74,7 +73,6 @@ CSICamera::CSICamera(int width, int height, int fps) {
              << "nvvidconv flip-method=0 ! video/x-raw, width=" << width
              << ", height=" << height << ", format=BGRx ! "
              << "videoconvert ! video/x-raw, format=BGR ! appsink";
-
     cap.open(pipeline.str(), cv::CAP_GSTREAMER);
 }
 
@@ -126,13 +124,11 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
                         std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect) {
     const int height = original_frame.rows;
     const int width = original_frame.cols;
-
     int roi_start_y = static_cast<int>(0.50 * height); // 224
     int roi_end_y = static_cast<int>(0.95 * height);   // 425.6
     int roi_height = roi_end_y - roi_start_y;
 
     cv::Rect roi(0, roi_start_y, width, roi_height);
-
     cv::Mat da_logits(2, height * width, CV_32FC1, da_output);
     cv::Mat da_mask(height, width, CV_8UC1, cv::Scalar(0));
 
@@ -153,7 +149,7 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
     processor.processMask(da_resized, mask_output, medianPoints);
 
     cv::Mat result_frame = original_frame.clone();
-
+    
     laneData.valid = !medianPoints.empty();
     laneData.num_points = 0;
 
@@ -196,7 +192,6 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         
         LineCoef left_coeffs = processor.linearRegression(left_edge_points);
         LineCoef right_coeffs = processor.linearRegression(right_edge_points);
-
         intersect = findIntersect(left_coeffs, right_coeffs, height, width);
         
         if (left_coeffs.valid && right_coeffs.valid) {
@@ -225,12 +220,12 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
                 cv::line(result_frame, roi_median_points.front(), roi_median_points.back(), cv::Scalar(0, 255, 0), 2);
             }
 
-            if (intersect.valid) {
+            /*if (intersect.valid) {
                 cv::circle(result_frame, intersect.xl_t, 5, cv::Scalar(0, 255, 255), -1);
                 cv::circle(result_frame, intersect.xl_b, 5, cv::Scalar(0, 255, 255), -1);
                 cv::circle(result_frame, intersect.xr_t, 5, cv::Scalar(255, 255, 0), -1);
                 cv::circle(result_frame, intersect.xr_b, 5, cv::Scalar(255, 255, 0), -1);
-            }
+            } */
         }
     }
     return result_frame;
@@ -259,6 +254,5 @@ LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_
 
     return intersect;
 }
-
 /**************************************************************************************/
 

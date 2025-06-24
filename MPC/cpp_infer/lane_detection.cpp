@@ -150,16 +150,13 @@ private:
 std::vector<float> preprocess_frame(const cv::Mat& frame) {
     cv::Mat resized;
     cv::resize(frame, resized, cv::Size(448, 448));
-    cv::Mat chw(3, 448 * 448, CV_32FC1);
+    resized.convertTo(resized, CV_32FC3, 1.0 / 255); // Normaliza
 
-    std::vector<float> inputData(3 * 448 * 448);
-    int idx = 0;
-    for (int c = 0; c < 3; ++c) {
-        for (int i = 0; i < 448; ++i) {
-            for (int j = 0; j < 448; ++j) {
-                inputData[idx++] = resized.at<cv::Vec3b>(i, j)[2 - c] / 255.0f;  // BGR -> RGB
-            }
-        }
+    std::vector<cv::Mat> channels(3);
+    cv::split(resized, channels);
+    std::vector<float> inputData;
+    for (int i = 2; i >= 0; --i) { // BGR to RGB
+        inputData.insert(inputData.end(), (float*)channels[i].datastart, (float*)channels[i].dataend);
     }
     return inputData;
 }

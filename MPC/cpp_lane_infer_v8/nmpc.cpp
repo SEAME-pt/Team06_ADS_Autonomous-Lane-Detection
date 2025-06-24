@@ -29,44 +29,44 @@ NMPCController::NMPCController(double L, double dt, int N, double delta_max, dou
     std::vector<SX> w; // Todas as variáveis
     std::vector<SX> g; // Restrições
     SX J = 0;          // Função de custo
-    std::vector<SX> lbw, ubw; // Limites das variáveis
-    std::vector<SX> lbg, ubg; // Limites das restrições
+    std::vector<std::vector<double>> lbw, ubw; // Limites das variáveis
+    std::vector<std::vector<double>> lbg, ubg; // Limites das restrições
 
     // Estados e controles ao longo do horizonte
     std::vector<SX> X(N + 1), U(N);
     for (int k = 0; k < N + 1; ++k) {
         X[k] = SX::sym("X_" + std::to_string(k), 3);
         w.push_back(X[k]);
-        lbw.push_back(std::vector<double>{-inf, -inf, -inf});
-        ubw.push_back(std::vector<double>{inf, inf, inf});
+        lbw.push_back({-inf, -inf, -inf});
+        ubw.push_back({inf, inf, inf});
     }
     for (int k = 0; k < N; ++k) {
         U[k] = SX::sym("U_" + std::to_string(k), 1);
         w.push_back(U[k]);
-        lbw.push_back(std::vector<double>{-delta_max});
-        ubw.push_back(std::vector<double>{delta_max});
+        lbw.push_back({-delta_max});
+        ubw.push_back({delta_max});
     }
 
     // Estado inicial
     SX x0 = SX::sym("x0", 3);
     g.push_back(X[0] - x0);
-    lbg.push_back(std::vector<double>{0, 0, 0});
-    ubg.push_back(std::vector<double>{0, 0, 0});
+    lbg.push_back({0, 0, 0});
+    ubg.push_back({0, 0, 0});
 
     // Dinâmica
     for (int k = 0; k < N; ++k) {
         std::vector<SX> f_in = {X[k], U[k]};
         SX xk_next = f(f_in)[0];
         g.push_back(xk_next - X[k + 1]);
-        lbg.push_back(std::vector<double>{0, 0, 0});
-        ubg.push_back(std::vector<double>{0, 0, 0});
+        lbg.push_back({0, 0, 0});
+        ubg.push_back({0, 0, 0});
     }
 
     // Função de custo
-    SX x_ref = SX::sym("x_ref", N, 2); // [x_ref, y_ref]
+    SX x_ref = SX::sym("x_ref", 2 * N); // Vetor [x_ref_0, y_ref_0, x_ref_1, y_ref_1, ...]
     for (int k = 0; k < N; ++k) {
-        J += w_x * pow(X[k + 1](0) - x_ref(k, 0), 2);
-        J += w_y * pow(X[k + 1](1) - x_ref(k, 1), 2);
+        J += w_x * pow(X[k + 1](0) - x_ref(2 * k), 2);
+        J += w_y * pow(X[k + 1](1) - x_ref(2 * k + 1), 2);
         J += w_psi * pow(X[k + 1](2), 2); // psi_ref = 0
         if (k < N) {
             J += w_delta * pow(U[k](0), 2);
@@ -75,7 +75,9 @@ NMPCController::NMPCController(double L, double dt, int N, double delta_max, dou
 
     // Configuração do solver
     Dict opts;
-    opts["ipopt.print_level"] = 0;
+    opts["ipopt.print_level"] = 0; // Suprime saída do IPOPT
+    opts["ipopt.sb"] = "yes";      // Suprime banner do IPOPT
+    opts["print_time"] = 0;        // Suprime estatísticas de tempo
     opts["ipopt.max_iter"] = 100;
     opts["ipopt.tol"] = 1e-6;
     SXDict nlp = {{"x", vertcat(w)}, {"f", J}, {"g", vertcat(g)}, {"p", vertcat(x0, x_ref)}};
@@ -86,7 +88,6 @@ std::vector<double> NMPCController::compute_control(const std::vector<double>& x
     if (x0.size() < 3) {
         throw std::runtime_error("Estado inicial deve ter pelo menos 3 elementos");
     }
-
     // Preparar trajetória de referência
     std::vector<double> x_ref(N_ * 2, 0.0);
     int points_used = std::min(laneData.num_points, N_);
@@ -101,7 +102,7 @@ std::vector<double> NMPCController::compute_control(const std::vector<double>& x
     }
 
     // Estado inicial
-    std::vector<double> state = {x0[0], x0zieli, psi};
+    std::vector<double> state = {x0[0], x0[1], psi};
 
     // Preparar argumentos do solver
     std::vector<double> w0((N_ + 1) * 3 + N_, 0.0);
@@ -143,7 +144,7 @@ std::vector<double> NMPCController::compute_control(const std::vector<double>& x
 
     DMDict arg = {{"x0", w0}, {"lbx", lbx}, {"ubx", ubx}, {"lbg", lbg}, {"ubg", ubg}, {"p", p}};
     DMDict res = solver_(arg);
-    std::vector<double> w_opt = res.at("x");
+    std::vector<double> w_opt(res.at("x").get_elements());
 
     // Extrair o primeiro controle
     return {w_opt[(N_ + 1) * 3]};
