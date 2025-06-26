@@ -1,4 +1,7 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o"
+  "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o"
+  "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o"
   "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o"
   "CMakeFiles/lane_detection.dir/lane.cpp.o"
   "CMakeFiles/lane_detection.dir/main.cpp.o"

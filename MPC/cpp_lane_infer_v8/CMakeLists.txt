@@ -36,6 +36,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CASADI_INCLUDE_DIRS}
     ../FServo
+    ../BackMotors
+    ../Control
 )
 
 # Adicionar executável
@@ -45,6 +47,9 @@ add_executable(lane_detection
     mask.cpp
     nmpc.cpp
     ../FServo/FServo.cpp
+    ../BackMotors/BackMotors.cpp
+    ../Control/ControlAssembly.cpp
+    ../Control/Controller.cpp
 )
 
 # Linkar bibliotecas

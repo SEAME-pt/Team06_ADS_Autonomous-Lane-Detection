@@ -4,6 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp" "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o"
+  "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp" "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o"
+  "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp" "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o"
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp" "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o"
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/lane.cpp" "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles/lane_detection.dir/lane.cpp.o"
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/main.cpp" "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles/lane_detection.dir/main.cpp.o"
@@ -18,6 +21,8 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/src/tensorrt/include"
   "../"
   "../../FServo"
+  "../../BackMotors"
+  "../../Control"
   "/usr/include/opencv4"
   )
 

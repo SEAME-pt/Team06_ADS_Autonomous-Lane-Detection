@@ -4,6 +4,7 @@
 #include <chrono>
 #include <vector>
 #include "../FServo/FServo.hpp"
+#include "../Control/ControlAssembly.hpp"
 
 void visualize_pixel_markers(cv::Mat& frame) {
     int y_pos = static_cast<int>(0.95 * frame.rows); // 95% da altura (y = 342 para 448px)
@@ -85,6 +86,15 @@ int main() {
         if (!servo.init_servo()) {
             throw std::runtime_error("Falha ao inicializar o servo");
         }
+
+        std::cout << "Definindo ângulo de direção para -45 graus...\n";
+        servo.set_steering(-45);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+
+        std::cout << "Definindo ângulo de direção para +45 graus...\n";
+        servo.set_steering(45);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+
         std::cout << "Servo inicializado com sucesso\n";
         servo.set_steering(0);
     } catch (const std::exception& e) {
@@ -92,6 +102,9 @@ int main() {
         return -1;
     }
     
+    // Inicializar joystick
+    //ControlAssembly controlAssembly;
+
     std::cout << "Pressione 'q' para sair" << std::endl;
     
     auto lastTime = std::chrono::steady_clock::now();
@@ -118,7 +131,7 @@ int main() {
         
 
         // Visualizar marcadores de pixels
-        visualize_pixel_markers(result);
+        //visualize_pixel_markers(result);
 
         // Atualizar estado com psi do intersect
         if (intersect.valid) {
@@ -126,7 +139,7 @@ int main() {
         }
         // Estimar x, y (desvio lateral a partir do primeiro ponto da mediana)
         if (laneData.valid && laneData.num_points > 0) {
-            x0[1] = laneData.points[0].x; // y é o desvio lateral
+            x0[1] = intersect.offset_cm; // y é o desvio lateral
             x0[0] = 0.0; // Assume x=0 (posição longitudinal inicial)
         }
 
@@ -136,7 +149,7 @@ int main() {
         
         // Converter delta de radianos para graus e limitar
         int steering_angle = static_cast<int>(delta * 180.0 / M_PI);
-        steering_angle = std::max(-20, std::min(20, steering_angle));
+        steering_angle = std::max(-35, std::min(35, steering_angle));
         
         servo.set_steering(steering_angle);
         
@@ -149,6 +162,8 @@ int main() {
         cv::putText(result, desvText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 0), 2);
         std::string psiText = "Psi(rad): " + std::to_string(x0[2]) + " (deg): " + std::to_string(x0[2] * 180.0 / M_PI);
         cv::putText(result, psiText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 0), 2);
+        std::string steeringText = "Steering: " + std::to_string(steering_angle) + " deg";
+        cv::putText(result, steeringText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 0), 2);
         
         int centerX = result.cols / 2 + 22.5;
         int centerY = result.rows;
@@ -165,7 +180,8 @@ int main() {
         frame.release();
         result.release();
     }
-    
+
+    // Parar servo e motores
     servo.set_steering(0);
     cam.stop();
     cv::destroyAllWindows();

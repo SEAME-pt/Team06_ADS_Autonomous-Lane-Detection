@@ -122,13 +122,55 @@ CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-L
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.s
 
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s
+
 # Object files for target lane_detection
 lane_detection_OBJECTS = \
 "CMakeFiles/lane_detection.dir/main.cpp.o" \
 "CMakeFiles/lane_detection.dir/lane.cpp.o" \
 "CMakeFiles/lane_detection.dir/mask.cpp.o" \
 "CMakeFiles/lane_detection.dir/nmpc.cpp.o" \
-"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o"
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o"
 
 # External object files for target lane_detection
 lane_detection_EXTERNAL_OBJECTS =
@@ -138,6 +180,9 @@ lane_detection: CMakeFiles/lane_detection.dir/lane.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/mask.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/nmpc.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/build.make
 lane_detection: /usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.8.0
 lane_detection: /usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.8.0
@@ -218,7 +263,7 @@ lane_detection: /usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so
 lane_detection: /usr/lib/aarch64-linux-gnu/libnvonnxparser.so
 lane_detection: /usr/local/lib/libcasadi.so
 lane_detection: CMakeFiles/lane_detection.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable lane_detection"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable lane_detection"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lane_detection.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

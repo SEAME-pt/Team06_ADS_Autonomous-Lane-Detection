@@ -123,6 +123,87 @@ lane_detection/fast:
 	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/build
 .PHONY : lane_detection/fast
 
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.s
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.s
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s
+
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s:
+	$(MAKE) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s
+
 home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o
 
 .PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.o
@@ -267,6 +348,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... lane_detection"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.s"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.o"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.i"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.s"

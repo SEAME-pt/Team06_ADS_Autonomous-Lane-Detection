@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wall -Ofast   -std=gnu++17
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8 -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/../FServo -isystem /usr/include/opencv4 
+CXX_INCLUDES = -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8 -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/../FServo -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/../BackMotors -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v8/../Control -isystem /usr/include/opencv4 
 
