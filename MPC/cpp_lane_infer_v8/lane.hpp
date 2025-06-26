@@ -44,14 +44,21 @@ struct LaneData {
 };
 
 struct LineIntersect {
-    cv::Point2f xl_t;    // Interseção da linha esquerda com roi_start_y (pixels)
-    cv::Point2f xl_b;    // Interseção da linha esquerda com roi_end_y (pixels)
-    cv::Point2f xr_t;    // Interseção da linha direita com roi_start_y (pixels)
-    cv::Point2f xr_b;    // Interseção da linha direita com roi_end_y (pixels)
-    float ratio_top;     // Razão da posição relativa na margem superior
-    float xs_b;          // Ponto x da mediana estimada na margem inferior
-    float slope;         // Inclinação da mediana estimada
-    float psi;           // Yaw (ângulo) da mediana estimada
+    cv::Point2f xl_t;   // Interseção da linha esquerda com roi_start_y (pixels)
+    cv::Point2f xl_b;   // Interseção da linha esquerda com roi_end_y (pixels)
+    cv::Point2f xr_t;   // Interseção da linha direita com roi_start_y (pixels)
+    cv::Point2f xr_b;   // Interseção da linha direita com roi_end_y (pixels)
+    float ratio_top;    // Razão da posição relativa na margem superior
+    float xs_b;         // Ponto x da mediana estimada na margem inferior
+    float slope;        // Inclinação da mediana estimada
+    float psi;          // Yaw (ângulo) da mediana estimada
+    float x_px_t;       // pixels a meio da imagem
+    float x_px_b;       // pixeis na base do roi
+    float scaleFactor_t;// scale factor top
+    float scaleFactor_b;// scale factor bottom
+    float var_a;        // variavel a    
+    float var_b;        // variavel b
+    float offset_cm;    // offset no centro de massa do carro
     bool valid;
 };
 
@@ -94,5 +101,7 @@ private:
 std::vector<float>  preprocess_frame(const cv::Mat& frame);
 cv::Mat             postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect);
 LineIntersect       findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width);
+void drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y);
+
 
 #endif

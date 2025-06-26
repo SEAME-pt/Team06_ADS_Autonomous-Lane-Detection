@@ -149,20 +149,6 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
     processor.processMask(da_resized, mask_output, medianPoints);
 
     cv::Mat result_frame = original_frame.clone();
-    
-    laneData.valid = !medianPoints.empty();
-    laneData.num_points = 0;
-
-    if (laneData.valid) {
-        int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
-        for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
-            if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
-                laneData.points[laneData.num_points].x = 0.0015625 * (medianPoints[i].x - (width/2));
-                laneData.points[laneData.num_points].y = 0.001623 * ((height*0.95) - medianPoints[i].y);
-                laneData.num_points++;
-            }
-        }
-    }
 
     if (!medianPoints.empty()) {
         std::vector<cv::Point> left_edge_points, right_edge_points;
@@ -193,8 +179,83 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         LineCoef left_coeffs = processor.linearRegression(left_edge_points);
         LineCoef right_coeffs = processor.linearRegression(right_edge_points);
         intersect = findIntersect(left_coeffs, right_coeffs, height, width);
+        drawLanes(left_coeffs, right_coeffs, result_frame, medianPoints, roi_start_y, roi_end_y);
+    }
+
+    laneData.valid = !medianPoints.empty();
+    laneData.num_points = 0;
+
+    if (laneData.valid) {
+        int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
+        for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
+            if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
+                laneData.points[laneData.num_points].x = 0.000669 * (medianPoints[i].x - (width/2) + 22.5);
+                laneData.points[laneData.num_points].y = 0.001623 * ((height*0.95) - medianPoints[i].y);
+                laneData.num_points++;
+            }
+        }
+    }
+
+    return result_frame;
+}
+
+/**************************************************************************************/
+LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width) {
+    LineIntersect intersect;
+    intersect.valid = false;
+
+    int roi_start_y = static_cast<int>(0.50 * height); // y = 224
+    int roi_end_y = static_cast<int>(0.95 * height);   // y = 426
+
+    if (left_coeffs.valid && right_coeffs.valid) {
+        intersect.xl_t = { static_cast<float>(left_coeffs.m * roi_start_y + left_coeffs.b), static_cast<float>(roi_start_y) };
+        intersect.xl_b = { static_cast<float>(left_coeffs.m * roi_end_y + left_coeffs.b), static_cast<float>(roi_end_y) };
+        intersect.xr_t = { static_cast<float>(right_coeffs.m * roi_start_y + right_coeffs.b), static_cast<float>(roi_start_y) };
+        intersect.xr_b = { static_cast<float>(right_coeffs.m * roi_end_y + right_coeffs.b), static_cast<float>(roi_end_y) };
         
-        if (left_coeffs.valid && right_coeffs.valid) {
+        intersect.ratio_top = (intersect.xr_t.x - width / 2.0f) / (intersect.xr_t.x - intersect.xl_t.x);
+        intersect.xs_b = intersect.xr_b.x - intersect.ratio_top * (intersect.xr_b.x - intersect.xl_b.x);
+        intersect.slope = (intersect.xs_b - width / 2.0f + 22.5) / (roi_end_y - roi_start_y);
+        intersect.psi = std::atan(intersect.slope);
+        intersect.valid = true;
+
+        // Pixels on top and bottom image
+        intersect.x_px_t = intersect.xr_t.x - intersect.xl_t.x;
+        intersect.x_px_b = intersect.xr_b.x - intersect.xl_b.x;
+
+        // Scale Factor | d = s(y).x_px + b | with b = 0
+        intersect.scaleFactor_t = 0.26 / intersect.x_px_t;
+        intersect.scaleFactor_b = 0.26 / intersect.x_px_b;
+
+        // var a | s(y) = a * y + b (=) a = delta(s(y)) / delta(y) |,  with b = 0 
+        intersect.var_a = (intersect.scaleFactor_b - intersect.scaleFactor_t) / (intersect.xl_b.y - intersect.xl_t.y);
+
+        // var b para o top que será igual ao bottom
+        intersect.var_b = intersect.scaleFactor_t - (intersect.var_a * intersect.xl_t.y);
+
+
+        // calculo do offset no centro de massa
+        // Calcular y_cm (centro de massa)
+        float y_center = height / 2.0f;
+        float s_center = intersect.var_a * y_center + intersect.var_b;
+        float delta_y_px = 0.43 / s_center;
+        float y_cm = y_center + delta_y_px;
+
+        // Calcular offset em y_cm
+        float xl_cm = left_coeffs.m * y_cm + left_coeffs.b;
+        float xr_cm = right_coeffs.m * y_cm +right_coeffs.b;
+        float xs_cm = xr_cm - intersect.ratio_top * (xr_cm - xl_cm);
+        float offset_cm_px = xs_cm - (width / 2.0f + 22.5);
+        intersect.offset_cm = offset_cm_px * (intersect.var_a * y_cm + intersect.var_b);
+
+    }
+
+    return intersect;
+}
+/**************************************************************************************/
+
+void drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y){
+    if (left_coeffs.valid && right_coeffs.valid) {
             std::vector<cv::Point> left_line_points, right_line_points;
             for (int y = roi_start_y; y < roi_end_y; y++) {
                 int left_x = static_cast<int>(left_coeffs.m * y + left_coeffs.b);
@@ -219,40 +280,8 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
             if (roi_median_points.size() >= 2) {
                 cv::line(result_frame, roi_median_points.front(), roi_median_points.back(), cv::Scalar(0, 255, 0), 2);
             }
-
-            /*if (intersect.valid) {
-                cv::circle(result_frame, intersect.xl_t, 5, cv::Scalar(0, 255, 255), -1);
-                cv::circle(result_frame, intersect.xl_b, 5, cv::Scalar(0, 255, 255), -1);
-                cv::circle(result_frame, intersect.xr_t, 5, cv::Scalar(255, 255, 0), -1);
-                cv::circle(result_frame, intersect.xr_b, 5, cv::Scalar(255, 255, 0), -1);
-            } */
         }
-    }
-    return result_frame;
 }
 
-/**************************************************************************************/
-LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width) {
-    LineIntersect intersect;
-    intersect.valid = false;
-
-    int roi_start_y = static_cast<int>(0.50 * height); // y = 224
-    int roi_end_y = static_cast<int>(0.95 * height);   // y = 426
-
-    if (left_coeffs.valid && right_coeffs.valid) {
-        intersect.xl_t = { static_cast<float>(left_coeffs.m * roi_start_y + left_coeffs.b), static_cast<float>(roi_start_y) };
-        intersect.xl_b = { static_cast<float>(left_coeffs.m * roi_end_y + left_coeffs.b), static_cast<float>(roi_end_y) };
-        intersect.xr_t = { static_cast<float>(right_coeffs.m * roi_start_y + right_coeffs.b), static_cast<float>(roi_start_y) };
-        intersect.xr_b = { static_cast<float>(right_coeffs.m * roi_end_y + right_coeffs.b), static_cast<float>(roi_end_y) };
-        
-        intersect.ratio_top = (intersect.xr_t.x - width / 2.0f) / (intersect.xr_t.x - intersect.xl_t.x);
-        intersect.xs_b = intersect.xr_b.x - intersect.ratio_top * (intersect.xr_b.x - intersect.xl_b.x);
-        intersect.slope = (intersect.xs_b - width / 2.0f) / (roi_end_y - roi_start_y);
-        intersect.psi = std::atan(intersect.slope);
-        intersect.valid = true;
-    }
-
-    return intersect;
-}
 /**************************************************************************************/
 
