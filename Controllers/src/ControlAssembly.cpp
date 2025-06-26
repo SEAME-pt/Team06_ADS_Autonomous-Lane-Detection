@@ -8,10 +8,10 @@ ControlAssembly::ControlAssembly()
 		return;
 	}
 
-	if (!_fServo.init_servo()){
+	/* if (!_fServo.init_servo()){
 		LOG_ERROR("Failed to initialize FServo");
 		return;
-	}
+	} */
 
 	if (!_controller.isConnected()){
 		LOG_ERROR("Failed to initialize Controller");
@@ -27,7 +27,7 @@ ControlAssembly::ControlAssembly()
 		if (_controller.getButton(X_BUTTON)){
 			_onClick = true;
 			_backMotors.setSpeed(0);
-			_fServo.set_steering(0);
+			//_fServo.set_steering(0);
 		}
 		if (_controller.getButton(SELECT_BUTTON)){
 			std::cout << "START_BUTTON" << std::endl;
@@ -61,7 +61,7 @@ ControlAssembly::ControlAssembly()
 		    _turn = 0;
 		}
 		//LOG_INFO("Gear %f", _turn);
-		_fServo.set_steering(static_cast<int>(_turn * 30)); // Multiplicador ajustado
+		//_fServo.set_steering(static_cast<int>(_turn * 30)); // Multiplicador ajustado
 
 		
 		//float gear = _controller.getAxis(0);
@@ -78,11 +78,11 @@ ControlAssembly::ControlAssembly()
 		//_fServo.set_steering(static_cast<int>(_turn * 25));
 	}
 	_backMotors.setSpeed(0);
-	_fServo.set_steering(0);
+	//_fServo.set_steering(0);
 	return;
 }
 
 ControlAssembly::~ControlAssembly(){
 	_backMotors.setSpeed(0);
-	_fServo.set_steering(0);
+	//_fServo.set_steering(0);
 }
