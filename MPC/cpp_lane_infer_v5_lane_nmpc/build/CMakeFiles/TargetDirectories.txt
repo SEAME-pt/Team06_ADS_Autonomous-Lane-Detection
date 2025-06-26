@@ -1,3 +1,0 @@
-/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/lane_detection.dir
-/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/edit_cache.dir
-/home/team06/code/Team06-ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v5_lane_nmpc/build/CMakeFiles/rebuild_cache.dir
