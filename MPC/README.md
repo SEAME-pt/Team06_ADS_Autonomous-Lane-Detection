@@ -159,7 +159,7 @@ g++ -o mpc_carla mpc_carla.cpp `pkg-config --cflags --libs opencv4` -I/home/ndo-
 ./mpc_carla
 
 ## Compile cpp_infer lane_dete
-g++ -o lane_detec_v2 lane_detec_v2.cpp `pkg-config --cflags --libs opencv4` \
+g++ -o lane_detec_v2 lane_detec.cpp `pkg-config --cflags --libs opencv4` \
 -I/usr/local/cuda/include -L/usr/local/cuda/lib64 -lcudart \
 -I/usr/include/aarch64-linux-gnu -L/usr/lib/aarch64-linux-gnu \
 -lnvinfer -lnvinfer_plugin -lpthread

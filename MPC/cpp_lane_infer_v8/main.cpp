@@ -46,13 +46,12 @@ void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCo
         std::cout << "Right Bottom: (" << intersect.xr_b.x << ", " << intersect.xr_b.y << ")" << std::endl; */
 
         std::cout << "offset_cm: " << intersect.offset_cm << std::endl;
-
-/*         std::cout << "pixels on top: " << intersect.x_px_t << std::endl;
+        std::cout << "pixels on top: " << intersect.x_px_t << std::endl;
         std::cout << "pixels on bottom: " << intersect.x_px_b << std::endl;
         std::cout << "s(y1): " << intersect.scaleFactor_t << std::endl;
         std::cout << "s(y2): " << intersect.scaleFactor_b << std::endl;
         std::cout << "var a: " << intersect.var_a << std::endl;
-        std::cout << "var b: " << intersect.var_b << std::endl; */
+        std::cout << "var b: " << intersect.var_b << std::endl;
     }
         
 /*     if (intersect.valid && frameCount % 20 == 0) {
@@ -76,7 +75,7 @@ int main() {
     cam.start();
     
     // Inicializar NMPC
-    NMPCController nmpc(0.15, 0.1, 10, 0.524, 1.0, 10.0, 20.0, 10.0); // L, dt, N, delta_max, w_x, w_y, w_psi, w_delta
+    NMPCController nmpc(0.15, 0.1, 10, 0.524, 1.0, 5.0, 20.0, 10.0); // L, dt, N, delta_max, w_x, w_y, w_psi, w_delta
     std::vector<double> x0 = {0.0, 0.0, 0.0}; // Estado inicial: [x, y, psi]
     
     // Inicializar servo
@@ -135,12 +134,9 @@ int main() {
 
         // Atualizar estado com psi do intersect
         if (intersect.valid) {
-            x0[2] = intersect.psi; // Atualiza psi com o erro de yaw
-        }
-        // Estimar x, y (desvio lateral a partir do primeiro ponto da mediana)
-        if (laneData.valid && laneData.num_points > 0) {
-            x0[1] = intersect.offset_cm; // y é o desvio lateral
             x0[0] = 0.0; // Assume x=0 (posição longitudinal inicial)
+            x0[1] = intersect.offset_cm; // y é o desvio lateral
+            x0[2] = intersect.psi; // Atualiza psi com o erro de yaw
         }
 
         // Executar NMPC
@@ -170,13 +166,13 @@ int main() {
         int lineLength = 200;
         cv::Point lineStart(centerX, centerY - lineLength);
         cv::Point lineEnd(centerX, centerY - 20);
-        cv::line(result, lineStart, lineEnd, cv::Scalar(250, 250, 250), 2);
-        //std::cout << "FPS  " << smoothedFPS << std::endl;
+        cv::line(result, lineStart, lineEnd, cv::Scalar(250, 200, 200), 2);
+
         deBug(delta, laneData, intersect, frameCount);
         frameCount++;
         cv::imshow("Lane Detection", result);
         if (cv::waitKey(1) == 'q') break;
-       
+
         frame.release();
         result.release();
     }

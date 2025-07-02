@@ -120,8 +120,6 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
 }
 
 /**************************************************************************************/
-#include "mask.hpp"
-
 cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, 
                     std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect) {
     const int height = original_frame.rows;
@@ -162,8 +160,39 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
     //processor.processMask(da_resized, mask_output, medianPoints);
 
     cv::Mat result_frame = mask_output.clone();
-    
-    intersect = findIntersect(left_coeffs, right_coeffs, height, width);
+
+    if (!medianPoints.empty()) {
+        std::vector<cv::Point> left_edge_points, right_edge_points;
+        cv::Mat mask_bin = da_resized(roi);
+        cv::threshold(mask_bin, mask_bin, 127, 255, cv::THRESH_BINARY);
+
+        for (int y = 0; y < mask_bin.rows; y++) {
+            const cv::Mat row = mask_bin.row(y);
+            int left_x = -1, right_x = -1;
+            for (int x = 0; x < row.cols; x++) {
+                if (row.at<uchar>(0, x) == 255) {
+                    left_x = x;
+                    break;
+                }
+            }
+            for (int x = row.cols - 1; x >= 0; x--) {
+                if (row.at<uchar>(0, x) == 255) {
+                    right_x = x;
+                    break;
+                }
+            }
+            if (left_x != -1) {
+                left_edge_points.push_back(cv::Point(left_x, y + roi_start_y));
+                right_edge_points.push_back(cv::Point(right_x, y + roi_start_y));
+            }
+        }
+        
+        LineCoef left_coeffs = processor.linearRegression(left_edge_points);
+        LineCoef right_coeffs = processor.linearRegression(right_edge_points);
+        intersect = findIntersect(left_coeffs, right_coeffs, height, width);
+        drawLanes(left_coeffs, right_coeffs, result_frame, medianPoints, roi_start_y, roi_end_y);
+    }
+
     laneData.valid = !medianPoints.empty();
     laneData.num_points = 0;
 
@@ -215,6 +244,7 @@ LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_
         // var b para o top que será igual ao bottom
         intersect.var_b = intersect.scaleFactor_t - (intersect.var_a * intersect.xl_t.y);
 
+
         // calculo do offset no centro de massa
         // Calcular y_cm (centro de massa)
         float y_center = height / 2.0f;
@@ -228,6 +258,7 @@ LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_
         float xs_cm = xr_cm - intersect.ratio_top * (xr_cm - xl_cm);
         float offset_cm_px = xs_cm - (width / 2.0f + 22.5);
         intersect.offset_cm = offset_cm_px * (intersect.var_a * y_cm + intersect.var_b);
+
     }
 
     return intersect;

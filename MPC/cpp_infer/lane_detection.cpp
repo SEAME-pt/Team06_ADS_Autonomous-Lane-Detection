@@ -247,6 +247,9 @@ int main() {
         auto outputs = trt.infer(input);
         //auto result = postprocess_outputs(outputs, frame);
         auto result = postprocess(outputs[0].data(), outputs[1].data(), frame);
+        cv::Point lineStart(0, 224);
+        cv::Point lineEnd(447, 224);
+        cv::line(result, lineStart, lineEnd, cv::Scalar(250, 250, 250), 2);
         cv::imshow("Lane Detection", result);
         if (cv::waitKey(1) == 'q') break;
 

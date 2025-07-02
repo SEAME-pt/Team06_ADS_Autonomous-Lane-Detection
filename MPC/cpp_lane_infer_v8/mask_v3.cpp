@@ -1,4 +1,5 @@
 #include "mask.hpp"
+#include <algorithm> // Para std::min_element
 
 MaskProcessor::MaskProcessor() {}
 MaskProcessor::~MaskProcessor() {}
@@ -28,26 +29,23 @@ LineCoef MaskProcessor::linearRegression(const std::vector<cv::Point>& points) {
     return coeffs;
 }
 
-/**********************************************/
-
-int MaskProcessor::findFirstWhite(const cv::Mat& row, int center_x) {
-    for (int x = center_x; x >= 0; x--) {
-        if (row.at<uchar>(0, x) != 255) return (x + 1);
-        else if (x == 0) return x + 1;
+// vai do mais alto ao menor
+int MaskProcessor::findFirstWhite(const cv::Mat& row, int first, int width) {
+    for (int x = first; x >= 0; x--) { // Corrigido de x >= width para x >= 0
+        if (row.at<uchar>(0, x) == 255) return x;
+        else if (x == 0) return x;
     }
     return -1;
 }
 
-int MaskProcessor::findLastWhite(const cv::Mat& row, int center_x) {
-    int width = row.cols;
-    for (int x = center_x; x < width; x++) {
-        if (row.at<uchar>(0, x) != 255) return x - 1;
-        else if (x == (width - 1)) return x - 1;
+// vai do menor ao mais alto
+int MaskProcessor::findLastWhite(const cv::Mat& row, int first, int width) {
+    for (int x = first; x < width; x++) {
+        if (row.at<uchar>(0, x) == 255) return x;
+        else if (x == (width - 1)) return x;
     }
     return -1;
 }
-
-/**********************************************/
 
 void displayMaskAndLines(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
                         const std::vector<cv::Point>& left_line_points,
@@ -75,14 +73,26 @@ void displayMaskAndLines(const cv::Mat& da_mask, const cv::Mat& ll_mask,
         cv::line(viz, ll_right_points.front(), ll_right_points.back(), cv::Scalar(0, 255, 255), 2); // Amarelo para direita
     }
 
+        // Desenhar linhas de ll_mask em amarelo
+    int height = da_mask.rows;
+    int width = da_mask.cols;
+    int roi_start_y = static_cast<int>(0.50 * height);
+    int roi_end_y = static_cast<int>(0.95 * height);
+    for (int y = roi_start_y; y < roi_end_y; y++) {
+        const cv::Mat row = ll_mask.row(y);
+        for (int x = 0; x < width; x++) {
+            if (row.at<uchar>(0, x) == 255)
+                cv::circle(viz, cv::Point(x, y), 2, cv::Scalar(0, 255, 255), -1); // Amarelo
+        }
+    }
+
     cv::imshow("Lane Detection", viz);
     cv::waitKey(1); // Atualiza a janela em tempo real
 }
 
-void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints,
-                                LineCoef& left_coeffs, LineCoef& right_coeffs) {
+void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints) {
     cv::Mat mask_bin = da_mask.clone();
-    cv::threshold(da_mask, mask_bin, 127, 255, cv::THRESH_BINARY);
+    cv::threshold(mask_bin, mask_bin, 127, 255, cv::THRESH_BINARY);
 
     std::vector<cv::Point> left_edge_points;
     std::vector<cv::Point> right_edge_points;
@@ -100,7 +110,7 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
     for (int y = roi_start_y; y <= roi_end_y; y += y_step) {
         const cv::Mat row = mask_bin.row(y);
         int center_x = width / 2;
-        if (findFirstWhite(row, center_x) != -1) {
+        if (findFirstWhite(row, center_x, 0) != -1) {
             if (first_y == -1) first_y = y;
             last_y = y;
         }
@@ -112,56 +122,13 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
         cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
         return;
     }
-
-    // Coletar pontos das bordas no ROI para da_mask com maior sequência de brancos
-    int prev_width = -1; // Armazena a largura da sequência anterior
-    for (int y = first_y; y <= last_y; y += y_step) {
-        const cv::Mat row = mask_bin.row(y);
-        int max_seq_start = -1, max_seq_end = -1, max_seq_length = 0;
-        int current_start = -1, current_length = 0;
-
-        // Encontrar a maior sequência contínua de pixels brancos
-        for (int x = 0; x < width; x++) {
-            if (row.at<uchar>(0, x) == 255) {
-                if (current_start == -1) current_start = x; // Início de uma nova sequência
-                current_length++;
-            } else {
-                if (current_length > max_seq_length) {
-                    max_seq_length = current_length;
-                    max_seq_start = current_start;
-                    max_seq_end = x - 1;
-                }
-                current_start = -1;
-                current_length = 0;
-            }
-        }
-        // Verificar o final da linha
-        if (current_length > max_seq_length) {
-            max_seq_length = current_length;
-            max_seq_start = current_start;
-            max_seq_end = width - 1;
-        }
-
-        // Verificar se a diferença de largura é abrupta (maior que 10 pixels)
-        int current_width = (max_seq_end - max_seq_start + 1);
-        if (prev_width != -1 && abs(current_width - prev_width) > 10) {
-            continue; // Descartar esta linha se a mudança for abrupta
-        }
-        prev_width = current_width;
-
-        // Guardar as coordenadas do primeiro e último pixel da maior sequência
-        if (max_seq_start != -1 && max_seq_end != -1) {
-            left_edge_points.push_back(cv::Point(max_seq_start, y));
-            right_edge_points.push_back(cv::Point(max_seq_end, y));
-        }
-    }
-
+    
     // Coletar pontos de ll_mask no ROI para regressão
     for (int y = first_y; y <= roi_end_y; y += y_step) {
         const cv::Mat row = ll_mask.row(y);
         int center_x = width / 2;
-        int left_x = findFirstWhite(row, center_x);
-        int right_x = findLastWhite(row, center_x);
+        int left_x = findFirstWhite(row, center_x, 0);
+        int right_x = findLastWhite(row, center_x, width);
 
         if (left_x != -1 && right_x != -1) {
             // Dividir pontos de ll_mask em esquerda e direita com base no centro
@@ -170,8 +137,36 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
         }
     }
 
-    left_coeffs = linearRegression(left_edge_points);
-    right_coeffs = linearRegression(right_edge_points);
+    // Coletar pontos das bordas no ROI para da_mask, usando pontos de ll_mask como ponto de partida
+    for (int y = first_y; y <= last_y; y += y_step) {
+        const cv::Mat row = mask_bin.row(y); // Pega a linha y da imagem mask_bin (matriz binária de da_mask).
+        int center_x = width / 2; // Define o centro horizontal da imagem como ponto de partida padrão.
+
+        // Encontrar o ponto mais próximo em ll_left_points e ll_right_points para o y atual
+        int ll_left_start = 0; // Inicializa o ponto de partida esquerdo como o centro.
+        int ll_right_start = width - 1; // Inicializa o ponto de partida direito como o centro.
+        for (const auto& p : ll_left_points) { // Itera sobre os pontos da borda esquerda de ll_mask.
+            if (abs(p.y - y) < y_step) { // Verifica se o y do ponto está dentro de y_step (ex.: 2 pixels) do y atual.
+                ll_left_start = p.x; // Se sim, usa o x desse ponto como novo ponto de partida esquerdo.
+                break; // Sai do loop ao encontrar o primeiro ponto válido.
+            }
+        }
+        for (const auto& p : ll_right_points) { // Itera sobre os pontos da borda direita de ll_mask.
+            if (abs(p.y - y) < y_step) { // Verifica se o y do ponto está dentro de y_step do y atual.
+                ll_right_start = p.x; // Se sim, usa o x desse ponto como novo ponto de partida direito.
+                break; // Sai do loop ao encontrar o primeiro ponto válido.
+            }
+        }
+
+        int right_x = findFirstWhite(row, ll_right_start, center_x); // Busca o primeiro pixel branco à direita a partir de ll_right_start.
+        int left_x = findLastWhite(row, ll_left_start, center_x); // Busca o primeiro pixel branco à esquerda a partir de ll_left_start.
+
+        if (left_x != -1) left_edge_points.push_back(cv::Point(left_x, y)); // Adiciona o ponto esquerdo à lista se encontrado.
+        if (right_x != -1) right_edge_points.push_back(cv::Point(right_x, y)); // Adiciona o ponto direito à lista se encontrado.
+    }
+
+    LineCoef left_coeffs = linearRegression(left_edge_points);
+    LineCoef right_coeffs = linearRegression(right_edge_points);
     LineCoef ll_left_coeffs = linearRegression(ll_left_points);
     LineCoef ll_right_coeffs = linearRegression(ll_right_points);
 
@@ -202,10 +197,10 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
             if (ll_right_x >= 0 && ll_right_x < width) ll_right_line_points.push_back(cv::Point(ll_right_x, y));
         }
 
-/*         if (!ll_left_line_points.empty() && !ll_right_line_points.empty()) {
+        if (!ll_left_line_points.empty() && !ll_right_line_points.empty()) {
             cv::line(output, ll_left_line_points.front(), ll_left_line_points.back(), cv::Scalar(0, 255, 255), 2); // Amarelo
             cv::line(output, ll_right_line_points.front(), ll_right_line_points.back(), cv::Scalar(0, 255, 255), 2); // Amarelo
-        } */
+        }
     }
 
     medianPoints.clear();
@@ -223,5 +218,5 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
     }
 
     // Passar ll_mask e pontos calculados para exibição
-    //displayMaskAndLines(mask_bin, ll_mask, left_line_points, right_line_points, medianPoints, ll_left_line_points, ll_right_points);
+    displayMaskAndLines(mask_bin, ll_mask, left_line_points, right_line_points, medianPoints, ll_left_line_points, ll_right_line_points);
 }
