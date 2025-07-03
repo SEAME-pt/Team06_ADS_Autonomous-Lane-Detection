@@ -37,7 +37,7 @@ void visualize_pixel_markers(cv::Mat& frame) {
     cv::imshow("Pixel Markers", marker_frame);
 }
 
-void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCount){
+void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCount, std::vector<cv::Point> medianPoints){
 
     if (intersect.valid && frameCount % 20 == 0) {
 /*         std::cout << "Left Top: (" << intersect.xl_t.x << ", " << intersect.xl_t.y << ")" << std::endl;
@@ -52,6 +52,9 @@ void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCo
         std::cout << "s(y2): " << intersect.scaleFactor_b << std::endl;
         std::cout << "var a: " << intersect.var_a << std::endl;
         std::cout << "var b: " << intersect.var_b << std::endl;
+        std::cout << "Psi: " << intersect.psi << std::endl;
+        std::cout << "median points: " << medianPoints << std::endl;
+
     }
         
 /*     if (intersect.valid && frameCount % 20 == 0) {
@@ -168,7 +171,7 @@ int main() {
         cv::Point lineEnd(centerX, centerY - 20);
         cv::line(result, lineStart, lineEnd, cv::Scalar(250, 200, 200), 2);
 
-        deBug(delta, laneData, intersect, frameCount);
+        deBug(delta, laneData, intersect, frameCount, medianPoints);
         frameCount++;
         cv::imshow("Lane Detection", result);
         if (cv::waitKey(1) == 'q') break;
