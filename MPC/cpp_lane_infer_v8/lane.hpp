@@ -59,8 +59,14 @@ struct LineIntersect {
     float var_a;        // variavel a    
     float var_b;        // variavel b
     float offset_cm;    // offset no centro de massa do carro
+    float w_real = 0.26; // distancia entre as linhas da pista em metros
     bool valid;
 };
+
+static constexpr double Asy = -3.52e-06;
+static constexpr double Bsy = 2.17e-03;
+static constexpr double P1_x_car_frame = 0.22;
+static constexpr double P2_x_car_frame = 0.445;
 
 class TensorRTInference {
 public:
@@ -101,7 +107,8 @@ private:
 std::vector<float>  preprocess_frame(const cv::Mat& frame);
 cv::Mat             postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect);
 LineIntersect       findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width);
-void drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y);
+void                findOffset(LineIntersect& intersect);
+void                drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y);
 
 
 #endif

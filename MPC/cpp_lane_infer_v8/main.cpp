@@ -45,15 +45,15 @@ void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCo
         std::cout << "Right Top: (" << intersect.xr_t.x << ", " << intersect.xr_t.y << ")" << std::endl;
         std::cout << "Right Bottom: (" << intersect.xr_b.x << ", " << intersect.xr_b.y << ")" << std::endl; */
 
-        std::cout << "offset_cm: " << intersect.offset_cm << std::endl;
+/*         std::cout << "offset_cm: " << intersect.offset_cm << std::endl;
         std::cout << "pixels on top: " << intersect.x_px_t << std::endl;
         std::cout << "pixels on bottom: " << intersect.x_px_b << std::endl;
         std::cout << "s(y1): " << intersect.scaleFactor_t << std::endl;
         std::cout << "s(y2): " << intersect.scaleFactor_b << std::endl;
         std::cout << "var a: " << intersect.var_a << std::endl;
         std::cout << "var b: " << intersect.var_b << std::endl;
-        std::cout << "Psi: " << intersect.psi << std::endl;
-        std::cout << "median points: " << medianPoints << std::endl;
+        std::cout << "Psi: " << intersect.psi << std::endl; */
+        //std::cout << "median points: " << medianPoints << std::endl;
 
     }
         
@@ -65,7 +65,7 @@ void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCo
         std::cout << "Psi: " << intersect.psi * 180.0 / M_PI << " deg" << std::endl ;
         std::cout << " Delta: " + std::to_string(delta * 180.0 / M_PI) + "deg" << std::endl << std::endl;
     } */
-    /*if (laneData.valid && frameCount % 20 == 0) {
+/*     if (laneData.valid && frameCount % 20 == 0) {
         for (int i = 0; i < laneData.num_points; ++i) {
             std::cout << "  Ponto " << i << ": (" << laneData.points[i].x << ", " << laneData.points[i].y << ")" << std::endl;
         }
@@ -136,11 +136,9 @@ int main() {
         //visualize_pixel_markers(result);
 
         // Atualizar estado com psi do intersect
-        if (intersect.valid) {
-            x0[0] = 0.0; // Assume x=0 (posição longitudinal inicial)
-            x0[1] = intersect.offset_cm; // y é o desvio lateral
-            x0[2] = intersect.psi; // Atualiza psi com o erro de yaw
-        }
+        x0[0] = 0.0; // Assume x=0 (posição longitudinal inicial)
+        x0[1] = intersect.offset_cm; // y é o desvio lateral
+        x0[2] = intersect.psi; // Atualiza psi com o erro de yaw
 
         // Executar NMPC
         std::vector<double> control = nmpc.compute_control(x0, laneData, intersect.psi);

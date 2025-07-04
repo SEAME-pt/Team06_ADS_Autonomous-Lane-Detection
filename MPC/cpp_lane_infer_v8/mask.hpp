@@ -9,17 +9,17 @@ class MaskProcessor {
 public:
     MaskProcessor();
     ~MaskProcessor();
-    void processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, LineCoef& left_coeffs, LineCoef& right_coeffs);
+    //void processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, LineCoef& left_coeffs, LineCoef& right_coeffs);
     //void processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints);
-    //void processMask(const cv::Mat& mask, cv::Mat& output, std::vector<cv::Point>& medianPoints);
+    void processMask(const cv::Mat& mask, cv::Mat& output, std::vector<cv::Point>& medianPoints);
     LineCoef linearRegression(const std::vector<cv::Point>& points);
     std::pair<int, int> findEdgesFromCenter(const cv::Mat& row, int center_x, int width);
 
 private:
-    /* int findFirstWhite(const cv::Mat& row, int center_x, int with);
-    int findLastWhite(const cv::Mat& row, int center_x, int with); */    
-    int findFirstWhite(const cv::Mat& row, int center_x);
-    int findLastWhite(const cv::Mat& row, int center_x);
+    int findFirstWhite(const cv::Mat& row);
+    int findLastWhite(const cv::Mat& row);    
+    /* int findFirstWhite(const cv::Mat& row, int center_x);
+    int findLastWhite(const cv::Mat& row, int center_x); */
 };
 
 #endif

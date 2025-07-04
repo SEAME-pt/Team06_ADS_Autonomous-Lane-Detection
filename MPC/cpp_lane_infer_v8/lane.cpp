@@ -158,21 +158,45 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
 
     MaskProcessor processor;
     cv::Mat mask_output;
-    processor.processMask(da_resized, ll_resized, mask_output, medianPoints, left_coeffs, right_coeffs);
-    //processor.processMask(da_resized, mask_output, medianPoints);
+    //processor.processMask(da_resized, ll_resized, mask_output, medianPoints, left_coeffs, right_coeffs);
+    processor.processMask(da_resized, mask_output, medianPoints);
 
     cv::Mat result_frame = mask_output.clone();
     
-    intersect = findIntersect(left_coeffs, right_coeffs, height, width);
+    //intersect = findIntersect(left_coeffs, right_coeffs, height, width);
     laneData.valid = !medianPoints.empty();
     laneData.num_points = 0;
+
+    /*
+        d_mtr = s(y) * x_img_frame
+        s(y) = Asy * y_img_frame + Bsy
+        d_mtr = Asy * y_img_frame + Bsy
+    */
+
+    float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - 244);
+    float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - 244); // 
+
+    float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame; // Calibration data
+    float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame; // Instante measured data
+
+    float slope_car_frame = deltaY_car_frame / deltaX_car_frame;
+
+    float B = P2_x_img_frame - slope_car_frame * P2_x_car_frame; // b = y - m * x
+
+    intersect.offset_cm = B;
+
+    intersect.psi = atan(slope_car_frame);
+
+/*     std::cout << "[" <<  __func__ <<"]" << std::endl
+                << "median points back: " << medianPoints.back().x << std::endl
+                << "median points front: " << medianPoints.front().x << std::endl; */
 
     if (laneData.valid) {
         int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
         for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
             if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
-                laneData.points[laneData.num_points].x = 0.000669 * (medianPoints[i].x - (width/2) + 22.5);
-                laneData.points[laneData.num_points].y = 0.001623 * ((height*0.95) - medianPoints[i].y);
+                laneData.points[laneData.num_points].x = (medianPoints[i].x);
+                laneData.points[laneData.num_points].y = (medianPoints[i].y);
                 laneData.num_points++;
             }
         }
@@ -206,28 +230,14 @@ LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_
         intersect.x_px_b = intersect.xr_b.x - intersect.xl_b.x;
 
         // Scale Factor | d = s(y).x_px + b | with b = 0
-        intersect.scaleFactor_t = 0.26 / intersect.x_px_t;
-        intersect.scaleFactor_b = 0.26 / intersect.x_px_b;
+        intersect.scaleFactor_t = intersect.w_real / intersect.x_px_t;
+        intersect.scaleFactor_b = intersect.w_real / intersect.x_px_b;
 
         // var a | s(y) = a * y + b (=) a = delta(s(y)) / delta(y) |,  with b = 0 
         intersect.var_a = (intersect.scaleFactor_b - intersect.scaleFactor_t) / (intersect.xl_b.y - intersect.xl_t.y);
 
         // var b para o top que será igual ao bottom
         intersect.var_b = intersect.scaleFactor_t - (intersect.var_a * intersect.xl_t.y);
-
-        // calculo do offset no centro de massa
-        // Calcular y_cm (centro de massa)
-        float y_center = height / 2.0f;
-        float s_center = intersect.var_a * y_center + intersect.var_b;
-        float delta_y_px = 0.43 / s_center;
-        float y_cm = y_center + delta_y_px;
-
-        // Calcular offset em y_cm
-        float xl_cm = left_coeffs.m * y_cm + left_coeffs.b;
-        float xr_cm = right_coeffs.m * y_cm +right_coeffs.b;
-        float xs_cm = xr_cm - intersect.ratio_top * (xr_cm - xl_cm);
-        float offset_cm_px = xs_cm - (width / 2.0f + 22.5);
-        intersect.offset_cm = offset_cm_px * (intersect.var_a * y_cm + intersect.var_b);
     }
 
     return intersect;
