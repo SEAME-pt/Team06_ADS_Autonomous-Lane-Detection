@@ -119,17 +119,16 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
     return inputData;
 }
 
-/**************************************************************************************/
-#include "mask.hpp"
 
 cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, 
                     std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect) {
+    //std::cout << "  postprocess entrou " << std::endl;
+    
     const int height = original_frame.rows;
     const int width = original_frame.cols;
     int roi_start_y = static_cast<int>(0.50 * height); // 224
     int roi_end_y = static_cast<int>(0.95 * height);   // 425.6
     int roi_height = roi_end_y - roi_start_y;
-    LineCoef left_coeffs, right_coeffs;
 
     cv::Rect roi(0, roi_start_y, width, roi_height);
     cv::Mat da_logits(2, height * width, CV_32FC1, da_output);
@@ -158,12 +157,14 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
 
     MaskProcessor processor;
     cv::Mat mask_output;
-    //processor.processMask(da_resized, ll_resized, mask_output, medianPoints, left_coeffs, right_coeffs);
-    processor.processMask(da_resized, mask_output, medianPoints);
+    processor.processMask(da_resized, ll_resized, mask_output, medianPoints);
+    //std::cout << "  processMask check " << std::endl;
+
+    //processor.processMask(da_resized, mask_output, medianPoints);
+
 
     cv::Mat result_frame = mask_output.clone();
     
-    //intersect = findIntersect(left_coeffs, right_coeffs, height, width);
     laneData.valid = !medianPoints.empty();
     laneData.num_points = 0;
 
@@ -172,24 +173,38 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         s(y) = Asy * y_img_frame + Bsy
         d_mtr = Asy * y_img_frame + Bsy
     */
+    
+    // Verificar se medianPoints tem pelo menos um elemento
+    if (medianPoints.size() >= 5) {
+        // Realizar cálculos apenas se medianPoints não estiver vazio
+        float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - 224);
+        float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - 224);
+        float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame; // Calibration data
+        float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame; // Instante measured data
 
-    float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - 244);
-    float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - 244); // 
+        // Verificar se deltaX_car_frame não é zero para evitar divisão por zero
+        if (std::abs(deltaX_car_frame) > 1e-8) { // Usar um pequeno epsilon para evitar divisão por zero
+            float slope_car_frame = deltaY_car_frame / deltaX_car_frame;
+            float B = P2_x_img_frame - slope_car_frame * P2_x_car_frame; // b = y - m * x
 
-    float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame; // Calibration data
-    float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame; // Instante measured data
-
-    float slope_car_frame = deltaY_car_frame / deltaX_car_frame;
-
-    float B = P2_x_img_frame - slope_car_frame * P2_x_car_frame; // b = y - m * x
-
-    intersect.offset_cm = B;
-
-    intersect.psi = atan(slope_car_frame);
+            intersect.offset_cm = B;
+            intersect.psi = std::atan(slope_car_frame);
+        } else {
+            // Caso deltaX_car_frame seja zero, definir valores padrão para intersect
+            intersect.offset_cm = 0.0f;
+            intersect.psi = 0.0f;
+            std::cout << "Aviso: deltaX_car_frame é zero, valores padrão definidos para intersect." << std::endl;
+        }
+    } else {
+        // Caso medianPoints esteja vazio, definir valores padrão
+        intersect.offset_cm = 0.0f;
+        intersect.psi = 0.0f;
+        std::cout << "Aviso: medianPoints está vazio, valores padrão definidos para intersect." << std::endl;
+    }
 
 /*     std::cout << "[" <<  __func__ <<"]" << std::endl
-                << "median points back: " << medianPoints.back().x << std::endl
-                << "median points front: " << medianPoints.front().x << std::endl; */
+                << "median points back: " << medianPoints.back().x << " " << medianPoints.back().y << std::endl
+                << "median points front: " << medianPoints.front().x << " " << medianPoints.back().y << std::endl; */
 
     if (laneData.valid) {
         int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
@@ -201,7 +216,6 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
             }
         }
     }
-
     return result_frame;
 }
 

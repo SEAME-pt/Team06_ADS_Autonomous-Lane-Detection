@@ -95,6 +95,7 @@ std::vector<double> NMPCController::compute_control(const std::vector<double>& x
         x_ref[2 * i] = laneData.points[i].x;
         x_ref[2 * i + 1] = laneData.points[i].y;
     }
+    
     // Preencher com o último ponto, se necessário
     for (int i = points_used; i < N_; ++i) {
         x_ref[2 * i] = laneData.points[points_used - 1].x;

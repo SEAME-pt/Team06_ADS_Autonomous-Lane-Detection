@@ -95,27 +95,9 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
     const int roi_end_y = static_cast<int>(0.95 * height);
     const int y_step = 2; // Processar a cada 2 linhas para eficiência
 
-    // Identificar limites verticais da pista no ROI
-    int first_y = -1, last_y = -1;
-    for (int y = roi_start_y; y <= roi_end_y; y += y_step) {
-        const cv::Mat row = mask_bin.row(y);
-        int center_x = width / 2;
-        if (findFirstWhite(row, center_x) != -1) {
-            if (first_y == -1) first_y = y;
-            last_y = y;
-        }
-    }
-
-    // Se não encontrou pista, limpar medianPoints e sair
-    if (first_y == -1 || last_y == -1) {
-        medianPoints.clear();
-        cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
-        return;
-    }
-
     // Coletar pontos das bordas no ROI para da_mask com maior sequência de brancos
     int prev_width = -1; // Armazena a largura da sequência anterior
-    for (int y = first_y; y <= last_y; y += y_step) {
+    for (int y = roi_start_y; y <= roi_end_y; y += y_step) {
         const cv::Mat row = mask_bin.row(y);
         int max_seq_start = -1, max_seq_end = -1, max_seq_length = 0;
         int current_start = -1, current_length = 0;

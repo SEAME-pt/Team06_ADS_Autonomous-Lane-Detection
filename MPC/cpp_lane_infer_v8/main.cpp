@@ -77,9 +77,9 @@ int main() {
     CSICamera cam(448, 448, 15);
     cam.start();
     
-    // Inicializar NMPC
-    NMPCController nmpc(0.15, 0.1, 10, 0.524, 1.0, 5.0, 20.0, 10.0); // L, dt, N, delta_max, w_x, w_y, w_psi, w_delta
-    std::vector<double> x0 = {0.0, 0.0, 0.0}; // Estado inicial: [x, y, psi]
+    // Inicializar NMPC   L,  dt, N, delta_max, w_x, w_y, w_psi, w_delta
+    NMPCController nmpc(0.15, 0.1, 10, 0.524, 0.0, 0.0, 10.0, 10.0);
+    std::vector<double> x0 = {0.0, 0.0, 0.0}; // [x, y, psi]
     
     // Inicializar servo
     FServo servo;
@@ -89,13 +89,6 @@ int main() {
             throw std::runtime_error("Falha ao inicializar o servo");
         }
 
-        std::cout << "Definindo ângulo de direção para -45 graus...\n";
-        servo.set_steering(-45);
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-
-        std::cout << "Definindo ângulo de direção para +45 graus...\n";
-        servo.set_steering(45);
-        std::this_thread::sleep_for(std::chrono::seconds(2));
 
         std::cout << "Servo inicializado com sucesso\n";
         servo.set_steering(0);
@@ -115,6 +108,7 @@ int main() {
     int frameCount = 0;
 
     while (true) {
+        //std::cout << "Entrou while " << std::endl;
         cv::Mat frame = cam.read();
         if (frame.empty()) continue;
         auto currentTime = std::chrono::steady_clock::now();
@@ -125,12 +119,14 @@ int main() {
         smoothedFPS = smoothedFPS == 0.0 ? currentFPS : alpha * smoothedFPS + (1.0 - alpha) * currentFPS;
         
         std::vector<float> input = preprocess_frame(frame);
+        //std::cout << "preprocess frame check " << std::endl;
+
         auto outputs = trt.infer(input);
         std::vector<cv::Point> medianPoints;
         LaneData laneData;
         LineIntersect intersect;
         auto result = postprocess(outputs[0].data(), outputs[1].data(), frame, medianPoints, laneData, intersect);
-        
+        //std::cout << "postprocess check " << std::endl;
 
         // Visualizar marcadores de pixels
         //visualize_pixel_markers(result);
@@ -162,16 +158,20 @@ int main() {
         std::string steeringText = "Steering: " + std::to_string(steering_angle) + " deg";
         cv::putText(result, steeringText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 0), 2);
         
-        int centerX = result.cols / 2 + 22.5;
+        //std::cout << "janela check " << std::endl;
+        
+        int centerX = result.cols / 2;
         int centerY = result.rows;
         int lineLength = 200;
         cv::Point lineStart(centerX, centerY - lineLength);
         cv::Point lineEnd(centerX, centerY - 20);
         cv::line(result, lineStart, lineEnd, cv::Scalar(250, 200, 200), 2);
 
-        deBug(delta, laneData, intersect, frameCount, medianPoints);
+        //deBug(delta, laneData, intersect, frameCount, medianPoints);
         frameCount++;
         cv::imshow("Lane Detection", result);
+        //std::cout << "imshow check " << std::endl;
+
         if (cv::waitKey(1) == 'q') break;
 
         frame.release();
