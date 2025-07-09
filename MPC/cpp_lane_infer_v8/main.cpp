@@ -78,7 +78,7 @@ int main() {
     cam.start();
     
     // Inicializar NMPC   L,  dt, N, delta_max, w_x, w_y, w_psi, w_delta
-    NMPCController nmpc(0.15, 0.1, 10, 0.524, 0.0, 0.0, 10.0, 10.0);
+    NMPCController nmpc(0.15, 0.1, 10, 0.524, 0.1, 0.0, 20.0, 10.0);
     std::vector<double> x0 = {0.0, 0.0, 0.0}; // [x, y, psi]
     
     // Inicializar servo
@@ -88,8 +88,6 @@ int main() {
         if (!servo.init_servo()) {
             throw std::runtime_error("Falha ao inicializar o servo");
         }
-
-
         std::cout << "Servo inicializado com sucesso\n";
         servo.set_steering(0);
     } catch (const std::exception& e) {
@@ -138,7 +136,7 @@ int main() {
 
         // Executar NMPC
         std::vector<double> control = nmpc.compute_control(x0, laneData, intersect.psi);
-        double delta = control[0]; // rad
+        double delta = - control[0]; // rad
         
         // Converter delta de radianos para graus e limitar
         int steering_angle = static_cast<int>(delta * 180.0 / M_PI);

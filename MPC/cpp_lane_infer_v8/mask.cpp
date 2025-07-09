@@ -29,7 +29,7 @@ LineCoef MaskProcessor::linearRegression(const std::vector<cv::Point>& points) {
     return coeffs;
 }
 
-int MaskProcessor::findFirstWhite(const cv::Mat& row) {
+/* int MaskProcessor::firstWhite(const cv::Mat& row) {
     for (int x = 0; x < row.cols - 5; x++) {
         if (row.at<uchar>(0, x) == 255 && x > 5) return x;
         else if (row.at<uchar>(0, x) == 255 && x < 5) return -1;
@@ -37,13 +37,28 @@ int MaskProcessor::findFirstWhite(const cv::Mat& row) {
     return -1;
 }
 
-int MaskProcessor::findLastWhite(const cv::Mat& row) {
+int MaskProcessor::lastWhite(const cv::Mat& row) {
     for (int x = row.cols - 1; x > 5; x--) {
         if (row.at<uchar>(0, x) == 255 && x < row.cols - 5) return x;
         else if (row.at<uchar>(0, x) == 255 && x > row.cols - 5) return -1;
     }
     return -1;
+} */
+
+int MaskProcessor::firstWhite(const cv::Mat& row) {
+    for (int x = row.cols / 2 - 10; x > 5; x--) {
+        if (row.at<uchar>(0, x) != 255) return x + 1;
+    }
+    return -1;
 }
+
+int MaskProcessor::lastWhite(const cv::Mat& row) {
+    for (int x = row.cols / 2 + 10; x < row.cols - 5; x++) {
+        if (row.at<uchar>(0, x) != 255) return x - 1;
+    }
+    return -1;
+}
+
 
 void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints) {
     cv::Mat mask_bin = da_mask.clone();
@@ -64,8 +79,8 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
 
     for (int y = top_y; y <= bottom_y; y += y_step) {
         const cv::Mat row = mask_bin.row(y);
-        int left_x = findFirstWhite(row);
-        int right_x = findLastWhite(row);
+        int left_x = firstWhite(row);
+        int right_x = lastWhite(row);
 
         if ((left_x == -1 || right_x == -1) && y > top_y + 50) break;
         if (left_x != -1) left_edge_points.push_back(cv::Point(left_x, y));
@@ -75,8 +90,8 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
     // Coletar pontos de ll_mask no ROI para regressão
     for (int y = top_y; y <= bottom_y; y += y_step) {
         const cv::Mat row = ll_mask.row(y);
-        int left_x = findFirstWhite(row);
-        int right_x = findLastWhite(row);
+        int left_x = firstWhite(row);
+        int right_x = lastWhite(row);
 
         if ((left_x == -1 || right_x == -1) && y < top_y + 50) continue;
         if (left_x == -1 || right_x == -1) break;
@@ -118,6 +133,11 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
             cv::line(output, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2); // Vermelho
             cv::line(output, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2); // Azul
         }
+        std::cout << "[" <<  __func__ <<"]" << std::endl
+            << "median points back: " << left_line_points.back().x << " " << left_line_points.back().y << " -- " << 
+                                        right_line_points.back().x << " " << right_line_points.back().y << std::endl
+            << "median points front: " << left_line_points.front().x << " " << left_line_points.front().y << " -- "
+                                        << right_line_points.front().x << " " << right_line_points.front().y << std::endl;
     }
 
 /*     if (ll_left_coeffs.valid && ll_right_coeffs.valid) {

@@ -16,10 +16,8 @@ public:
     std::pair<int, int> findEdgesFromCenter(const cv::Mat& row, int center_x, int width);
 
 private:
-    int findFirstWhite(const cv::Mat& row);
-    int findLastWhite(const cv::Mat& row);    
-    /* int findFirstWhite(const cv::Mat& row, int center_x);
-    int findLastWhite(const cv::Mat& row, int center_x); */
+    int firstWhite(const cv::Mat& row);
+    int lastWhite(const cv::Mat& row);    
 };
 
 #endif
