@@ -121,76 +121,69 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
 
 cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints,
                     LaneData& laneData, LineIntersect& intersect) {
-
     const int height = original_frame.rows;
     const int width = original_frame.cols;
     int roi_start_y = static_cast<int>(0.50 * height); // 224 / 2
     int roi_end_y = static_cast<int>(0.95 * height);   // 224 * 0.95
     int roi_height = roi_end_y - roi_start_y;
 
-    cv::Rect roi(0, roi_start_y, width, roi_height);
-    cv::Mat ll_logits(2, height * width, CV_32FC1, ll_output);
-    cv::Mat ll_mask(height, width, CV_8UC1, cv::Scalar(0));
+    // Criar máscara a partir da saída do modelo (canal único)
+    cv::Mat ll_mask(height, width, CV_32FC1, ll_output);
+    cv::Mat ll_bin;
+    
+    // Aplicar threshold para binarizar
+    cv::threshold(ll_mask, ll_bin, 0.1, 255, cv::THRESH_BINARY);
+    ll_bin.convertTo(ll_bin, CV_8UC1);
 
-    for (int i = 0; i < height * width; ++i) {
-        float ll0 = ll_logits.at<float>(0, i);
-        float ll1 = ll_logits.at<float>(1, i);
+    // Aplicar operações morfológicas para limpar ruído e engrossar linhas
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+    cv::morphologyEx(ll_bin, ll_bin, cv::MORPH_CLOSE, kernel);
+    cv::dilate(ll_bin, ll_bin, kernel);
 
-        ll_mask.at<uchar>(i / width, i % width) = (ll1 > ll0) ? 255 : 0;
-    }
+    // Exibir máscara para depuração
+    cv::imshow("ll_mask_raw", ll_bin);
+    cv::waitKey(1);
 
-    ll_mask(cv::Rect(0, 0, width, roi_start_y)) = 0;
-    ll_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0;
+    // Aplicar ROI (zerar regiões fora do interesse)
+    ll_bin(cv::Rect(0, 0, width, roi_start_y)) = 0;
+    ll_bin(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0;
 
+    // Redimensionar para o tamanho do frame original
     cv::Mat ll_resized;
-    cv::resize(ll_mask, ll_resized, original_frame.size());
+    cv::resize(ll_bin, ll_resized, original_frame.size(), 0, 0, cv::INTER_NEAREST);
 
+    // Processar máscara para extrair pontos e linhas
     MaskProcessor processor;
     cv::Mat mask_output;
     processor.processMask(ll_resized, mask_output, medianPoints);
 
     cv::Mat result_frame = mask_output.clone();
-    
+
+    // Cálculos de laneData e intersect (mantidos inalterados)
     laneData.valid = !medianPoints.empty();
     laneData.num_points = 0;
 
-    /*
-        d_mtr = s(y) * x_img_frame
-        s(y) = Asy * y_img_frame + Bsy
-        d_mtr = Asy * y_img_frame + Bsy
-    */
-    
-    // Verificar se medianPoints tem pelo menos um elemento
     if (medianPoints.size() >= 5) {
-        // Realizar cálculos apenas se medianPoints não estiver vazio
         float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - 224);
         float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - 224);
-        float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame; // Calibration data
-        float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame; // Instante measured data
+        float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame;
+        float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame;
 
-        // Verificar se deltaX_car_frame não é zero para evitar divisão por zero
-        if (std::abs(deltaX_car_frame) > 1e-8) { // Usar um pequeno epsilon para evitar divisão por zero
+        if (std::abs(deltaX_car_frame) > 1e-8) {
             float slope_car_frame = deltaY_car_frame / deltaX_car_frame;
-            float B = P2_x_img_frame - slope_car_frame * P2_x_car_frame; // b = y - m * x
-
+            float B = P2_x_img_frame - slope_car_frame * P2_x_car_frame;
             intersect.offset_cm = B;
             intersect.psi = std::atan(slope_car_frame);
         } else {
-            // Caso deltaX_car_frame seja zero, definir valores padrão para intersect
             intersect.offset_cm = 0.0f;
             intersect.psi = 0.0f;
             std::cout << "Aviso: deltaX_car_frame é zero, valores padrão definidos para intersect." << std::endl;
         }
     } else {
-        // Caso medianPoints esteja vazio, definir valores padrão
         intersect.offset_cm = 0.0f;
         intersect.psi = 0.0f;
         std::cout << "Aviso: medianPoints está vazio, valores padrão definidos para intersect." << std::endl;
     }
-
-/*     std::cout << "[" <<  __func__ <<"]" << std::endl
-                << "median points back: " << medianPoints.back().x << " " << medianPoints.back().y << std::endl
-                << "median points front: " << medianPoints.front().x << " " << medianPoints.back().y << std::endl; */
 
     if (laneData.valid) {
         int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
@@ -202,9 +195,9 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
             }
         }
     }
+
     return result_frame;
 }
-
 /**************************************************************************************/
 
 
