@@ -157,7 +157,13 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     cv::Mat mask_output;
     processor.processMask(ll_resized, mask_output, medianPoints);
 
-    cv::Mat result_frame = mask_output.clone();
+    // Criar máscara colorida para overlay
+    cv::Mat color_mask = cv::Mat::zeros(original_frame.size(), CV_8UC3);
+    color_mask.setTo(cv::Scalar(255, 0, 255), ll_resized); // Magenta para linhas
+
+    // Combinar a imagem original com a máscara colorida
+    cv::Mat result_frame;
+    cv::addWeighted(original_frame, 0.5, color_mask, 1.0, 0, result_frame);
 
     // Cálculos de laneData e intersect (mantidos inalterados)
     laneData.valid = !medianPoints.empty();
