@@ -1,0 +1,114 @@
+#ifndef LANE_HPP
+#define LANE_HPP
+
+#include <opencv2/opencv.hpp>
+#include <NvInfer.h>
+#include <cuda_runtime_api.h>
+#include <fstream>
+#include <thread>
+#include <atomic>
+#include <vector>
+#include <iostream>
+#include <chrono>
+
+
+using namespace nvinfer1;
+
+class Logger : public ILogger {
+public:
+    void log(Severity severity, const char* msg) noexcept override {
+        if (severity <= Severity::kWARNING)
+            std::cout << msg << std::endl;
+    }
+};
+
+struct LineCoef {
+    double m, b;
+    bool valid;
+};
+
+struct Buffer {
+    void* device;
+    float* host;
+    size_t size;
+};
+
+struct LaneData {
+    bool valid;
+    double timestamp;
+    int num_points;
+    struct Point {
+        float x;
+        float y;
+    } points[10];
+};
+
+struct LineIntersect {
+    cv::Point2f xl_t;   // Interseção da linha esquerda com roi_start_y (pixels)
+    cv::Point2f xl_b;   // Interseção da linha esquerda com roi_end_y (pixels)
+    cv::Point2f xr_t;   // Interseção da linha direita com roi_start_y (pixels)
+    cv::Point2f xr_b;   // Interseção da linha direita com roi_end_y (pixels)
+    float ratio_top;    // Razão da posição relativa na margem superior
+    float xs_b;         // Ponto x da mediana estimada na margem inferior
+    float slope;        // Inclinação da mediana estimada
+    float psi;          // Yaw (ângulo) da mediana estimada
+    float x_px_t;       // pixels a meio da imagem
+    float x_px_b;       // pixeis na base do roi
+    float scaleFactor_t;// scale factor top
+    float scaleFactor_b;// scale factor bottom
+    float var_a;        // variavel a    
+    float var_b;        // variavel b
+    float offset_cm;    // offset no centro de massa do carro
+    float w_real = 0.26; // distancia entre as linhas da pista em metros
+    bool valid;
+};
+
+static constexpr double Asy = -3.62e-06;
+static constexpr double Bsy = 2.21e-03;
+static constexpr double P1_x_car_frame = 0.22;
+static constexpr double P2_x_car_frame = 0.445;
+
+class TensorRTInference {
+public:
+    TensorRTInference(const std::string& engine_path);
+    ~TensorRTInference();
+
+    std::vector<std::vector<float>> infer(const std::vector<float>& inputData);
+
+private:
+    Logger logger;
+    IRuntime* runtime = nullptr;
+    ICudaEngine* engine = nullptr;
+    IExecutionContext* context = nullptr;
+
+    std::vector<Buffer> inputBuffers;
+    std::vector<Buffer> outputBuffers;
+    std::vector<void*> bindings;
+
+    void allocateBuffers();
+};
+
+class CSICamera {
+public:
+    CSICamera(int width, int height, int fps);
+    void start();
+    void stop();
+    cv::Mat read() const;
+
+private:
+    cv::VideoCapture cap;
+    cv::Mat frame;
+    std::thread thread;
+    std::atomic<bool> running{false};
+
+    void update();
+};
+
+std::vector<float>  preprocess_frame(const cv::Mat& frame);
+cv::Mat             postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect);
+LineIntersect       findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width);
+void                findOffset(LineIntersect& intersect);
+void                drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y);
+
+
+#endif
