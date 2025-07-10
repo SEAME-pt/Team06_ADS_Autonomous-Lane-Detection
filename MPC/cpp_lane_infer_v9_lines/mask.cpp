@@ -69,12 +69,14 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
         int left_x = firstWhite(row);
         int right_x = lastWhite(row);
 
+        
         if ((left_x == -1 || right_x == -1) && y < top_y + 50) continue;
         if (left_x == -1 || right_x == -1) break;
         left_edge_points.push_back(cv::Point(left_x, y));
         right_edge_points.push_back(cv::Point(right_x, y));
     }
-
+    
+    
     // Verify if de have Edges
     if (left_edge_points.size() < 10) {
         std::cerr << "[Warning] Left Edge Lost" << std::endl;
@@ -82,20 +84,26 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
         std::cerr << "[Warning] Right Edge Lost" << std::endl;
     } else {
         bottom_y = (left_edge_points.size() > right_edge_points.size()) 
-            ? right_edge_points.back().y 
-            : left_edge_points.back().y;
+        ? right_edge_points.back().y 
+        : left_edge_points.back().y;
     }
-
+    
     /********Linear Regression *********/
     LineCoef left_coeffs, right_coeffs;
-
+    
     std::vector<cv::Point> left_line_points = linearRegression(left_edge_points, top_y, bottom_y, width, left_coeffs);
     std::vector<cv::Point> right_line_points = linearRegression(right_edge_points, top_y, bottom_y, width, right_coeffs);
+    
+/*     std::cout << "left          " << left_line_points << std::endl;
+    std::cout << "right         " << right_line_points << std::endl; */
 
     cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
 
     if (left_coeffs.valid && right_coeffs.valid) {
         if (!left_line_points.empty() && !right_line_points.empty()) {
+
+            std::cout << "      entrou         " << std::endl;
+            
             cv::line(output, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2); // Vermelho
             cv::line(output, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2); // Azul
         }

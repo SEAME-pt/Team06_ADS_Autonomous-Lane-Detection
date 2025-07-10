@@ -17,6 +17,11 @@ TensorRTInference::TensorRTInference(const std::string& engine_path) {
     context = engine->createExecutionContext();
 
     allocateBuffers();
+
+    Dims dims = engine->getBindingDimensions(1); // output index = 1 se for o output
+    std::cout << "Output dims: ";
+    for (int i = 0; i < dims.nbDims; ++i) std::cout << dims.d[i] << " ";
+    std::cout << std::endl;
 }
 
 /**************************************************************************************/
@@ -119,7 +124,7 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
     return inputData;
 }
 
-cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints,
+/* cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints,
                     LaneData& laneData, LineIntersect& intersect) {
     const int height = original_frame.rows;
     const int width = original_frame.cols;
@@ -203,7 +208,102 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     }
 
     return result_frame;
-}
+} */
 /**************************************************************************************/
+cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints,
+                    LaneData& laneData, LineIntersect& intersect) {
+    const int height = 224;
+    const int width = 224;
+
+/*     // 🧪 Mostrar os 4 canais do output para debug (podes comentar isto depois)
+    for (int i = 0; i < 4; ++i) {
+        cv::Mat channel(height, width, CV_32FC1, ll_output + i * height * width);
+        cv::Mat bin;
+        cv::threshold(channel, bin, 0.1, 255, cv::THRESH_BINARY);
+        bin.convertTo(bin, CV_8UC1);
+        cv::imshow("Canal " + std::to_string(i), bin);
+    }
+    cv::waitKey(0);  // Pressiona uma tecla para continuar após ver os canais */
+
+    // ✅ Usa apenas o canal que representa a linha desejada (ex: canal 1 = linha central)
+    int selected_channel = 0;
+    cv::Mat ll_mask(height, width, CV_32FC1, ll_output + selected_channel * height * width);
+
+    // Binarização
+    cv::Mat ll_bin;
+    cv::threshold(ll_mask, ll_bin, 0.1, 255, cv::THRESH_BINARY);
+    ll_bin.convertTo(ll_bin, CV_8UC1);
+
+    // Morfologia para limpeza
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+    cv::morphologyEx(ll_bin, ll_bin, cv::MORPH_CLOSE, kernel);
+    cv::dilate(ll_bin, ll_bin, kernel);
+
+    // Exibir a máscara usada (opcional para debug)
+    cv::imshow("ll_mask_raw", ll_bin);
+    cv::waitKey(1);
+
+    // Redimensionar para o tamanho do frame original
+    cv::Mat ll_resized;
+    cv::resize(ll_bin, ll_resized, original_frame.size(), 0, 0, cv::INTER_NEAREST);
+
+    // Aplicar ROI
+    int roi_start_y = static_cast<int>(0.50 * original_frame.rows);
+    int roi_end_y = static_cast<int>(0.95 * original_frame.rows);
+    ll_resized(cv::Rect(0, 0, original_frame.cols, roi_start_y)) = 0;
+    ll_resized(cv::Rect(0, roi_end_y, original_frame.cols, original_frame.rows - roi_end_y)) = 0;
+
+    // Processar a máscara
+    MaskProcessor processor;
+    cv::Mat mask_output;
+    processor.processMask(ll_resized, mask_output, medianPoints);
+
+    // Criar máscara colorida para overlay
+    cv::Mat color_mask = cv::Mat::zeros(original_frame.size(), CV_8UC3);
+    color_mask.setTo(cv::Scalar(255, 0, 255), ll_resized);  // Magenta
+
+    // Combinar com a imagem original
+    cv::Mat result_frame;
+    cv::addWeighted(original_frame, 0.5, color_mask, 1.0, 0, result_frame);
+
+    // === Resto do processamento de geometria (mantido igual) ===
+    laneData.valid = !medianPoints.empty();
+    laneData.num_points = 0;
+
+    if (medianPoints.size() >= 5) {
+        float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - 224);
+        float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - 224);
+        float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame;
+        float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame;
+
+        if (std::abs(deltaX_car_frame) > 1e-8) {
+            float slope_car_frame = deltaY_car_frame / deltaX_car_frame;
+            float B = P2_x_img_frame - slope_car_frame * P2_x_car_frame;
+            intersect.offset_cm = B;
+            intersect.psi = std::atan(slope_car_frame);
+        } else {
+            intersect.offset_cm = 0.0f;
+            intersect.psi = 0.0f;
+            std::cout << "Aviso: deltaX_car_frame é zero, valores padrão definidos para intersect." << std::endl;
+        }
+    } else {
+        intersect.offset_cm = 0.0f;
+        intersect.psi = 0.0f;
+        std::cout << "Aviso: medianPoints está vazio, valores padrão definidos para intersect." << std::endl;
+    }
+
+    if (laneData.valid) {
+        int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
+        for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
+            if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
+                laneData.points[laneData.num_points].x = (medianPoints[i].x);
+                laneData.points[laneData.num_points].y = (medianPoints[i].y);
+                laneData.num_points++;
+            }
+        }
+    }
+
+    return result_frame;
+}
 
 

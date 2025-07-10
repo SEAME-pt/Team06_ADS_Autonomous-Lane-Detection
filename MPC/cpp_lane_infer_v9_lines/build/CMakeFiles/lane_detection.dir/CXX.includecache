@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/lane.cpp
-lane.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/lane.hpp
-mask.hpp
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/mask.hpp
-
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/lane.hpp
 opencv2/opencv.hpp
 -
@@ -31,6 +25,10 @@ iostream
 -
 chrono
 -
+
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/mask.cpp
+mask.hpp
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/mask.hpp
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v9_lines/mask.hpp
 opencv2/opencv.hpp
