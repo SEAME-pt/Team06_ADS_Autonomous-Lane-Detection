@@ -73,7 +73,7 @@ public:
     TensorRTInference(const std::string& engine_path);
     ~TensorRTInference();
 
-    std::vector<std::vector<float>> infer(const std::vector<float>& inputData);
+    std::vector<float> infer(const std::vector<float>& inputData);
 
 private:
     Logger logger;
@@ -105,7 +105,7 @@ private:
 };
 
 std::vector<float>  preprocess_frame(const cv::Mat& frame);
-cv::Mat             postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect);
+cv::Mat             postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect);
 LineIntersect       findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width);
 void                findOffset(LineIntersect& intersect);
 void                drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y);

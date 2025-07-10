@@ -3,7 +3,7 @@
 
 TensorRTInference::TensorRTInference(const std::string& engine_path) {
     std::ifstream engineFile(engine_path, std::ios::binary);
-    if (!engineFile) throw std::runtime_error("Erro ao abrir engine");
+    if (!engineFile) throw std::runtime_error("Error engine");
 
     engineFile.seekg(0, engineFile.end);
     size_t fsize = engineFile.tellg();
@@ -29,7 +29,7 @@ TensorRTInference::~TensorRTInference() {
 void TensorRTInference::allocateBuffers() {
     int nbBindings = engine->getNbBindings();
     inputBuffers.resize(1);
-    outputBuffers.resize(nbBindings - 1);
+    outputBuffers.resize(1);
     bindings.resize(nbBindings);
 
     for (int i = 0; i < nbBindings; ++i) {
@@ -47,21 +47,17 @@ void TensorRTInference::allocateBuffers() {
         if (engine->bindingIsInput(i)) {
             inputBuffers[0] = {deviceMem, hostMem, vol * typeSize};
         } else {
-            outputBuffers[i - 1] = {deviceMem, hostMem, vol * typeSize};
+            outputBuffers[0] = {deviceMem, hostMem, vol * typeSize};
         }
     }
 }
 
 /**************************************************************************************/
-std::vector<std::vector<float>> TensorRTInference::infer(const std::vector<float>& inputData) {
-    cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
-    context->executeV2(bindings.data());
-    std::vector<std::vector<float>> outputs;
-    for (auto& out : outputBuffers) {
-        cudaMemcpy(out.host, out.device, out.size, cudaMemcpyDeviceToHost);
-        outputs.emplace_back(out.host, out.host + out.size / sizeof(float));
-    }
-    return outputs;
+std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData) {
+      cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
+        context->executeV2(bindings.data());
+        cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
+        return std::vector<float>(outputBuffers[0].host, outputBuffers[0].host + outputBuffers[0].size / sizeof(float));
 }
 
 /**************************************************************************************/
@@ -123,48 +119,35 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
     return inputData;
 }
 
-cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame, 
-                    std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect) {
-    //std::cout << "  postprocess entrou " << std::endl;
-    
+cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints,
+                    LaneData& laneData, LineIntersect& intersect) {
+
     const int height = original_frame.rows;
     const int width = original_frame.cols;
-    int roi_start_y = static_cast<int>(0.50 * height); // 224
-    int roi_end_y = static_cast<int>(0.95 * height);   // 425.6
+    int roi_start_y = static_cast<int>(0.50 * height); // 224 / 2
+    int roi_end_y = static_cast<int>(0.95 * height);   // 224 * 0.95
     int roi_height = roi_end_y - roi_start_y;
 
     cv::Rect roi(0, roi_start_y, width, roi_height);
-    cv::Mat da_logits(2, height * width, CV_32FC1, da_output);
     cv::Mat ll_logits(2, height * width, CV_32FC1, ll_output);
-    cv::Mat da_mask(height, width, CV_8UC1, cv::Scalar(0));
     cv::Mat ll_mask(height, width, CV_8UC1, cv::Scalar(0));
 
     for (int i = 0; i < height * width; ++i) {
-        float da0 = da_logits.at<float>(0, i);
-        float da1 = da_logits.at<float>(1, i);
         float ll0 = ll_logits.at<float>(0, i);
         float ll1 = ll_logits.at<float>(1, i);
 
-        da_mask.at<uchar>(i / width, i % width) = (da1 > da0) ? 255 : 0;
         ll_mask.at<uchar>(i / width, i % width) = (ll1 > ll0) ? 255 : 0;
     }
 
-    da_mask(cv::Rect(0, 0, width, roi_start_y)) = 0;
-    da_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0;
     ll_mask(cv::Rect(0, 0, width, roi_start_y)) = 0;
     ll_mask(cv::Rect(0, roi_end_y, width, height - roi_end_y)) = 0;
 
-    cv::Mat da_resized, ll_resized;
-    cv::resize(da_mask, da_resized, original_frame.size());
+    cv::Mat ll_resized;
     cv::resize(ll_mask, ll_resized, original_frame.size());
 
     MaskProcessor processor;
     cv::Mat mask_output;
-    processor.processMask(da_resized, ll_resized, mask_output, medianPoints);
-    //std::cout << "  processMask check " << std::endl;
-
-    //processor.processMask(da_resized, mask_output, medianPoints);
-
+    processor.processMask(ll_resized, mask_output, medianPoints);
 
     cv::Mat result_frame = mask_output.clone();
     
@@ -223,72 +206,5 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
 }
 
 /**************************************************************************************/
-LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width) {
-    LineIntersect intersect;
-    intersect.valid = false;
 
-    int roi_start_y = static_cast<int>(0.50 * height); // y = 224
-    int roi_end_y = static_cast<int>(0.95 * height);   // y = 426
-
-    if (left_coeffs.valid && right_coeffs.valid) {
-        intersect.xl_t = { static_cast<float>(left_coeffs.m * roi_start_y + left_coeffs.b), static_cast<float>(roi_start_y) };
-        intersect.xl_b = { static_cast<float>(left_coeffs.m * roi_end_y + left_coeffs.b), static_cast<float>(roi_end_y) };
-        intersect.xr_t = { static_cast<float>(right_coeffs.m * roi_start_y + right_coeffs.b), static_cast<float>(roi_start_y) };
-        intersect.xr_b = { static_cast<float>(right_coeffs.m * roi_end_y + right_coeffs.b), static_cast<float>(roi_end_y) };
-        
-        intersect.ratio_top = (intersect.xr_t.x - width / 2.0f) / (intersect.xr_t.x - intersect.xl_t.x);
-        intersect.xs_b = intersect.xr_b.x - intersect.ratio_top * (intersect.xr_b.x - intersect.xl_b.x);
-        intersect.slope = (intersect.xs_b - width / 2.0f + 22.5) / (roi_end_y - roi_start_y);
-        intersect.psi = std::atan(intersect.slope);
-        intersect.valid = true;
-
-        // Pixels on top and bottom image
-        intersect.x_px_t = intersect.xr_t.x - intersect.xl_t.x;
-        intersect.x_px_b = intersect.xr_b.x - intersect.xl_b.x;
-
-        // Scale Factor | d = s(y).x_px + b | with b = 0
-        intersect.scaleFactor_t = intersect.w_real / intersect.x_px_t;
-        intersect.scaleFactor_b = intersect.w_real / intersect.x_px_b;
-
-        // var a | s(y) = a * y + b (=) a = delta(s(y)) / delta(y) |,  with b = 0 
-        intersect.var_a = (intersect.scaleFactor_b - intersect.scaleFactor_t) / (intersect.xl_b.y - intersect.xl_t.y);
-
-        // var b para o top que será igual ao bottom
-        intersect.var_b = intersect.scaleFactor_t - (intersect.var_a * intersect.xl_t.y);
-    }
-
-    return intersect;
-}
-/**************************************************************************************/
-
-void drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y){
-    if (left_coeffs.valid && right_coeffs.valid) {
-            std::vector<cv::Point> left_line_points, right_line_points;
-            for (int y = roi_start_y; y < roi_end_y; y++) {
-                int left_x = static_cast<int>(left_coeffs.m * y + left_coeffs.b);
-                int right_x = static_cast<int>(right_coeffs.m * y + right_coeffs.b);
-                if (left_x >= 0 && left_x < result_frame.cols)
-                left_line_points.push_back(cv::Point(left_x, y));
-                if (right_x >= 0 && right_x < result_frame.cols)
-                right_line_points.push_back(cv::Point(right_x, y));
-            }
-            
-            if (!left_line_points.empty() && !right_line_points.empty()) {
-                cv::line(result_frame, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2);
-                cv::line(result_frame, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2);
-            }
-            
-            std::vector<cv::Point> roi_median_points;
-            for (const auto& p : medianPoints) {
-                if (p.y >= roi_start_y && p.y < roi_end_y) {
-                    roi_median_points.push_back(p);
-                }
-            }
-            if (roi_median_points.size() >= 2) {
-                cv::line(result_frame, roi_median_points.front(), roi_median_points.back(), cv::Scalar(0, 255, 0), 2);
-            }
-        }
-}
-
-/**************************************************************************************/
 

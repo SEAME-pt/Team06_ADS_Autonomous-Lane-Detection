@@ -6,71 +6,6 @@
 #include "../FServo/FServo.hpp"
 #include "../Control/ControlAssembly.hpp"
 
-void visualize_pixel_markers(cv::Mat& frame) {
-    int y_pos = static_cast<int>(0.95 * frame.rows); // 95% da altura (y = 342 para 448px)
-    int y_pos_2 = static_cast<int>(0.5 * frame.rows); // 50% da altura (y =  para 448px)
-    bool up = true;
-    cv::Mat marker_frame = frame.clone(); // Criar uma cópia para não modificar o original
-    
-    // Desenhar marcadores a cada 10 pixels ao longo da largura
-    for (int x = 0; x < frame.cols; x += 10) {
-        cv::circle(marker_frame, cv::Point(x, y_pos), 2, cv::Scalar(0, 0, 255), 0);
-        cv::circle(marker_frame, cv::Point(x, y_pos_2), 2, cv::Scalar(0, 0, 255), 0);
-        if (x % 10 == 0) {
-            std::string label = std::to_string(x);
-            if (up == true){
-                cv::putText(marker_frame, label, cv::Point(x, y_pos - 10),
-                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(0, 0, 0), 0);
-                cv::putText(marker_frame, label, cv::Point(x, y_pos_2 - 10),
-                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(0, 0, 0), 0);
-                up = false;
-            }
-            else{
-                cv::putText(marker_frame, label, cv::Point(x, y_pos + 10),
-                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(255, 255, 255), 0);
-                cv::putText(marker_frame, label, cv::Point(x, y_pos_2 + 10),
-                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(255, 255, 255), 0);
-                up = true;
-            }
-        }
-    }
-    cv::imshow("Pixel Markers", marker_frame);
-}
-
-void deBug(double delta, LaneData laneData, LineIntersect intersect, int frameCount, std::vector<cv::Point> medianPoints){
-
-    if (intersect.valid && frameCount % 20 == 0) {
-/*         std::cout << "Left Top: (" << intersect.xl_t.x << ", " << intersect.xl_t.y << ")" << std::endl;
-        std::cout << "Left Bottom: (" << intersect.xl_b.x << ", " << intersect.xl_b.y << ")" << std::endl;
-        std::cout << "Right Top: (" << intersect.xr_t.x << ", " << intersect.xr_t.y << ")" << std::endl;
-        std::cout << "Right Bottom: (" << intersect.xr_b.x << ", " << intersect.xr_b.y << ")" << std::endl; */
-
-/*         std::cout << "offset_cm: " << intersect.offset_cm << std::endl;
-        std::cout << "pixels on top: " << intersect.x_px_t << std::endl;
-        std::cout << "pixels on bottom: " << intersect.x_px_b << std::endl;
-        std::cout << "s(y1): " << intersect.scaleFactor_t << std::endl;
-        std::cout << "s(y2): " << intersect.scaleFactor_b << std::endl;
-        std::cout << "var a: " << intersect.var_a << std::endl;
-        std::cout << "var b: " << intersect.var_b << std::endl;
-        std::cout << "Psi: " << intersect.psi << std::endl; */
-        //std::cout << "median points: " << medianPoints << std::endl;
-
-    }
-        
-/*     if (intersect.valid && frameCount % 20 == 0) {
-        std::cout << "ratio: " << intersect.ratio_top << std::endl;
-        //std::cout << "xs_b: " << intersect.xs_b << std::endl;
-        std::cout << "slope: " << intersect.slope << std::endl;
-        std::cout << "Psi: " << intersect.psi << std::endl;
-        std::cout << "Psi: " << intersect.psi * 180.0 / M_PI << " deg" << std::endl ;
-        std::cout << " Delta: " + std::to_string(delta * 180.0 / M_PI) + "deg" << std::endl << std::endl;
-    } */
-/*     if (laneData.valid && frameCount % 20 == 0) {
-        for (int i = 0; i < laneData.num_points; ++i) {
-            std::cout << "  Ponto " << i << ": (" << laneData.points[i].x << ", " << laneData.points[i].y << ")" << std::endl;
-        }
-    } */
-}
 
 int main() {
     TensorRTInference trt("../model.engine");
@@ -106,7 +41,7 @@ int main() {
     int frameCount = 0;
 
     while (true) {
-        //std::cout << "Entrou while " << std::endl;
+std::cout << "Entrou while " << std::endl;
         cv::Mat frame = cam.read();
         if (frame.empty()) continue;
         auto currentTime = std::chrono::steady_clock::now();
@@ -117,14 +52,14 @@ int main() {
         smoothedFPS = smoothedFPS == 0.0 ? currentFPS : alpha * smoothedFPS + (1.0 - alpha) * currentFPS;
         
         std::vector<float> input = preprocess_frame(frame);
-        //std::cout << "preprocess frame check " << std::endl;
+std::cout << "preprocess frame check " << std::endl;
 
         auto outputs = trt.infer(input);
         std::vector<cv::Point> medianPoints;
         LaneData laneData;
         LineIntersect intersect;
-        auto result = postprocess(outputs[0].data(), outputs[1].data(), frame, medianPoints, laneData, intersect);
-        //std::cout << "postprocess check " << std::endl;
+        auto result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
+std::cout << "postprocess check " << std::endl;
 
         // Visualizar marcadores de pixels
         //visualize_pixel_markers(result);
@@ -168,7 +103,7 @@ int main() {
         //deBug(delta, laneData, intersect, frameCount, medianPoints);
         frameCount++;
         cv::imshow("Lane Detection", result);
-        //std::cout << "imshow check " << std::endl;
+std::cout << "imshow check " << std::endl;
 
         if (cv::waitKey(1) == 'q') break;
 
