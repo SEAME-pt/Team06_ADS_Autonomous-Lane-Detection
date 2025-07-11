@@ -41,7 +41,7 @@ int main() {
     int frameCount = 0;
 
     while (true) {
-std::cout << "Entrou while " << std::endl;
+//std::cout << "Entrou while " << std::endl;
         cv::Mat frame = cam.read();
         if (frame.empty()) continue;
         auto currentTime = std::chrono::steady_clock::now();
@@ -52,14 +52,14 @@ std::cout << "Entrou while " << std::endl;
         smoothedFPS = smoothedFPS == 0.0 ? currentFPS : alpha * smoothedFPS + (1.0 - alpha) * currentFPS;
         
         std::vector<float> input = preprocess_frame(frame);
-std::cout << "preprocess frame check " << std::endl;
+//std::cout << "preprocess frame check " << std::endl;
 
         auto outputs = trt.infer(input);
         std::vector<cv::Point> medianPoints;
         LaneData laneData;
         LineIntersect intersect;
         auto result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
-std::cout << "postprocess check " << std::endl;
+//std::cout << "postprocess check " << std::endl;
 
         // Visualizar marcadores de pixels
         //visualize_pixel_markers(result);
@@ -95,7 +95,7 @@ std::cout << "postprocess check " << std::endl;
         
         int centerX = result.cols / 2;
         int centerY = result.rows;
-        int lineLength = 200;
+        int lineLength = 300;
         cv::Point lineStart(centerX, centerY - lineLength);
         cv::Point lineEnd(centerX, centerY - 20);
         cv::line(result, lineStart, lineEnd, cv::Scalar(250, 200, 200), 2);
@@ -103,7 +103,7 @@ std::cout << "postprocess check " << std::endl;
         //deBug(delta, laneData, intersect, frameCount, medianPoints);
         frameCount++;
         cv::imshow("Lane Detection", result);
-std::cout << "imshow check " << std::endl;
+//std::cout << "imshow check " << std::endl;
 
         if (cv::waitKey(1) == 'q') break;
 
