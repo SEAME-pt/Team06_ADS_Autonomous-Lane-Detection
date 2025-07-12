@@ -8,7 +8,7 @@ std::vector<cv::Point> MaskProcessor::linearRegression(const std::vector<cv::Poi
     coeffs = {0.0, 0.0, false};
     std::vector<cv::Point> edge;
     if (points.size() < 2) {
-        std::cout << "no points "<< std::endl;
+        std::cout << "                                                  no points "<< std::endl;
         return edge;
     }
     double sumX = 0.0, sumY = 0.0, sumXY = 0.0, sumXX = 0.0;
@@ -57,7 +57,7 @@ int MaskProcessor::lastWhite(const cv::Mat& row) {
 
 bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>& left_edge, std::vector<cv::Point>& right_edge) {
     int height = mask_bin.rows, width = mask_bin.cols;
-    int center_x = width / 2, margin = 20, range = 20;
+    int center_x = width / 2, margin = 5, range = 20;
 
     left_edge.clear();
     right_edge.clear();
@@ -65,84 +65,85 @@ bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>
     // Passo 1: Verificar se o pixel central na linha base é branco
     int base_y = static_cast<int>(height * 0.95) - 1;
 
-    // Passo 2: Encontrar o último pixel branco na sequência para esquerda e direita
+    // Passo 2: Encontrar 
+    // o último pixel branco na sequência para esquerda e direita
     int left_x = -1, right_x = -1;
     int left_contig = -1, right_contig = -1;
+    int left_count = 0, right_count = 0;
+    int left_start_limit = static_cast<int>(height * 0.75);
+    int right_start_limit = static_cast<int>(height * 0.66);
+    bool reset_left = false, reset_right = false;
 
     // Passo 3: Busca de baixo para cima nas linhas subsequentes
     for (int y = base_y; y >= height / 2; --y) {
         const cv::Mat row = mask_bin.row(y);
         int new_right_x = -1, new_left_x = -1;
 
-        if (left_x == -1 && y > height * 0.66){
+        if (left_x == -1 && y > left_start_limit){
+            //  std::cout << "          entrou no primeiro" << std::endl;
             for (int x = center_x; x >= margin; --x) {
-                if (row.at<uchar>(x) == 255 && x < width / 2 - 100) {
-                    left_x = x; // Último pixel branco na sequência
+                if (row.at<uchar>(x) == 255 && x < center_x - (center_x / 4)) {
+                    left_x = x; 
                     left_contig ++;
+                    left_count ++;
                     break;
                 }
             }
         }
-        else if (left_contig != -1 && left_contig <= 10){
-            // Borda esquerda: verificar mesma coordenada, depois direita, depois esquerda
-            // Procurar para a direita (left_x até left_x + range, limitado por center_x)
-            for (int x = std::min(left_x + range, center_x); x >= std::max(margin, left_x - range); --x) {
-                //if (x == left_x + range) std::cout << " X left    " << x << std::endl;
+        else if (left_x != -1 && left_contig != -1 && left_contig <= 10){
+            for (int x = std::min(left_x + range, center_x + 100); x >= std::max(margin, left_x - range); --x) {
                 if (row.at<uchar>(x) == 255) {
-                    new_left_x = x; // Último pixel branco na sequência
-                    break; // Para ao encontrar um pixel não branco após uma sequência branca
+                    new_left_x = x; 
+                    left_count ++;
+                    break; 
                 }
             }
             if (new_left_x != -1) left_x = new_left_x;
             else left_contig++;
         }
+        if (left_contig > 10 && left_count < 30) {
+            std::cout << " reset left" << std::endl;
+            left_x = -1;
+            left_contig = -1;
+            left_count = 0;
+            reset_left = true;
+        }
         
-        if (right_x == -1 && y > height * 0.66){
-            // Right edge: buscar do centro para a direita (x cresce)
+        if (right_x == -1 && y > right_start_limit){
             for (int x = center_x; x < width - margin; ++x) {
-                if (row.at<uchar>(x) == 255 && x > width / 2 + 100) {
-                    right_x = x; // Último pixel branco na sequência
+                if (row.at<uchar>(x) == 255 && x > center_x + (center_x / 4)) {
+                    right_x = x; 
                     right_contig++;
+                    right_count++;
                     break;
                 }
             }
-        } else if (right_contig != -1 && right_contig <= 10) {
-            // Procurar para a esquerda (right_x até right_x - range, limitado por center_x)
+        } else if (right_x != -1 && right_contig != -1 && right_contig <= 10) {
             for (int x = std::max(center_x, right_x - range); x <= std::min( width - margin, right_x + range); ++x) {
-                //if (x == right_x - range) std::cout << "    X right       " << x << std::endl << std::endl;
                 if (row.at<uchar>(x) == 255) {
-                    new_right_x = x; // Último pixel branco na sequência
-                    break; // Para ao encontrar um pixel não branco após uma sequência branca
+                    new_right_x = x;
+                    right_count++;
+                    break;
                 }
             }
             if (new_right_x != -1) right_x = new_right_x;
             else right_contig++;
         }
+        if (right_contig > 10 && right_count < 30) {
+            right_x = -1;
+            right_contig = -1;
+            right_count = 0;
+            reset_right = true;
+        }
 
         // Atualiza as coordenadas e adiciona os pontos
-        if (left_x != -1 && left_contig <= 10 && right_contig != -1){
-            left_edge.emplace(left_edge.begin(), left_x, y);
-        }
-        if (right_x != -1 && right_contig <= 10 && right_contig != -1) {
-            right_edge.emplace(right_edge.begin(), right_x, y);
-        }
-/*         std::cout << std::endl << "left Point " << left_x << std::endl;
-        std::cout << "Right Point " << right_x << std::endl << std::endl; */
+        if (left_x != -1 && left_contig <= 10 && left_contig != -1) left_edge.emplace(left_edge.begin(), left_x, y);
+        if (reset_left == true)  left_edge.clear();
+
+        if (right_x != -1 && right_contig <= 10 && right_contig != -1) right_edge.emplace(right_edge.begin(), right_x, y);
+        if (reset_right == true)  right_edge.clear();
+
     }
-
-    left_edge.erase(
-        std::remove_if(left_edge.begin(), left_edge.end(), [margin, width](const cv::Point& pt) {
-            return pt.x <= margin || pt.x >= width - margin;
-        }),
-        left_edge.end()
-    );
-
-    right_edge.erase(
-        std::remove_if(right_edge.begin(), right_edge.end(), [margin, width](const cv::Point& pt) {
-            return pt.x <= margin || pt.x >= width - margin;
-        }),
-        right_edge.end()
-    );
     return true;
 }
 
@@ -159,6 +160,10 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
 
     bool findEdges = processEdges(mask_bin, left_edge_points, right_edge_points);
 
+    const double a = -0.00000362, b = 0.00221;
+    double x_px = 0, sy = 0;
+    double d = 0.26;
+
     if (findEdges == false)
         std::cout << "Lane Not Found" << std::endl;
     
@@ -169,34 +174,100 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
     if (right_edge_points.size() < 10) {
         std::cerr << "[Warning] Right Edge Lost" << std::endl;
     } 
-    if (!left_edge_points.empty() && !right_edge_points.empty()) {
+/*     if (!left_edge_points.empty() && !right_edge_points.empty()) {
         bottom_y = (left_edge_points.size() > right_edge_points.size()) 
         ? right_edge_points.back().y 
         : left_edge_points.back().y;
+    }   */  
+    if (left_edge_points.empty() && right_edge_points.empty()){
+        std::cerr << "[Warning Break!!!!!!!!!!!!] Edges Lost" << std::endl;
+
+        return;
+    } 
+
+    int bottom_left = bottom_y, bottom_right = bottom_y;
+    int top_left = top_y , top_right = top_y;
+    if (!left_edge_points.empty()){
+        bottom_left = left_edge_points.back().y;
+        std::cout << " encontrou a esquerda" << std::endl;
     }
-    
+    else if (left_edge_points.empty() && !right_edge_points.empty()){
+        std::cout << "              Entrou na excepção    left!!!" << std::endl;
+        auto it = right_edge_points.begin();
+        for (int y = it->y; it != right_edge_points.end(); ++it, y = it->y) {
+            sy = a * y + b;
+            x_px = d / sy;
+            int left_x = it->x - x_px;
+            left_edge_points.emplace_back(left_x, y);
+        }
+        bottom_left = right_edge_points.back().y;
+        top_left = right_edge_points.front().y;
+    }
+    if (!right_edge_points.empty()) {
+        std::cout << " encontrou a direita" << std::endl;
+        bottom_right = right_edge_points.back().y;
+    }
+    else if (right_edge_points.empty() && !left_edge_points.empty()){
+        std::cout << "              Entrou na excepção  right!!!" << std::endl;
+        
+        auto it = left_edge_points.begin();
+        for (int y = it->y; it != left_edge_points.end(); ++it, y = it->y) {
+            sy = a * y + b;
+            x_px = d / sy;
+            int right_x = it->x + x_px;
+            right_edge_points.emplace_back(right_x, y);
+        }
+        bottom_right = left_edge_points.back().y;
+        top_right = left_edge_points.front().y;
+
+    }
+    std::cout << "right   back      " << right_edge_points.back() << std::endl;
+    std::cout << "left    back     " << left_edge_points.back() << std::endl;    
+    std::cout << "right   front      " << right_edge_points.front() << std::endl;
+    std::cout << "left    front     " << left_edge_points.front() << std::endl;
+    //std::cout << "right   size      " << right_edge_points << std::endl;
+    //std::cout << "left   size      " << left_edge_points << std::endl;
+
+
     //std::cout << " checking linearRegression " << std::endl;
     /********Linear Regression *********/
     LineCoef left_coeffs, right_coeffs;
     
-    std::vector<cv::Point> left_line_points = linearRegression(left_edge_points, top_y, bottom_y, width, left_coeffs);
-    std::vector<cv::Point> right_line_points = linearRegression(right_edge_points, top_y, bottom_y, width, right_coeffs);
-    
-/*     std::cout << "left          " << left_line_points << std::endl;
-    std::cout << "right         " << right_line_points << std::endl; */
+    std::vector<cv::Point> left_line_points = linearRegression(left_edge_points, top_left, bottom_left, width, left_coeffs);
+    std::vector<cv::Point> right_line_points = linearRegression(right_edge_points, top_right, bottom_right, width, right_coeffs);
 
+/*     std::cout << std::endl << "Linear left      back    " << left_line_points.back() << std::endl;
+    std::cout << "Linear left      front    " << left_line_points.front() << std::endl;
+    std::cout << "Linear right     back    " << right_line_points.back() << std::endl;
+    std::cout << "Linear right     front    " << right_line_points.front() << std::endl << std::endl; */
+
+    //std::cout << "Linear left      front    " << left_line_points << std::endl;
+    //std::cout << "Linear right      front    " << right_line_points << std::endl;
+
+/*     if (!left_edge_points.empty()){
+        cv::Point point_back (left_edge_points.back().x, left_edge_points.back().y);
+        cv::Point point_front (left_edge_points.front().x, left_edge_points.front().y);
+        cv::circle(output, point_back, 5, cv::Scalar(0,0,0), -1 );
+        cv::circle(output, point_front, 5, cv::Scalar(0,0,0), -1 );
+    } */
+    
     cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
-    if (!left_line_points.empty())
+    if (!left_line_points.empty()){
+        cv::Point point_left_back (left_line_points.back().x, left_line_points.back().y);
+        cv::Point point_left_front (left_line_points.front().x, left_line_points.front().y);
         cv::line(output, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2); // Vermelho
+        cv::circle(output, point_left_back, 5, cv::Scalar(255,100,0), -1 );
+        cv::circle(output, point_left_front, 5, cv::Scalar(200,100,0), -1 );
+    }
     if (!right_line_points.empty())
         cv::line(output, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2); // Azul
-    if (!right_line_points.empty() && !left_line_points.empty()){
+/*     if (!right_line_points.empty() && !left_line_points.empty()){
         std::cout << "[" <<  __func__ <<"]" << std::endl
         << "median points back: " << left_line_points.back().x << " " << left_line_points.back().y << " -- " << 
                                     right_line_points.back().x << " " << right_line_points.back().y << std::endl
         << "median points front: " << left_line_points.front().x << " " << left_line_points.front().y << " -- "
                                     << right_line_points.front().x << " " << right_line_points.front().y << std::endl;
-    }
+    } */
 
     medianPoints.clear();
     for (int y = top_y; y <= bottom_y; y++) {

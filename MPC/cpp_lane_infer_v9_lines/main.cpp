@@ -13,7 +13,7 @@ int main() {
     cam.start();
     
     // Inicializar NMPC   L,  dt, N, delta_max, w_x, w_y, w_psi, w_delta
-    NMPCController nmpc(0.15, 0.1, 10, 0.524, 0.1, 0.0, 20.0, 10.0);
+    NMPCController nmpc(0.15, 0.1, 10, 0.698132, 0.1, 0.0, 20.0, 20.0);
     std::vector<double> x0 = {0.0, 0.0, 0.0}; // [x, y, psi]
     
     // Inicializar servo
@@ -75,7 +75,7 @@ int main() {
         
         // Converter delta de radianos para graus e limitar
         int steering_angle = static_cast<int>(delta * 180.0 / M_PI);
-        steering_angle = std::max(-35, std::min(35, steering_angle));
+        steering_angle = std::max(-40, std::min(40, steering_angle));
         
         servo.set_steering(steering_angle);
         
