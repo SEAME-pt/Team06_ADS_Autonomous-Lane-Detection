@@ -71,7 +71,7 @@ bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>
     int left_contig = -1, right_contig = -1;
     int left_count = 0, right_count = 0;
     int left_start_limit = static_cast<int>(height * 0.75);
-    int right_start_limit = static_cast<int>(height * 0.66);
+    int right_start_limit = static_cast<int>(height * 0.75);
     bool reset_left = false, reset_right = false;
 
     // Passo 3: Busca de baixo para cima nas linhas subsequentes
@@ -160,7 +160,7 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
 
     bool findEdges = processEdges(mask_bin, left_edge_points, right_edge_points);
 
-    const double a = -0.00000362, b = 0.00221;
+    const double a = -0.00000269, b = 0.00168;
     double x_px = 0, sy = 0;
     double d = 0.26;
 
@@ -261,13 +261,13 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
     }
     if (!right_line_points.empty())
         cv::line(output, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2); // Azul
-/*     if (!right_line_points.empty() && !left_line_points.empty()){
+    if (!right_line_points.empty() && !left_line_points.empty()){
         std::cout << "[" <<  __func__ <<"]" << std::endl
         << "median points back: " << left_line_points.back().x << " " << left_line_points.back().y << " -- " << 
                                     right_line_points.back().x << " " << right_line_points.back().y << std::endl
         << "median points front: " << left_line_points.front().x << " " << left_line_points.front().y << " -- "
                                     << right_line_points.front().x << " " << right_line_points.front().y << std::endl;
-    } */
+    }
 
     medianPoints.clear();
     for (int y = top_y; y <= bottom_y; y++) {

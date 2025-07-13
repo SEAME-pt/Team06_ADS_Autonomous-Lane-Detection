@@ -6,10 +6,40 @@
 #include "../FServo/FServo.hpp"
 #include "../Control/ControlAssembly.hpp"
 
+void visualize_pixel_markers(cv::Mat& frame) {
+    int y_pos = static_cast<int>(0.95 * frame.rows); // 95% da altura (y = 342 para 448px)
+    int y_pos_2 = static_cast<int>(0.5 * frame.rows); // 50% da altura (y =  para 448px)
+    bool up = true;
+    cv::Mat marker_frame = frame.clone(); // Criar uma cópia para não modificar o original
+    
+    // Desenhar marcadores a cada 10 pixels ao longo da largura
+    for (int x = 0; x < frame.cols; x += 10) {
+        cv::circle(marker_frame, cv::Point(x, y_pos), 2, cv::Scalar(0, 0, 255), 0);
+        cv::circle(marker_frame, cv::Point(x, y_pos_2), 2, cv::Scalar(0, 0, 255), 0);
+        if (x % 10 == 0) {
+            std::string label = std::to_string(x);
+            if (up == true){
+                cv::putText(marker_frame, label, cv::Point(x, y_pos - 10),
+                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(0, 0, 0), 0);
+                cv::putText(marker_frame, label, cv::Point(x, y_pos_2 - 10),
+                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(0, 0, 0), 0);
+                up = false;
+            }
+            else{
+                cv::putText(marker_frame, label, cv::Point(x, y_pos + 10),
+                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(255, 255, 255), 0);
+                cv::putText(marker_frame, label, cv::Point(x, y_pos_2 + 10),
+                cv::FONT_HERSHEY_SIMPLEX, 0.2, cv::Scalar(255, 255, 255), 0);
+                up = true;
+            }
+        }
+    }
+    cv::imshow("Pixel Markers", marker_frame);
+}
 
 int main() {
     TensorRTInference trt("../model.engine");
-    CSICamera cam(448, 448, 15);
+    CSICamera cam(640, 480, 15);
     cam.start();
     
     // Inicializar NMPC   L,  dt, N, delta_max, w_x, w_y, w_psi, w_delta

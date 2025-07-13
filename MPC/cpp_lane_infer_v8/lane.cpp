@@ -157,7 +157,7 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
 
     MaskProcessor processor;
     cv::Mat mask_output;
-    processor.processMask(da_resized, ll_resized, mask_output, medianPoints);
+    processor.processMask(da_resized, ll_resized, mask_output, original_frame, medianPoints);
     //std::cout << "  processMask check " << std::endl;
 
     //processor.processMask(da_resized, mask_output, medianPoints);

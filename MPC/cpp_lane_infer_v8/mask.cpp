@@ -4,31 +4,6 @@
 MaskProcessor::MaskProcessor() {}
 MaskProcessor::~MaskProcessor() {}
 
-/* LineCoef MaskProcessor::linearRegression(const std::vector<cv::Point>& points) {
-    LineCoef coeffs = {0.0, 0.0, false};
-    if (points.size() < 2) return coeffs;
-
-    double sumX = 0.0, sumY = 0.0, sumXY = 0.0, sumXX = 0.0;
-    int n = points.size();
-
-    for (const auto& p : points) {
-        double x = p.y;
-        double y = p.x;
-        sumX += x;
-        sumY += y;
-        sumXY += x * y;
-        sumXX += x * x;
-    }
-
-    double denominator = (n * sumXX - sumX * sumX);
-    if (abs(denominator) < 1e-6) return coeffs;
-
-    coeffs.m = (n * sumXY - sumX * sumY) / denominator;
-    coeffs.b = (sumY * sumXX - sumX * sumXY) / denominator;
-    coeffs.valid = true;
-    return coeffs;
-} */
-
 std::vector<cv::Point> MaskProcessor::linearRegression(const std::vector<cv::Point>& points, int top_y, int bottom_y, int width, LineCoef& coeffs) {
     coeffs = {0.0, 0.0, false};
     //if (points.size() < 2) return coeffs;
@@ -63,22 +38,6 @@ std::vector<cv::Point> MaskProcessor::linearRegression(const std::vector<cv::Poi
     return edge;
 }
 
-/* int MaskProcessor::firstWhite(const cv::Mat& row) {
-    for (int x = 0; x < row.cols - 5; x++) {
-        if (row.at<uchar>(0, x) == 255 && x > 5) return x;
-        else if (row.at<uchar>(0, x) == 255 && x < 5) return -1;
-    }
-    return -1;
-}
-
-int MaskProcessor::lastWhite(const cv::Mat& row) {
-    for (int x = row.cols - 1; x > 5; x--) {
-        if (row.at<uchar>(0, x) == 255 && x < row.cols - 5) return x;
-        else if (row.at<uchar>(0, x) == 255 && x > row.cols - 5) return -1;
-    }
-    return -1;
-} */
-
 int MaskProcessor::firstWhite(const cv::Mat& row) {
     for (int x = row.cols / 2 - 10; x > 5; x--) {
         if (row.at<uchar>(0, x) != 255) return x + 1;
@@ -95,128 +54,72 @@ int MaskProcessor::lastWhite(const cv::Mat& row) {
 
 bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>& left_edge, std::vector<cv::Point>& right_edge) {
     int height = mask_bin.rows, width = mask_bin.cols;
-    int center_x = width / 2, margin = 20, range = 25;
+    int center_x = width / 2, margin = 5, range = 10;
 
     left_edge.clear();
     right_edge.clear();
 
     // Passo 1: Verificar se o pixel central na linha base é branco
     int base_y = static_cast<int>(height * 0.95) - 1;
-    const cv::Mat base_row = mask_bin.row(base_y);
 
-    if (base_row.at<uchar>(0, center_x) != 255) {
-        std::cout << "Aviso: O pixel central na linha base (x=" << center_x << ", y=" << base_y << ") não é branco." << std::endl;
-        return false;
-    }
-
-    // Passo 2: Encontrar o último pixel branco na sequência para esquerda e direita
-    int left_x = center_x, right_x = center_x;
-
-    // Left edge: buscar do centro para a esquerda (x decresce)
-    for (int x = center_x; x >= margin; --x) {
-        if (base_row.at<uchar>(0, x) == 255) {
-            left_x = x; // Último pixel branco na sequência
-        } else {
-            break;
-        }
-    }
-
-    // Right edge: buscar do centro para a direita (x cresce)
-    for (int x = center_x; x < width - margin; ++x) {
-        if (base_row.at<uchar>(0, x) == 255) {
-            right_x = x; // Último pixel branco na sequência
-        } else {
-            break;
-        }
-    }
-
-    // Adicionar pontos da base
-    left_edge.push_back(cv::Point(left_x, base_y));
-    right_edge.push_back(cv::Point(right_x, base_y));
+    // Passo 2: Encontrar 
+    // o último pixel branco na sequência para esquerda e direita
+    int left_x = -1, right_x = -1;
+    int left_start_limit = static_cast<int>(height * 0.75);
+    int right_start_limit = static_cast<int>(height * 0.75);
 
     // Passo 3: Busca de baixo para cima nas linhas subsequentes
-    for (int y = base_y - 1; y >= height / 2; --y) {
+    for (int y = base_y; y >= height / 2; --y) {
         const cv::Mat row = mask_bin.row(y);
+        int new_right_x = -1, new_left_x = -1;
 
-        // Borda esquerda: verificar mesma coordenada, depois direita, depois esquerda
-        int new_left_x = -1;
-        if (row.at<uchar>(0, left_x) == 255) {
-            new_left_x = left_x; // Mesma coordenada é branca
-        } else {
-            // Procurar para a direita (left_x até left_x + range, limitado por center_x)
-            for (int x = left_x; x <= std::min(center_x, left_x + range); ++x) {
-                if (row.at<uchar>(0, x) == 255) {
-                    new_left_x = x; // Último pixel branco na sequência
-                } else if (new_left_x != -1) {
-                    break; // Para ao encontrar um pixel não branco após uma sequência branca
+        if (left_x == -1 && y > left_start_limit){
+            for (int x = center_x; x >= margin; --x) {
+                if (row.at<uchar>(0, x) == 255 && x < center_x - (center_x / 4)) {
+                    left_x = x; 
                 }
+                else if (left_x != -1)
+                    break;
             }
-            // Se não encontrou, procurar para a esquerda (left_x - 1 até left_x - range, limitado por margin)
-            if (new_left_x == -1) {
-                for (int x = left_x - 1; x >= std::max(margin, left_x - range); --x) {
-                    if (row.at<uchar>(0, x) == 255) {
-                        new_left_x = x; // Último pixel branco na sequência
-                    } else if (new_left_x != -1) {
-                        break; // Para ao encontrar um pixel não branco após uma sequência branca
-                    }
+        }
+        else if (left_x != -1){
+            for (int x = std::min(center_x + 50, left_x + range); x >= std::max(left_x - range, margin); --x) {
+                if (row.at<uchar>(0, x) != 255){
+                    left_x = x;
+                    break;  
+                }
+                else if (x == std::max(left_x - range, margin)){
+                    left_x = left_x + 1;
                 }
             }
         }
-
-        // Borda direita: verificar mesma coordenada, depois esquerda, depois direita
-        int new_right_x = -1;
-        if (row.at<uchar>(0, right_x) == 255) {
-            new_right_x = right_x; // Mesma coordenada é branca
-        } else {
-            // Procurar para a esquerda (right_x até right_x - range, limitado por center_x)
-            for (int x = right_x; x >= std::max(center_x, right_x - range); --x) {
-                if (row.at<uchar>(0, x) == 255) {
-                    new_right_x = x; // Último pixel branco na sequência
-                } else if (new_right_x != -1)
-                    break; // Para ao encontrar um pixel não branco após uma sequência branca
+        
+        if (right_x == -1 && y > right_start_limit){
+            for (int x = center_x; x < width - margin; ++x) {
+                if (row.at<uchar>(0, x) == 255 && x > center_x + (center_x / 4)) {
+                    right_x = x; 
+                }else if (right_x != -1)
+                    break;
             }
-            // Se não encontrou, procurar para a direita (right_x + 1 até right_x + range, limitado por width - margin)
-            if (new_right_x == -1) {
-                for (int x = right_x + 1; x <= std::min(width - margin, right_x + range); ++x) {
-                    if (row.at<uchar>(0, x) == 255) {
-                        new_right_x = x; // Último pixel branco na sequência
-                    } else if (new_right_x != -1)
-                        break; // Para ao encontrar um pixel não branco após uma sequência branca
+        } else if (right_x != -1) {
+            for (int x = std::max( center_x - 50, right_x - range); x <= std::min(width - margin, right_x + range) ; ++x) {
+                if (row.at<uchar>(0, x) != 255){
+                    right_x = x;
+                    break;
                 }
             }
         }
 
-        // Se não encontrar pixels brancos em uma das bordas, interrompe a busca
-        if (new_left_x == -1 || new_right_x == -1 ) break;
+        if (left_x != -1) left_edge.emplace(left_edge.begin(), left_x, y);
 
-        // Atualiza as coordenadas e adiciona os pontos
-        left_x = new_left_x;
-        right_x = new_right_x;
-        left_edge.emplace(left_edge.begin(), left_x, y);
-        right_edge.emplace(right_edge.begin(), right_x, y);
+        if (right_x != -1) right_edge.emplace(right_edge.begin(), right_x, y);
+
     }
-
-    // Passo 4: Verificar e remover pontos a partir de coordenadas nas bordas da imagem
-    for (auto it = left_edge.begin(); it != left_edge.end(); ++it) {
-        if (it->x <= margin || it->x >= width - margin) {
-            left_edge.erase(it, left_edge.end());
-            break;
-        }
-    }
-
-    for (auto it = right_edge.begin(); it != right_edge.end(); ++it) {
-        std::cout << " it x             " << it->x << std::endl;
-        if (it->x <= margin || it->x >= width - margin) {
-            right_edge.erase(it, right_edge.end());
-            break;
-        }
-    }
-
     return true;
 }
 
 
-void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints) {
+void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, const cv::Mat& original_frame, std::vector<cv::Point>& medianPoints) {
     cv::Mat mask_bin = da_mask.clone();
     cv::threshold(da_mask, mask_bin, 127, 255, cv::THRESH_BINARY);
 
@@ -250,9 +153,11 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
     // Verify if de have Edges
     if (left_edge_points.size() < 10) {
         std::cerr << "[Warning] Left Edge Lost" << std::endl;
-    } else if (right_edge_points.size() < 10) {
+    }
+    if (right_edge_points.size() < 10) {
         std::cerr << "[Warning] Right Edge Lost" << std::endl;
-    } else {
+    }
+    if (!left_edge_points.empty() && !right_edge_points.empty()) {
         bottom_y = (left_edge_points.size() > right_edge_points.size()) 
             ? right_edge_points.back().y 
             : left_edge_points.back().y;
@@ -266,8 +171,11 @@ void MaskProcessor::processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, 
     std::vector<cv::Point> ll_left_line_points = linearRegression(ll_left_points, top_y, bottom_y, width, ll_left_coeffs);
     std::vector<cv::Point> ll_right_line_points = linearRegression(ll_right_points, top_y, bottom_y, width, ll_right_coeffs);
 
-    cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
+    //cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
+    cv::imshow("Lanes", mask_bin);
 
+
+    output = original_frame.clone();
     if (left_coeffs.valid && right_coeffs.valid) {
         if (!left_line_points.empty() && !right_line_points.empty()) {
             cv::line(output, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2); // Vermelho

@@ -126,8 +126,10 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
 /**************************************************************************************/
 cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints,
                     LaneData& laneData, LineIntersect& intersect) {
-    const int height = 224;
-    const int width = 224;
+    const int height_mask = 224;
+    const int width_mask = 224;
+    const int height_win = 640;
+    const int width_win = 448;
 
 /*     // 🧪 Mostrar os 4 canais do output para debug (podes comentar isto depois)
     for (int i = 0; i < 4; ++i) {
@@ -141,7 +143,7 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
 
     // ✅ Usa apenas o canal que representa a linha desejada (ex: canal 1 = linha central)
     int selected_channel = 0;
-    cv::Mat ll_mask(height, width, CV_32FC1, ll_output + selected_channel * height * width);
+    cv::Mat ll_mask(height_mask, width_mask, CV_32FC1, ll_output + selected_channel * height_mask * width_mask);
 
     // Binarização
     cv::Mat ll_bin;
@@ -194,8 +196,8 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     laneData.num_points = 0;
 
     if (medianPoints.size() >= 5) {
-        float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - 224);
-        float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - 224);
+        float P1_x_img_frame = (Asy * roi_end_y + Bsy) * (medianPoints.back().x - (height_win / 2));
+        float P2_x_img_frame = (Asy * roi_start_y + Bsy) * (medianPoints.front().x - (height_win / 2));
         float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame;
         float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame;
 

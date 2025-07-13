@@ -63,10 +63,10 @@ struct LineIntersect {
     bool valid;
 };
 
-static constexpr double Asy = -3.62e-06;
-static constexpr double Bsy = 2.21e-03;
-static constexpr double P1_x_car_frame = 0.22;
-static constexpr double P2_x_car_frame = 0.445;
+static constexpr double Asy = -2.69e-06;
+static constexpr double Bsy = 1.68e-03;
+static constexpr double P1_x_car_frame = 0.225;
+static constexpr double P2_x_car_frame = 0.46;
 
 class TensorRTInference {
 public:
