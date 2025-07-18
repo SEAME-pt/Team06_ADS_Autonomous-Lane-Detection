@@ -46,6 +46,7 @@ add_executable(lane_detection
     lane.cpp
     mask.cpp
     nmpc.cpp
+    pid.cpp
     ../FServo/FServo.cpp
     ../BackMotors/BackMotors.cpp
     ../Control/ControlAssembly.cpp

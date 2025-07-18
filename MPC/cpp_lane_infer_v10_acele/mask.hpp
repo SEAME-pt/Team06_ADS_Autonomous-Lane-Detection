@@ -9,12 +9,11 @@ class MaskProcessor {
 public:
     MaskProcessor();
     ~MaskProcessor();
-    //void processMask(const cv::Mat& da_mask, const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, LineCoef& left_coeffs, LineCoef& right_coeffs);
-    void processMask(const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, LineCoef& left_coeffs, LineCoef& right_coeffs);
-    //void processMask(const cv::Mat& mask, cv::Mat& output, std::vector<cv::Point>& medianPoints);
-    //LineCoef linearRegression(const std::vector<cv::Point>& points);
+    void processMask(const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, LineCoef& left_coeffs, LineCoef& right_coeffs, LineIntersect& intersect);
     std::vector<cv::Point> linearRegression(const std::vector<cv::Point>& points, int y_top, int bottom_y, int width, LineCoef& coeffs);
-    bool processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>& left_edge, std::vector<cv::Point>& right_edge);
+    void processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>& left_edge, std::vector<cv::Point>& right_edge);
+    void verifyLanes(std::vector<cv::Point>& left_edge_points, std::vector<cv::Point>& right_edge_points, int& bottom_left, int& bottom_right, int& top_left, int& top_right);
+    LineIntersect findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width);
 
 private:
     int firstWhite(const cv::Mat& row);

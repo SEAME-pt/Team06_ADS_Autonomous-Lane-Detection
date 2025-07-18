@@ -235,7 +235,7 @@ LineIntersect  findIntersect(const LineCoef& left_coeffs, const LineCoef& right_
         
         intersect.ratio_top = (intersect.xr_t.x - width / 2.0f) / (intersect.xr_t.x - intersect.xl_t.x);
         intersect.xs_b = intersect.xr_b.x - intersect.ratio_top * (intersect.xr_b.x - intersect.xl_b.x);
-        intersect.slope = (intersect.xs_b - width / 2.0f + 22.5) / (roi_end_y - roi_start_y);
+        intersect.slope = (intersect.xs_b - width / 2.0f) / (roi_end_y - roi_start_y);
         intersect.psi = std::atan(intersect.slope);
         intersect.valid = true;
 

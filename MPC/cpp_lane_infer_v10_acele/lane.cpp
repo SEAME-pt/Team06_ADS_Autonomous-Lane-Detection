@@ -17,11 +17,6 @@ TensorRTInference::TensorRTInference(const std::string& engine_path) {
     context = engine->createExecutionContext();
 
     allocateBuffers();
-
-/*     Dims dims = engine->getBindingDimensions(1); // output index = 1 se for o output
-    std::cout << "Output dims: ";
-    for (int i = 0; i < dims.nbDims; ++i) std::cout << dims.d[i] << " ";
-    std::cout << std::endl; */
 }
 
 /**************************************************************************************/
@@ -135,16 +130,6 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     const int width_win = 640;
     const int height_win = 360;
 
-/*     // 🧪 Mostrar os 4 canais do output para debug (podes comentar isto depois)
-    for (int i = 0; i < 4; ++i) {
-        cv::Mat channel(height, width, CV_32FC1, ll_output + i * height * width);
-        cv::Mat bin;
-        cv::threshold(channel, bin, 0.1, 255, cv::THRESH_BINARY);
-        bin.convertTo(bin, CV_8UC1);
-        cv::imshow("Canal " + std::to_string(i), bin);
-    }
-    cv::waitKey(0);  // Pressiona uma tecla para continuar após ver os canais */
-
     // ✅ Usa apenas o canal que representa a linha desejada (ex: canal 1 = linha central)
     int selected_channel = 0;
     cv::Mat ll_mask(height_mask, width_mask, CV_32FC1, ll_output + selected_channel * height_mask * width_mask);
@@ -177,7 +162,7 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     MaskProcessor processor;
     LineCoef left_coeffs, right_coeffs;
     cv::Mat mask_output;
-    processor.processMask(ll_resized, mask_output, medianPoints, left_coeffs, right_coeffs);
+    processor.processMask(ll_resized, mask_output, medianPoints, left_coeffs, right_coeffs, intersect);
 
     // Criar uma cópia da imagem original para desenhar as linhas
     cv::Mat result_frame = original_frame.clone();
@@ -206,19 +191,19 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
 
     if (medianPoints.size() >= 5) {
         // desvio do centro da pista
-        float xlt = ( left_coeffs.m * (height_win / 2) + left_coeffs.b);
-        float xlb = static_cast<int>( left_coeffs.m * height_win + left_coeffs.b);
-        float xrt = static_cast<int>( right_coeffs.m * (height_win / 2) + right_coeffs.b);
-        float xrb = static_cast<int>( right_coeffs.m * height_win + right_coeffs.b);
+        intersect.xlt = (left_coeffs.m * (height_win / 2) + left_coeffs.b);
+        intersect.xlb = (left_coeffs.m * height_win + left_coeffs.b);
+        intersect.xrt = (right_coeffs.m * (height_win / 2) + right_coeffs.b);
+        intersect.xrb = (right_coeffs.m * height_win + right_coeffs.b);
 /*         std::cout << "xleft top: " << xlt << std::endl;
         std::cout << "xleft bottom: " << xlb << std::endl;        
         std::cout << "xright top: " << xrt << std::endl;
-        std::cout << "xright bottom: " << xrb << std::endl; */
+        std::cout << "xright bottom: " << xrb << std::endl << std::endl; */
 
-        float xmt = (xrt + xlt) / 2;
-        float xmb = (xrb + xlb) / 2;
-        std::cout << "xm top: " << xmt << std::endl;
-        std::cout << "xm bottom: " << xmb << std::endl << std::endl;
+        float xmt = (intersect.xrt + intersect.xlt) / 2;
+        float xmb = (intersect.xrb + intersect.xlb) / 2;
+/*         std::cout << "xm top: " << xmt << std::endl;
+        std::cout << "xm bottom: " << xmb << std::endl << std::endl; */
 
         cv::Point xmtop(xmt, height_win / 2);
         cv::Point xmbottom(xmb, height_win);
@@ -229,15 +214,15 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
         float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame;
         float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame;
 
-        std::cout << "P2: " << P2_x_img_frame << std::endl;
-        std::cout << "P1: " << P1_x_img_frame << std::endl << std::endl;
+        /* std::cout << "P2: " << P2_x_img_frame << std::endl;
+        std::cout << "P1: " << P1_x_img_frame << std::endl << std::endl; */
 
         if (std::abs(deltaX_car_frame) > 1e-8) {
-            float slope_car_frame = deltaY_car_frame / deltaX_car_frame;
-            intersect.offset_cm = P2_x_img_frame - slope_car_frame * P2_x_car_frame;
+            intersect.slope = deltaY_car_frame / deltaX_car_frame;
+            intersect.offset_cm = P2_x_img_frame - intersect.slope * P2_x_car_frame;
 
             //std::cout << "Slope: " << slope_car_frame << std::endl;
-            intersect.psi = std::atan(slope_car_frame);
+            intersect.psi = std::atan(intersect.slope);
         } else {
             intersect.offset_cm = 0.0f;
             intersect.psi = 0.0f;

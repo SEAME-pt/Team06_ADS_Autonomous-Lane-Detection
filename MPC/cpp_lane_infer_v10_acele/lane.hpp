@@ -48,6 +48,10 @@ struct LineIntersect {
     cv::Point2f xl_b;   // Interseção da linha esquerda com roi_end_y (pixels)
     cv::Point2f xr_t;   // Interseção da linha direita com roi_start_y (pixels)
     cv::Point2f xr_b;   // Interseção da linha direita com roi_end_y (pixels)
+    float xlt;
+    float xlb; 
+    float xrt;
+    float xrb;
     float ratio_top;    // Razão da posição relativa na margem superior
     float xs_b;         // Ponto x da mediana estimada na margem inferior
     float slope;        // Inclinação da mediana estimada
@@ -63,10 +67,10 @@ struct LineIntersect {
     bool valid;
 };
 
-static constexpr double Asy = -3.39e-06;
-static constexpr double Bsy = 1.65e-03;
-static constexpr double P1_x_car_frame = 0.22;
-static constexpr double P2_x_car_frame = 0.48;
+static constexpr double Asy = -3.20e-06;
+static constexpr double Bsy = 1.59e-03;
+static constexpr double P1_x_car_frame = 0.24;
+static constexpr double P2_x_car_frame = 0.475;
 
 class TensorRTInference {
 public:

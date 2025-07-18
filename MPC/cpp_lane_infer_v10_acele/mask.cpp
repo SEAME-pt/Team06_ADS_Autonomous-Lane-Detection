@@ -42,46 +42,27 @@ std::vector<cv::Point> MaskProcessor::linearRegression(const std::vector<cv::Poi
     return edge;
 }
 
-int MaskProcessor::firstWhite(const cv::Mat& row) {
-    for (int x = row.cols / 2 - 10; x > 5; x--) {
-        if (row.at<uchar>(0, x) == 255) return x;
-    }
-    return -1;
-}
-
-int MaskProcessor::lastWhite(const cv::Mat& row) {
-    for (int x = row.cols / 2 + 10; x < row.cols - 5; x++) {
-        if (row.at<uchar>(0, x) == 255) return x;
-    }
-    return -1;
-}
-
-bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>& left_edge, std::vector<cv::Point>& right_edge) {
+void MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>& left_edge, std::vector<cv::Point>& right_edge) {
     int height = mask_bin.rows, width = mask_bin.cols;
     int center_x = width / 2, margin = 5, range = 20;
 
     left_edge.clear();
     right_edge.clear();
 
-    // Passo 1: Verificar se o pixel central na linha base é branco
     int base_y = static_cast<int>(height * 0.95) - 1;
 
-    // Passo 2: Encontrar 
-    // o último pixel branco na sequência para esquerda e direita
     int left_x = -1, right_x = -1;
     int left_contig = -1, right_contig = -1;
     int left_count = 0, right_count = 0;
-    int left_start_limit = static_cast<int>(height * 0.75);
-    int right_start_limit = static_cast<int>(height * 0.75);
+    int left_start_limit = static_cast<int>(height * 0.60);
+    int right_start_limit = static_cast<int>(height * 0.60);
     bool reset_left = false, reset_right = false;
 
-    // Passo 3: Busca de baixo para cima nas linhas subsequentes
     for (int y = base_y; y >= height / 2; --y) {
         const cv::Mat row = mask_bin.row(y);
         int new_right_x = -1, new_left_x = -1;
 
         if (left_x == -1 && y > left_start_limit){
-            //  std::cout << "          entrou no primeiro" << std::endl;
             for (int x = center_x; x >= margin; --x) {
                 if (row.at<uchar>(x) == 255 && x < center_x - (center_x / 4)) {
                     left_x = x; 
@@ -102,7 +83,7 @@ bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>
             if (new_left_x != -1) left_x = new_left_x;
             else left_contig++;
         }
-        if (left_contig > 10 && left_count < 30) {
+        if (left_contig > 10 && left_count < 50) {
             std::cout << " reset left" << std::endl;
             left_x = -1;
             left_contig = -1;
@@ -130,7 +111,7 @@ bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>
             if (new_right_x != -1) right_x = new_right_x;
             else right_contig++;
         }
-        if (right_contig > 10 && right_count < 30) {
+        if (right_contig > 10 && right_count < 50) {
             right_x = -1;
             right_contig = -1;
             right_count = 0;
@@ -145,58 +126,24 @@ bool MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>
         if (reset_right == true)  right_edge.clear();
 
     }
-    return true;
 }
 
+void MaskProcessor::verifyLanes(std::vector<cv::Point>& left_edge_points, std::vector<cv::Point>& right_edge_points, 
+                        int& bottom_left, int& bottom_right, int& top_left, int& top_right){
 
-void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, LineCoef& left_coeffs, LineCoef& right_coeffs) {
-    cv::Mat mask_bin = ll_mask.clone();
-    cv::threshold(ll_mask, mask_bin, 127, 255, cv::THRESH_BINARY);
-    /*lanes*/
-    std::vector<cv::Point> left_edge_points, right_edge_points;
-
-    int height = 360, width = 640;
-
-    int top_y = height / 2, bottom_y = height * 0.95;
-
-    bool findEdges = processEdges(mask_bin, left_edge_points, right_edge_points);
-
-    const double a = -0.00000339, b = 0.00165;
+    size_t min_size_line = 50;
     double x_px = 0, sy = 0;
     double d = 0.26;
 
-    if (findEdges == false)
-        std::cout << "Lane Not Found" << std::endl;
-    
-    // Verify if de have Edges
-    if (left_edge_points.size() < 50) {
-        std::cerr << "[Warning] Left Edge Lost" << std::endl;
-    }
-    if (right_edge_points.size() < 50) {
-        std::cerr << "[Warning] Right Edge Lost" << std::endl;
-    } 
-/*     if (!left_edge_points.empty() && !right_edge_points.empty()) {
-        bottom_y = (left_edge_points.size() > right_edge_points.size()) 
-        ? right_edge_points.back().y 
-        : left_edge_points.back().y;
-    }   */  
-    if (left_edge_points.empty() && right_edge_points.empty()){
-        std::cerr << "[Warning Break!!!!!!!!!!!!] Edges Lost" << std::endl;
-
-        return;
-    } 
-
-    int bottom_left = bottom_y, bottom_right = bottom_y;
-    int top_left = top_y , top_right = top_y;
-    if (!left_edge_points.empty()){
+    if (left_edge_points.size() > min_size_line){
         bottom_left = left_edge_points.back().y;
         std::cout << " encontrou a esquerda" << std::endl;
     }
-    else if (left_edge_points.empty() && !right_edge_points.empty()){
-        std::cout << "              Entrou na excepção    left!!!" << std::endl;
+    else if (left_edge_points.size() < min_size_line && right_edge_points.size() > min_size_line){
+        std::cerr << "[Warning] Left Edge Lost" << std::endl;
         auto it = right_edge_points.begin();
         for (int y = it->y; it != right_edge_points.end(); ++it, y = it->y) {
-            sy = a * y + b;
+            sy = Asy * y + Bsy;
             x_px = d / sy;
             int left_x = it->x - x_px;
             left_edge_points.emplace_back(left_x, y);
@@ -204,38 +151,112 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
         bottom_left = right_edge_points.back().y;
         top_left = right_edge_points.front().y;
     }
-    if (!right_edge_points.empty()) {
+
+    if (right_edge_points.size() > min_size_line) {
         std::cout << " encontrou a direita" << std::endl;
         bottom_right = right_edge_points.back().y;
     }
-    else if (right_edge_points.empty() && !left_edge_points.empty()){
-        std::cout << "              Entrou na excepção  right!!!" << std::endl;
-        
+    else if (right_edge_points.size()  < min_size_line && left_edge_points.size() > min_size_line){
+        std::cerr << "[Warning] Right Edge Lost" << std::endl;
         auto it = left_edge_points.begin();
         for (int y = it->y; it != left_edge_points.end(); ++it, y = it->y) {
-            sy = a * y + b;
+            sy = Asy * y + Bsy;
             x_px = d / sy;
             int right_x = it->x + x_px;
             right_edge_points.emplace_back(right_x, y);
         }
         bottom_right = left_edge_points.back().y;
         top_right = left_edge_points.front().y;
-
+        if (!right_edge_points.empty()){
+            std::cout << "bottom right" << right_edge_points.back() << std::endl;
+            std::cout << "top right" << right_edge_points.front() << std::endl;
+        }
+        if (!left_edge_points.empty()){
+            std::cout << "bottom left" << left_edge_points.back() << std::endl;
+            std::cout << "top left" << left_edge_points.front() << std::endl;
+        }
     }
-/*     std::cout << "right   back      " << right_edge_points.back() << std::endl;
+
+    if (left_edge_points.empty() && right_edge_points.empty()){
+        std::cerr << "[Warning Break!!!!!!!!!!!!] Edges Lost" << std::endl;
+        return;
+    }
+
+    /*     std::cout << "right   back      " << right_edge_points.back() << std::endl;
     std::cout << "left    back     " << left_edge_points.back() << std::endl;    
     std::cout << "right   front      " << right_edge_points.front() << std::endl;
     std::cout << "left    front     " << left_edge_points.front() << std::endl; */
     //std::cout << "right   size      " << right_edge_points << std::endl;
     //std::cout << "left   size      " << left_edge_points << std::endl;
+}
 
 
-    //std::cout << " checking linearRegression " << std::endl;
-    /********Linear Regression *********/
+LineIntersect  MaskProcessor::findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width) {
+    LineIntersect intersect;
+    intersect.valid = false;
+
+    int roi_start_y = static_cast<int>(0.50 * height); // y = 180
+    int roi_end_y = static_cast<int>(0.95 * height);   // y = 340
+
+    if (left_coeffs.valid && right_coeffs.valid) {
+        intersect.xl_t = { static_cast<float>(left_coeffs.m * roi_start_y + left_coeffs.b), static_cast<float>(roi_start_y) };
+        intersect.xl_b = { static_cast<float>(left_coeffs.m * roi_end_y + left_coeffs.b), static_cast<float>(roi_end_y) };
+        intersect.xr_t = { static_cast<float>(right_coeffs.m * roi_start_y + right_coeffs.b), static_cast<float>(roi_start_y) };
+        intersect.xr_b = { static_cast<float>(right_coeffs.m * roi_end_y + right_coeffs.b), static_cast<float>(roi_end_y) };
+        
+        intersect.ratio_top = (intersect.xr_t.x - width / 2.0f) / (intersect.xr_t.x - intersect.xl_t.x);
+        intersect.xs_b = intersect.xr_b.x - intersect.ratio_top * (intersect.xr_b.x - intersect.xl_b.x);
+        intersect.slope = (intersect.xs_b - width / 2.0f) / (roi_end_y - roi_start_y);
+        intersect.psi = std::atan(intersect.slope);
+        intersect.valid = true;
+
+        // Pixels on top and bottom image
+        intersect.x_px_t = intersect.xr_t.x - intersect.xl_t.x;
+        intersect.x_px_b = intersect.xr_b.x - intersect.xl_b.x;
+
+        // Scale Factor | d = s(y).x_px + b | with b = 0
+        intersect.scaleFactor_t = intersect.w_real / intersect.x_px_t;
+        intersect.scaleFactor_b = intersect.w_real / intersect.x_px_b;
+
+        // var a | s(y) = a * y + b (=) a = delta(s(y)) / delta(y) |,  with b = 0 
+        intersect.var_a = (intersect.scaleFactor_b - intersect.scaleFactor_t) / (intersect.xl_b.y - intersect.xl_t.y);
+
+        // var b para o top que será igual ao bottom
+        intersect.var_b = intersect.scaleFactor_t - (intersect.var_a * intersect.xl_t.y);
+    }
     
+    if (intersect.valid) {
+        //std::cout << "ratio: " << intersect.ratio_top << std::endl;
+        //std::cout << "xs_b: " << intersect.xs_b << std::endl;
+        std::cout << "slope: " << intersect.slope << std::endl;
+        std::cout << "Psi: " << intersect.psi << std::endl;
+        //std::cout << "Psi: " << intersect.psi * 180.0 / M_PI << " deg" << std::endl ;
+        //std::cout << " Delta: " + std::to_string(delta * 180.0 / M_PI) + "deg" << std::endl << std::endl;
+    }
+    return intersect;
+}
+
+void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::vector<cv::Point>& medianPoints, 
+                                LineCoef& left_coeffs, LineCoef& right_coeffs, LineIntersect& intersect) {
     
+    cv::Mat mask_bin = ll_mask.clone();
+    cv::threshold(ll_mask, mask_bin, 127, 255, cv::THRESH_BINARY);
+    //LineIntersect intersect;
+
+    std::vector<cv::Point> left_edge_points, right_edge_points;
+    int height = 360, width = 640;
+    int top_y = height / 2, bottom_y = height * 0.95;
+    int bottom_left = bottom_y, bottom_right = bottom_y;
+    int top_left = top_y , top_right = top_y;
+
+    processEdges(mask_bin, left_edge_points, right_edge_points);
+    verifyLanes(left_edge_points, right_edge_points, bottom_left, bottom_right, top_left, top_right);
+
+    /********Linear Regression *********/    
     std::vector<cv::Point> left_line_points = linearRegression(left_edge_points, top_left, bottom_left, width, left_coeffs);
     std::vector<cv::Point> right_line_points = linearRegression(right_edge_points, top_right, bottom_right, width, right_coeffs);
+    
+    //intersect = findIntersect(left_coeffs, right_coeffs, 360, 640);
 
 /*     std::cout << std::endl << "Linear left      back    " << left_line_points.back() << std::endl;
     std::cout << "Linear left      front    " << left_line_points.front() << std::endl;
@@ -251,33 +272,29 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
         cv::circle(output, point_back, 5, cv::Scalar(0,0,0), -1 );
         cv::circle(output, point_front, 5, cv::Scalar(0,0,0), -1 );
     } */
-    
+
     cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
-    if (!left_line_points.empty()){
-        cv::Point point_left_back (left_line_points.back().x, left_line_points.back().y);
-        cv::Point point_left_front (left_line_points.front().x, left_line_points.front().y);
+    if (!left_line_points.empty())
         cv::line(output, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2); // Vermelho
-        cv::circle(output, point_left_back, 5, cv::Scalar(255,100,0), -1 );
-        cv::circle(output, point_left_front, 5, cv::Scalar(200,100,0), -1 );
-    }
     if (!right_line_points.empty())
         cv::line(output, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2); // Azul
     if (!right_line_points.empty() && !left_line_points.empty()){
+        float sy1 = (Asy * 180 + Bsy) * ((intersect.xrt - intersect.xlt) / std::cos(intersect.slope));
+        float sy2 = (Asy * 360 + Bsy) * ((intersect.xrb - intersect.xlb) / std::cos(intersect.slope));
 
-        float sy1 = (Asy * 180 + Bsy) * (right_line_points.front().x - left_line_points.front().x);
-        float sy2 = (Asy * 340 + Bsy) * (right_line_points.back().x - left_line_points.back().x);
- /*        std::cout << "P2: " << sy2 << std::endl;
-        std::cout << "P1: " << sy1 << std::endl; */
+        std::cout << "[" <<  __func__ <<"]" << std::endl
+        << "P2: " << sy2 << std::endl
+        << "P1: " << sy1 << std::endl
+        << "Slope: " << intersect.slope << std::endl << std::endl
 
-/*         std::cout << "[" <<  __func__ <<"]" << std::endl
-        << "median points back: " << left_line_points.back().x << " " << left_line_points.back().y << " -- " << 
+        /* << "median points back: " << left_line_points.back().x << " " << left_line_points.back().y << " -- " << 
                                     right_line_points.back().x << " " << right_line_points.back().y << std::endl
         << "median points front: " << left_line_points.front().x << " " << left_line_points.front().y << " -- "
-                                    << right_line_points.front().x << " " << right_line_points.front().y << std::endl;
- */
-
+                                    << right_line_points.front().x << " " << right_line_points.front().y << std::endl << std::endl
+        << "distance back: " << right_line_points.back().x - left_line_points.back().x << " " << left_line_points.back().y << " -- " << std::endl
+        << "distance front: " << right_line_points.front().x - left_line_points.front().x << " " << left_line_points.front().y << std::endl << std::endl */;
     }
-    
+
     medianPoints.clear();
     for (int y = top_y; y < height; y++) {
         float left_x = (left_coeffs.m * y + left_coeffs.b);
@@ -287,9 +304,8 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
            medianPoints.emplace_back(median_x, y);
         }
     }
-    std::cout << "top: " << medianPoints.front() << std::endl;
-    std::cout << "bottom: " << medianPoints.back() << std::endl << std::endl;
-
+    /* std::cout << "top: " << medianPoints.front() << std::endl;
+    std::cout << "bottom: " << medianPoints.back() << std::endl << std::endl; */
 
     if (!medianPoints.empty()) {
         cv::line(output, medianPoints.front(), medianPoints.back(), cv::Scalar(200, 200, 200), 2); // Verde
