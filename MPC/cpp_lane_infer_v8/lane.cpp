@@ -210,8 +210,8 @@ cv::Mat postprocess(float* da_output, float* ll_output, cv::Mat& original_frame,
         int step = medianPoints.size() > 10 ? medianPoints.size() / 10 : 1;
         for (size_t i = 0; i < medianPoints.size() && laneData.num_points < 10; i += step) {
             if (medianPoints[i].y >= roi_start_y && medianPoints[i].y <= roi_end_y) {
-                laneData.points[laneData.num_points].x = (medianPoints[i].x);
-                laneData.points[laneData.num_points].y = (medianPoints[i].y);
+                laneData.points[laneData.num_points].x =  0.000669 * (medianPoints[i].x - (width/2));
+                laneData.points[laneData.num_points].y = 0.001623 * ((height*0.95) - medianPoints[i].y);
                 laneData.num_points++;
             }
         }
