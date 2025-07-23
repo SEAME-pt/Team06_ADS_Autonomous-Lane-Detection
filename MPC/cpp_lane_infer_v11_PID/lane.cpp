@@ -219,17 +219,17 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
 
         if (std::abs(deltaX_car_frame) > 1e-8) {
             intersect.slope = deltaY_car_frame / deltaX_car_frame;
-            intersect.offset_cm = P2_x_img_frame - intersect.slope * P2_x_car_frame;
+            intersect.offset = P2_x_img_frame - intersect.slope * P2_x_car_frame;
 
             //std::cout << "Slope: " << slope_car_frame << std::endl;
             intersect.psi = std::atan(intersect.slope);
         } else {
-            intersect.offset_cm = 0.0f;
+            intersect.offset = 0.0f;
             intersect.psi = 0.0f;
             std::cout << "Aviso: deltaX_car_frame é zero, valores padrão definidos para intersect." << std::endl;
         }
     } else {
-        intersect.offset_cm = 0.0f;
+        intersect.offset = 0.0f;
         intersect.psi = 0.0f;
         std::cout << "Aviso: medianPoints está vazio, valores padrão definidos para intersect." << std::endl;
     }

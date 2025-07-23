@@ -65,7 +65,7 @@ struct LineIntersect {
     float xrb;
     float slope;        // Inclinação da mediana estimada
     float psi;          // Yaw (ângulo) da mediana estimada
-    float offset_cm;    // offset no centro de massa do carro
+    float offset;    // offset no centro de massa do carro
     float w_real = 0.26; // distancia entre as linhas da pista em metros
     bool valid;
 };

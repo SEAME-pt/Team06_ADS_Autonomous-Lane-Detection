@@ -18,7 +18,7 @@ int main() {
 
     // Initialize PID for velocity control: kp, ki, kd, dt, output_min, output_max
     PIDController pid(1.0, 0.1, 0.05, 0.1, -255.0, 255.0); // Example gains and PWM bounds
-    double v_ideal = 3.0; // Velocidade ideal fixa (m/s)
+    double v_ideal = 1.0; // Velocidade ideal fixa (m/s)
 
     // Initialize servo
     FServo servo;
@@ -46,7 +46,6 @@ int main() {
     int frameCount = 0;
 
     // Initialize state
-    double x = 0.0, y = 0.0, theta = 0.0;
     double last_delta = 0.0; // Store last delta for state update
 
     while (true) {
@@ -67,17 +66,20 @@ int main() {
         auto result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
 
         // Update state (replace with actual odometry if available)
-        double v_actual = 3.0; // From your original code, replace with actual velocity
-        // Update theta using last computed delta (simplified odometry)
-        theta += (v_actual / 0.15) * std::tan(last_delta) * 0.1; // L=0.15m, dt=0.1s
-
+        double v_actual = 1.0; // MUITO IMPORTANTE: Substitua por uma leitura real da velocidade do seu robô.
+                               // Se v_actual for sempre 3.0, o MPC não terá a velocidade real do veículo,
+                               // o que pode levar a um controle impreciso.
+        
         // Check for invalid inputs
-        double offset = intersect.offset_cm;
+        double offset = intersect.offset;
         double psi = intersect.psi;
         double delta = last_delta; // Default to last delta if inputs are invalid
         if (!std::isnan(offset) && !std::isnan(psi)) {
             // Execute NMPC
-            delta = mpc.computeControl(offset, psi, theta, v_actual);
+            // O parâmetro 'theta' (current_theta_rad) foi removido da chamada.
+            delta = -mpc.computeControl(offset, psi, v_actual);
+        } else {
+            std::cerr << "AVISO: Offset ou Psi inválido (NaN). Usando delta anterior." << std::endl;
         }
 
         // PID for velocity control
@@ -89,7 +91,7 @@ int main() {
 
         // Apply controls
         servo.set_steering(steering_angle);
-        last_delta = delta; // Store delta for next state update
+        last_delta = delta; // Store delta for next state update (CRUCIAL para o MPC)
 
         // Log para depuração
         std::cout << "Offset: " << offset << " m, Psi: " << psi * 180.0 / M_PI << " deg, Delta: " << delta * 180.0 / M_PI << " deg" << std::endl;
