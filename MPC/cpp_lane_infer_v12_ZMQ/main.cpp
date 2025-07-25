@@ -8,6 +8,12 @@
 #include "../FServo/FServo.hpp"
 #include "../Control/ControlAssembly.hpp"
 
+// INCLUA O SEU ZMQ PUBLISHER
+#include "ZmqPublisher.hpp"
+// #include <json/json.h> // REMOVIDO: Não precisamos mais de JsonCpp
+#include <zmq.hpp> // Incluir explicitamente zmq.hpp para zmq::context_t
+#include <sstream> // PARA FORMATAR A STRING COM OS DADOS
+
 int main() {
     TensorRTInference trt("../model.engine");
     CSICamera cam(1280, 720, 30);
@@ -38,6 +44,25 @@ int main() {
     // ControlAssembly motor; // Uncomment and configure
     // motor.set_acceleration(0.0); // Initialize to zero
 
+    // --- INICIALIZAÇÃO DO ZMQ ---
+    zmq::context_t context(1);
+
+    const std::string ZMQ_HOST = "127.0.0.1";
+    const int ZMQ_PORT = 5558;
+    ZmqPublisher* zmq_publisher = nullptr;
+
+    try {
+        zmq_publisher = new ZmqPublisher(context, ZMQ_HOST, ZMQ_PORT);
+        if (!zmq_publisher->isConnected()) {
+            std::cerr << "AVISO: Falha ao inicializar o ZMQ Publisher. O middleware pode nao receber dados." << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "ERRO FATAL ao iniciar ZMQ Publisher: " << e.what() << std::endl;
+        zmq_publisher = nullptr;
+    }
+    // --- FIM DA INICIALIZAÇÃO ZMQ ---
+
+
     std::cout << "Pressione 'q' para sair" << std::endl;
 
     auto lastTime = std::chrono::steady_clock::now();
@@ -45,8 +70,7 @@ int main() {
     const double alpha = 0.9;
     int frameCount = 0;
 
-    // Initialize state
-    double last_delta = 0.0; // Store last delta for state update
+    double last_delta = 0.0;
 
     while (true) {
         cv::Mat frame = cam.read();
@@ -65,39 +89,42 @@ int main() {
         LineIntersect intersect;
         auto result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
 
-        // Update state (replace with actual odometry if available)
-        double v_actual = 1.0; // MUITO IMPORTANTE: Substitua por uma leitura real da velocidade do seu robô.
-                               // Se v_actual for sempre 3.0, o MPC não terá a velocidade real do veículo,
-                               // o que pode levar a um controle impreciso.
+        double v_actual = 1.0; 
 
-        // Check for invalid inputs
         double offset = intersect.offset;
         double psi = intersect.psi;
-        double delta = last_delta; // Default to last delta if inputs are invalid
+        double delta = last_delta;
         if (!std::isnan(offset) && !std::isnan(psi)) {
-            // Execute NMPC
-            // O parâmetro 'theta' (current_theta_rad) foi removido da chamada.
             delta = -mpc.computeControl(offset, psi, v_actual);
         } else {
-            std::cerr << "AVISO: Offset ou Psi inválido (NaN). Usando delta anterior." << std::endl;
+            std::cerr << "AVISO: Offset ou Psi invalido (NaN). Usando delta anterior." << std::endl;
         }
 
-        // PID for velocity control
         double motor_signal = pid.compute_control(v_ideal, v_actual);
 
-        // Convert delta to degrees and limit
         int steering_angle = static_cast<int>(delta * 180.0 / M_PI);
         steering_angle = std::max(-40, std::min(40, steering_angle));
 
-        // Apply controls
         servo.set_steering(steering_angle);
-        last_delta = delta; // Store delta for next state update (CRUCIAL para o MPC)
+        last_delta = delta;
 
-        // Log para depuração
         std::cout << "Offset: " << offset << " m, Psi: " << psi * 180.0 / M_PI << " deg, Delta: " << delta * 180.0 / M_PI << " deg" << std::endl;
-        // motor.set_pwm(motor_signal); // Implement motor control (e.g., PWM)
+        
+        int lane;
+        lane = (offset < -0.01) ? 2 : ((offset > 0.02) ? 1 : 0);
 
-        // Display info
+        // --- ENVIO DE DADOS VIA ZMQ (AGORA COMO STRING SIMPLES) ---
+        if (zmq_publisher && zmq_publisher->isConnected()) {
+            std::stringstream ss;
+            // Formate a string como desejar.
+            // Exemplo: "lane:0" ok, "lane:1" esq, "lane:2" direita
+            ss << "lane:" << lane;
+
+            zmq_publisher->publishMessage(ss.str());
+        }
+        // --- FIM DO ENVIO ZMQ ---
+
+        // (O restante do seu código de exibição permanece o mesmo)
         std::string fpsText = "FPS: " + std::to_string(static_cast<int>(smoothedFPS));
         cv::putText(result, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         std::string deltaText = "Delta: " + std::to_string(delta * 180.0 / M_PI) + " deg";
@@ -108,7 +135,7 @@ int main() {
         cv::putText(result, vActText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 2);
         std::string motorText = "Motor: " + std::to_string(motor_signal);
         cv::putText(result, motorText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
-        std::string desvText = "Desv Lat: " + std::to_string(offset); // Exibir em m
+        std::string desvText = "Desv Lat: " + std::to_string(offset);
         cv::putText(result, desvText, cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 100, 0), 2);
         std::string psiText = "Psi(rad): " + std::to_string(psi) + " (deg): " + std::to_string(psi * 180.0 / M_PI);
         cv::putText(result, psiText, cv::Point(10, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
@@ -134,8 +161,15 @@ int main() {
 
     // Stop servo and motors
     servo.set_steering(0);
-    // motor.set_pwm(0.0); // Implement
     cam.stop();
     cv::destroyAllWindows();
+
+    // --- LIBERAÇÃO DO RECURSO ZMQ ---
+    if (zmq_publisher) {
+        delete zmq_publisher;
+        std::cout << "ZMQ Publisher liberado." << std::endl;
+    }
+    // --- FIM DA LIBERAÇÃO ---
+
     return 0;
 }
