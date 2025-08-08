@@ -9,27 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(OpenCV REQUIRED)
 find_package(CUDA REQUIRED)
 
-# --- REMOVIDO: JsonCpp configurado manualmente ---
-# find_path(JsonCpp_INCLUDE_DIRS
-#     NAMES json/json.h
-#     PATHS /usr/include /usr/include/jsoncpp
-#     NO_CMAKE_FIND_ROOT_PATH
-# )
-# find_library(JsonCpp_LIBRARIES
-#     NAMES jsoncpp
-#     PATHS /usr/lib /usr/local/lib /usr/lib/aarch64-linux-gnu
-#     NO_CMAKE_FIND_ROOT_PATH
-# )
-# if(NOT JsonCpp_INCLUDE_DIRS)
-#     message(FATAL_ERROR "JsonCpp include (json/json.h) nao encontrado. Por favor, instale 'libjsoncpp-dev'.")
-# endif()
-# if(NOT JsonCpp_LIBRARIES)
-#     message(FATAL_ERROR "JsonCpp library (libjsoncpp.so) nao encontrada. Por favor, instale 'libjsoncpp-dev'.")
-# endif()
-# message(STATUS "JsonCpp configurado manualmente!")
-# message(STATUS "JsonCpp_INCLUDE_DIRS: ${JsonCpp_INCLUDE_DIRS}")
-# message(STATUS "JsonCpp_LIBRARIES: ${JsonCpp_LIBRARIES}")
-
 # --- Configurar ZeroMQ manualmente (Mantenha esta seção) ---
 find_path(ZeroMQ_INCLUDE_DIRS
     NAMES zmq.hpp
@@ -77,11 +56,11 @@ include_directories(
     ${TensorRT_ROOT}/include
     ${CMAKE_SOURCE_DIR}
     ${CASADI_INCLUDE_DIRS}
-    # REMOVIDO: ${JsonCpp_INCLUDE_DIRS}
     ${ZeroMQ_INCLUDE_DIRS}
     ../FServo
     ../BackMotors
     ../Control
+    ../../MCP2515
 )
 
 # Adicionar executável
@@ -96,6 +75,12 @@ add_executable(lane_detection
     ../BackMotors/BackMotors.cpp
     ../Control/ControlAssembly.cpp
     ../Control/Controller.cpp
+    # Ficheiros do CAN Bus
+    ../../MCP2515/SPIController.cpp
+    ../../MCP2515/MCP2515Configurator.cpp
+    ../../MCP2515/MCP2515Controller.cpp
+    ../../MCP2515/CanBusManager.cpp
+    ../../MCP2515/CANMessageProcessor.cpp
 )
 
 # Linkar bibliotecas
@@ -106,9 +91,10 @@ target_link_libraries(lane_detection
     ${NvInferPlugin_LIB}
     ${NvOnnxParser_LIB}
     ${CASADI_LIBRARIES}
-    # REMOVIDO: ${JsonCpp_LIBRARIES}
     ${ZeroMQ_LIBRARIES}
+    # Adicionar bibliotecas necessárias para as threads e SPI
     rt
+    pthread
 )
 
 # Configurações adicionais para Jetson
