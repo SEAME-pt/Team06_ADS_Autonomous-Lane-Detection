@@ -153,6 +153,126 @@ ZmqPublisher.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/ZmqPublisher.cpp.s
 .PHONY : ZmqPublisher.cpp.s
 
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.o
+
+# target to build an object file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.i: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.i
+
+# target to preprocess a source file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i
+
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.s: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.s
+
+# target to generate assembly for a file
+home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s
+.PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s
+
 home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o
 .PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.o
 
@@ -381,6 +501,21 @@ help:
 	@echo "... ZmqPublisher.o"
 	@echo "... ZmqPublisher.i"
 	@echo "... ZmqPublisher.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.s"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.o"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.i"
+	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.s"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.o"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.i"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.s"

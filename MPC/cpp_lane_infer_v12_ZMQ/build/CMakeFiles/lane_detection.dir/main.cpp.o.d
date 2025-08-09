@@ -519,28 +519,7 @@ CMakeFiles/lane_detection.dir/main.cpp.o: \
  /usr/local/include/casadi/core/filesystem.hpp \
  /usr/local/include/casadi/core/options.hpp \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/pid.hpp \
- /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../FServo/FServo.hpp \
- /usr/include/fcntl.h /usr/include/aarch64-linux-gnu/bits/fcntl.h \
- /usr/include/aarch64-linux-gnu/bits/fcntl-linux.h \
- /usr/include/aarch64-linux-gnu/bits/types/struct_iovec.h \
- /usr/include/linux/falloc.h /usr/include/aarch64-linux-gnu/bits/stat.h \
- /usr/include/aarch64-linux-gnu/bits/fcntl2.h \
- /usr/include/linux/i2c-dev.h /usr/include/linux/types.h \
- /usr/include/aarch64-linux-gnu/asm/types.h \
- /usr/include/asm-generic/types.h /usr/include/asm-generic/int-ll64.h \
- /usr/include/aarch64-linux-gnu/asm/bitsperlong.h \
- /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
- /usr/include/linux/stddef.h \
- /usr/include/aarch64-linux-gnu/asm/posix_types.h \
- /usr/include/asm-generic/posix_types.h \
- /usr/include/aarch64-linux-gnu/sys/ioctl.h \
- /usr/include/aarch64-linux-gnu/bits/ioctls.h \
- /usr/include/aarch64-linux-gnu/asm/ioctls.h \
- /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
- /usr/include/aarch64-linux-gnu/asm/ioctl.h \
- /usr/include/asm-generic/ioctl.h \
- /usr/include/aarch64-linux-gnu/bits/ioctl-types.h \
- /usr/include/aarch64-linux-gnu/sys/ttydefaults.h /usr/include/unistd.h \
+ /usr/include/c++/8/condition_variable /usr/include/unistd.h \
  /usr/include/aarch64-linux-gnu/bits/posix_opt.h \
  /usr/include/aarch64-linux-gnu/bits/environments.h \
  /usr/include/aarch64-linux-gnu/bits/confname.h \
@@ -563,6 +542,13 @@ CMakeFiles/lane_detection.dir/main.cpp.o: \
  /usr/include/aarch64-linux-gnu/bits/sigaction.h \
  /usr/include/aarch64-linux-gnu/bits/sigcontext.h \
  /usr/include/aarch64-linux-gnu/asm/sigcontext.h \
+ /usr/include/linux/types.h /usr/include/aarch64-linux-gnu/asm/types.h \
+ /usr/include/asm-generic/types.h /usr/include/asm-generic/int-ll64.h \
+ /usr/include/aarch64-linux-gnu/asm/bitsperlong.h \
+ /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
+ /usr/include/linux/stddef.h \
+ /usr/include/aarch64-linux-gnu/asm/posix_types.h \
+ /usr/include/asm-generic/posix_types.h \
  /usr/include/aarch64-linux-gnu/asm/sve_context.h \
  /usr/include/aarch64-linux-gnu/bits/types/stack_t.h \
  /usr/include/aarch64-linux-gnu/sys/ucontext.h \
@@ -578,6 +564,20 @@ CMakeFiles/lane_detection.dir/main.cpp.o: \
  /usr/include/aarch64-linux-gnu/bits/types/struct_sigstack.h \
  /usr/include/aarch64-linux-gnu/bits/sigthread.h \
  /usr/include/aarch64-linux-gnu/bits/signal_ext.h \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../FServo/FServo.hpp \
+ /usr/include/fcntl.h /usr/include/aarch64-linux-gnu/bits/fcntl.h \
+ /usr/include/aarch64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/aarch64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/aarch64-linux-gnu/bits/stat.h \
+ /usr/include/aarch64-linux-gnu/bits/fcntl2.h \
+ /usr/include/linux/i2c-dev.h /usr/include/aarch64-linux-gnu/sys/ioctl.h \
+ /usr/include/aarch64-linux-gnu/bits/ioctls.h \
+ /usr/include/aarch64-linux-gnu/asm/ioctls.h \
+ /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
+ /usr/include/aarch64-linux-gnu/asm/ioctl.h \
+ /usr/include/asm-generic/ioctl.h \
+ /usr/include/aarch64-linux-gnu/bits/ioctl-types.h \
+ /usr/include/aarch64-linux-gnu/sys/ttydefaults.h \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../Control/ControlAssembly.hpp \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../Control/../BackMotors/BackMotors.hpp \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../Control/../FServo/FServo.hpp \
@@ -586,5 +586,15 @@ CMakeFiles/lane_detection.dir/main.cpp.o: \
  /usr/include/linux/joystick.h /usr/include/linux/input.h \
  /usr/include/linux/input-event-codes.h \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../Control/Logger.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/CanBusManager.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/IMCP2515Controller.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/MCP2515Controller.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/ISPIController.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/MCP2515Configurator.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/CANMessageProcessor.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/MCP2515Controller.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/SPIController.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/MCP2515Configurator.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515/CANMessageProcessor.hpp \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/ZmqPublisher.hpp \
  /usr/local/include/zmq.hpp /usr/include/zmq.h /usr/include/c++/8/cassert

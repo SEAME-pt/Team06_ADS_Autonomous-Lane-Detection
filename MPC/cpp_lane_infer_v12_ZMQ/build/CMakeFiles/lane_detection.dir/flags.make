@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../FServo -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../BackMotors -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../Control -isystem /usr/include/opencv4
+CXX_INCLUDES = -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../FServo -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../BackMotors -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../Control -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/../../MCP2515 -isystem /usr/include/opencv4
 
 CXX_FLAGS =  -Wall -Ofast -std=gnu++17
 

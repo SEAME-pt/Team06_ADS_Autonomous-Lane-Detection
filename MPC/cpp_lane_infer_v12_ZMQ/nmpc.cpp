@@ -110,9 +110,12 @@ void NMPCController::setupCasADiProblem() {
 
     // Criar o problema de otimização
     Dict opts;
+    opts["print_time"] = 0;
     opts["ipopt.print_level"] = 0;
+    opts["ipopt.print_timing_statistics"] = "no";
     opts["ipopt.max_iter"] = 100;
     opts["ipopt.warm_start_init_point"] = "yes";
+
 
     // Setup do problema NLP
     casadi::SXDict nlp = {{"x", SX::vertcat({SX::reshape(X, -1, 1), SX::reshape(U, -1, 1)})},

@@ -209,6 +209,76 @@ CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-L
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.s
 
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o: CMakeFiles/lane_detection.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o -MF CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o.d -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.s
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o: CMakeFiles/lane_detection.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o -MF CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o.d -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.s
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o: CMakeFiles/lane_detection.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o -MF CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o.d -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.s
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o: CMakeFiles/lane_detection.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o -MF CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o.d -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.s
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o: CMakeFiles/lane_detection.dir/flags.make
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o: CMakeFiles/lane_detection.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o -MF CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o.d -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp > CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.i
+
+CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp -o CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.s
+
 # Object files for target lane_detection
 lane_detection_OBJECTS = \
 "CMakeFiles/lane_detection.dir/main.cpp.o" \
@@ -220,7 +290,12 @@ lane_detection_OBJECTS = \
 "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.o" \
 "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o" \
 "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o" \
-"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o"
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o" \
+"CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o"
 
 # External object files for target lane_detection
 lane_detection_EXTERNAL_OBJECTS =
@@ -235,6 +310,11 @@ lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_
 lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/BackMotors/BackMotors.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/ControlAssembly.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/Control/Controller.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o
+lane_detection: CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o
 lane_detection: CMakeFiles/lane_detection.dir/build.make
 lane_detection: /usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.8.0
 lane_detection: /usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.8.0
@@ -317,7 +397,7 @@ lane_detection: /usr/lib/aarch64-linux-gnu/libnvonnxparser.so
 lane_detection: /usr/local/lib/libcasadi.so
 lane_detection: /usr/lib/aarch64-linux-gnu/libzmq.so
 lane_detection: CMakeFiles/lane_detection.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable lane_detection"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Linking CXX executable lane_detection"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lane_detection.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

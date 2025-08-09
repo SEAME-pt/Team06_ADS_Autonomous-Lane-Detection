@@ -59,7 +59,7 @@ bool ZmqPublisher::publishMessage(const std::string& data) {
         // Cria uma mensagem ZMQ diretamente da string
         zmq::message_t message(data.begin(), data.end());
 
-        std::cout << "ZMQ Publisher: Publicando mensagem: " << data << std::endl;
+        //std::cout << "ZMQ Publisher: Publicando mensagem: " << data << std::endl;
 
         zmq::send_result_t send_result = _socket.send(message, zmq::send_flags::none);
 
