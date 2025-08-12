@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/lane_detection.dir/ZmqPublisher.cpp.o"
   "CMakeFiles/lane_detection.dir/ZmqPublisher.cpp.o.d"
+  "CMakeFiles/lane_detection.dir/autotune.cpp.o"
+  "CMakeFiles/lane_detection.dir/autotune.cpp.o.d"
   "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o"
   "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o.d"
   "CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp.o"

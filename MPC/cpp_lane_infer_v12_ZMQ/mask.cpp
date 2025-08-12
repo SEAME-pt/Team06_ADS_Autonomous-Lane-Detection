@@ -139,13 +139,13 @@ int MaskProcessor::verifyLanes(std::vector<cv::Point>& left_edge_points, std::ve
 
     if (left_edge_points.size() > min_size_line) {
         bottom_left = left_edge_points.back().y;
-        std::cout << " encontrou a esquerda" << std::endl;
+        //std::cout << " encontrou a esquerda" << std::endl;
     } else if (left_edge_points.size() < min_size_line && right_edge_points.size() > min_size_line) {
         value = -1;
     }
 
     if (right_edge_points.size() > min_size_line) {
-        std::cout << " encontrou a direita" << std::endl;
+        //std::cout << " encontrou a direita" << std::endl;
         bottom_right = right_edge_points.back().y;
     } else if (right_edge_points.size() < min_size_line && left_edge_points.size() > min_size_line) {
         value = -2;

@@ -1,6 +1,7 @@
 #include "lane.hpp"
 #include "nmpc.hpp"
 #include "pid.hpp"
+#include "autotune.hpp"
 #include <iostream>
 #include <chrono>
 #include <vector>
@@ -38,8 +39,14 @@ void signalHandler(int signum) {
     keep_running.store(false);
 }
 
-int main() {
+int main(int argc, char** argv) {
     std::signal(SIGINT, signalHandler);
+
+    bool do_autotune = false;
+    for (int i = 1; i < argc; ++i) {
+        std::string a(argv[i]);
+        if (a == "--auto-tune" || a == "--autotune") do_autotune = true;
+    }
 
     // --- PARTE 1: INICIALIZAÇÃO DA LÓGICA DE CONTROLO DE FAixas ---
     TensorRTInference trt("../model.engine");
@@ -55,10 +62,30 @@ int main() {
         return 1;
     }
 
-    double kp = 2.0, ki = 0.0, kd = 0.0;
+    double kp = 2.0, ki = 2.0, kd = 2.0;
     double dt = 0.1;
     PIDController pid(kp, ki, kd, dt, 0, 100.0);
     double v_ideal = 1.5;
+
+    if (do_autotune) {
+        std::cout << "Modo Auto-Tune ativado. A correr autotune...\n";
+        // parâmetros do autotune — ajusta conforme preciso
+        double tune_setpoint = v_ideal;    // velocidade alvo em m/s
+        double sample_dt = 0.05;           // 50ms amostragem
+        double relay_amp = 25.0;           // +/- 20 sobre base=50
+        double tune_duration = 40.0;       // segundos
+
+        PIDGains g = runRelayAutotune(backMotors, tune_setpoint, tune_duration, sample_dt, relay_amp, 50, "pid_gains.txt");
+
+        if (g.ok) {
+            std::cout << "Autotune sucesso. Kp=" << g.kp << " Ki=" << g.ki << " Kd=" << g.kd << "\n";
+            // Recria o PID com os novos ganhos
+            pid = PIDController(g.kp, g.ki, g.kd, dt, 0, 100.0);
+            // opcional: grava também no log / zmq
+        } else {
+            std::cerr << "Autotune falhou: " << g.msg << ". Continuando com ganhos anteriores.\n";
+        }
+    }
     
     FServo servo;
     try {
@@ -148,7 +175,7 @@ int main() {
         auto result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
 
         double v_actual = current_speed_ms.load();
-        std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
+        //std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
         
         double offset = intersect.offset;
         double psi = intersect.psi;
@@ -165,7 +192,7 @@ int main() {
         last_delta = delta;
         
         double motor_signal = pid.compute_control(v_ideal, v_actual);
-        std::cout << "Motor signal: " << motor_signal << std::endl;
+        //std::cout << "Motor signal: " << motor_signal << std::endl;
         backMotors.setSpeed(static_cast<int>(motor_signal));
 
         int lane;

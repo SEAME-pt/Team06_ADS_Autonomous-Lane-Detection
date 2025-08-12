@@ -153,6 +153,30 @@ ZmqPublisher.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/ZmqPublisher.cpp.s
 .PHONY : ZmqPublisher.cpp.s
 
+autotune.o: autotune.cpp.o
+.PHONY : autotune.o
+
+# target to build an object file
+autotune.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/autotune.cpp.o
+.PHONY : autotune.cpp.o
+
+autotune.i: autotune.cpp.i
+.PHONY : autotune.i
+
+# target to preprocess a source file
+autotune.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/autotune.cpp.i
+.PHONY : autotune.cpp.i
+
+autotune.s: autotune.cpp.s
+.PHONY : autotune.s
+
+# target to generate assembly for a file
+autotune.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/autotune.cpp.s
+.PHONY : autotune.cpp.s
+
 home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o
 .PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o
 
@@ -501,6 +525,9 @@ help:
 	@echo "... ZmqPublisher.o"
 	@echo "... ZmqPublisher.i"
 	@echo "... ZmqPublisher.s"
+	@echo "... autotune.o"
+	@echo "... autotune.i"
+	@echo "... autotune.s"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.i"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.s"
