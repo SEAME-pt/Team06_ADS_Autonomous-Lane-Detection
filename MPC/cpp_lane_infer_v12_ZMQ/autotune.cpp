@@ -1,4 +1,5 @@
 #include "autotune.hpp"
+#include "../BackMotors/BackMotors.hpp"
 #include <chrono>
 #include <thread>
 #include <atomic>
@@ -12,14 +13,14 @@ extern std::atomic<double> current_speed_ms;
 
 // Forward declaration da classe BackMotors (usa setSpeed(int), conforme o teu código).
 // Inclui o header real se disponível.
-class BackMotors {
+/* class BackMotors {
 public:
     bool init_motors() { return true; } // placeholder se não existir header
     void setSpeed(int s) {
         // implementação real já existe no teu projecto
         (void)s;
     }
-};
+}; */
 
 using Clock = std::chrono::steady_clock;
 
@@ -38,6 +39,7 @@ PIDGains runRelayAutotune(
 ) {
     PIDGains result;
     result.ok = false;
+    
 
     // Segurança
     if (sample_dt <= 0.0) sample_dt = 0.05;
@@ -84,6 +86,14 @@ PIDGains runRelayAutotune(
         // read current speed (thread-safe atomic)
         double v = current_speed_ms.load();
 
+        std::cout << "[DEBUG] t=" << elapsed
+          << "s, v=" << v
+          << ", out=" << last_output
+          << ", max=" << cur_max
+          << ", min=" << cur_min
+          << ", crossings=" << crossing_times.size()
+          << std::endl;
+
         // filtro muito simples: rejeita valores negativos / nan
         if (std::isnan(v) || v < 0) v = 0.0;
 
@@ -102,17 +112,25 @@ PIDGains runRelayAutotune(
 
         // detectar cruzamentos com o setpoint (v cruzando setpoint)
         if (times.size() >= 2) {
+
+            
             double v_prev = values[values.size()-2];
             double t_prev = times[times.size()-2];
             double v_curr = values.back();
             double t_curr = times.back();
-
+            
             // cruzamento ascendente
             if ( (v_prev < setpoint && v_curr >= setpoint) ||
-                 (v_prev > setpoint && v_curr <= setpoint) ) {
+            (v_prev > setpoint && v_curr <= setpoint) ) {
                 // linear interpolation para estimativa de tempo exato do cruzamento
                 double frac = (setpoint - v_prev) / (v_curr - v_prev + 1e-12);
                 double crossing_time = t_prev + frac * (t_curr - t_prev);
+
+                std::cout << "[DEBUG] crossing at t=" << crossing_time
+                << "s (v_prev=" << v_prev
+                << ", v_curr=" << v_curr << ")"
+                << std::endl;
+                
                 crossing_times.push_back(crossing_time);
                 // queremos pelo menos alguns cruzamentos para estimar periodo
                 if (!first_cycle_seen) {
@@ -185,7 +203,11 @@ PIDGains runRelayAutotune(
                         std::cerr << "[AutoTune] WARNING: Could not save gains to " << save_path << "\n";
                     }
                 }
-
+                
+                if (elapsed >= time_limit) {
+                std::cout << "[DEBUG] Timeout atingido — total cruzamentos=" 
+                << crossing_times.size() << std::endl;
+                }
                 break;
             }
         }

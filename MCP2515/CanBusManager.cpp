@@ -1,24 +1,3 @@
-/*!
- * @file CanBusManager.cpp
- * @brief Implementation of the CanBusManager class.
- * @version 0.1
- * @date 2025-01-31
- * @author Félix LE BIHAN (@Fle-bihh)
- * @author Tiago Pereira (@t-pereira06)
- * @author Ricardo Melo (@reomelo)
- * @author Michel Batista (@MicchelFAB)
- *
- * @details This file contains the implementation of the CanBusManager class,
- * which manages the CAN bus communication.
- *
- * @note This class is used to manage the CAN bus communication and
- * process incoming messages.
- *
- * @see CanBusManager.hpp for the class definition.
- *
- * @copyright Copyright (c) 2025
- */
-
 #include "CanBusManager.hpp"
 #include <iostream>
 #include <cstring> // Adicionado para memcpy
