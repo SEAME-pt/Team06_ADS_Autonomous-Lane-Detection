@@ -1,7 +1,6 @@
 #include "lane.hpp"
 #include "nmpc.hpp"
 #include "pid.hpp"
-#include "trapezoidal.hpp"
 #include <iostream>
 #include <chrono>
 #include <vector>
@@ -13,6 +12,7 @@
 #include <unistd.h>
 #include <csignal>
 #include <iomanip>
+#include <algorithm>
 
 // Componentes do seu sistema para controlo de motor e CAN Bus
 #include "../FServo/FServo.hpp"
@@ -27,6 +27,11 @@
 #include "ZmqPublisher.hpp"
 #include <zmq.hpp>
 #include <sstream>
+
+// Variável atómica para armazenar a velocidade atual, acessível de forma segura entre threads
+std::atomic<double> current_speed_ms{0.0};
+// Flag atómica para controlar a execução do loop principal
+std::atomic<bool> keep_running{true};
 
 // Handler de sinal para terminar o programa de forma limpa com Ctrl+C
 void signalHandler(int signum) {
@@ -50,6 +55,10 @@ int main() {
         std::cerr << "Falha ao inicializar os motores traseiros." << std::endl;
         return 1;
     }
+
+    double kp = 10.0, ki = 0.5, kd = 0.1, dt = 0.1;
+    PIDController pid(kp, ki, kd, dt, 0, 100.0);
+    double v_ideal = 1.0;
     
     FServo servo;
     try {
@@ -120,16 +129,6 @@ int main() {
     int frameCount = 0;
 
     bool img_entry = false;
-
-    double setpoint_velocity = 1.0; // m/s desejados
-    PID pid(30.0, 5.0, 0.0, 0.0, 100.0); // Kp, Ki, Kd ajustáveis
-    
-    auto pid_last_time = std::chrono::steady_clock::now();
-
-    double max_steering_vel_deg_s = 400.0; // 300°/s (ajusta para o teu servo)
-    double max_steering_acc_deg_s2 = 2000.0; // 1500°/s² (ajusta para suavidade)
-    TrapezoidalProfile steering_profile(max_steering_vel_deg_s, max_steering_acc_deg_s2);
-    
     // --- PARTE 3: LOOP PRINCIPAL DE CONTROLO ---
     while (keep_running.load()) {
         cv::Mat frame = cam.read();
@@ -151,17 +150,6 @@ int main() {
 
         double v_actual = current_speed_ms.load();
         std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
-
-        auto pid_now = std::chrono::steady_clock::now();
-        double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
-            
-        if (pid_dt >= 0.05) { // 50 ms → 20 Hz
-            double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-            backMotors.setSpeed(static_cast<int>(motor_pwm)); // aplica PWM de 0 a 100
-            motor_signal = motor_pwm; // para debug e display
-            pid_last_time = pid_now;
-        }
-
         
         double offset = intersect.offset;
         double psi = intersect.psi;
@@ -172,17 +160,15 @@ int main() {
             std::cerr << "AVISO: Offset ou Psi invalido (NaN). Usando delta anterior." << std::endl;
         }
 
-        // Converte delta para graus (ângulo desejado)
-        double target_steering_angle = delta * 180.0 / M_PI;
-
-        // Aplica perfil trapezoidal
-        double smoothed_steering_angle = steering_profile.computeNextAngle(target_steering_angle, elapsed);
-
-        // Limita o ângulo final
-        int steering_angle = static_cast<int>(smoothed_steering_angle);
+        int steering_angle = static_cast<int>(delta * 180.0 / M_PI);
         steering_angle = std::max(-40, std::min(40, steering_angle));
         servo.set_steering(steering_angle);
-        last_delta = delta; // Atualiza last_delta
+        last_delta = delta;
+        
+        double motor_signal = pid.compute_control(v_ideal, v_actual);
+        std::cout << "Motor signal: " << motor_signal << std::endl;
+        if (img_entry == true)
+            backMotors.setSpeed(static_cast<int>(motor_signal));
 
         int lane;
         lane = (offset < -0.01) ? 2 : ((offset > 0.02) ? 1 : 0);
@@ -208,12 +194,11 @@ int main() {
         cv::putText(result, psiText, cv::Point(10, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         std::string steeringText = "Steering: " + std::to_string(steering_angle) + " deg";
         cv::putText(result, steeringText, cv::Point(10, 160), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(200, 0, 0), 2);
-        std::string smoothedText = "Smoothed Steering: " + std::to_string(smoothed_steering_angle) + " deg";
-        cv::putText(result, smoothedText, cv::Point(10, 180), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 200, 200), 2);
 
         img_entry = true;
+
         frameCount++;
-        //cv::imshow("Lane Detection", result);
+        cv::imshow("Lane Detection", result);
 
         if (cv::waitKey(1) == 'q') {
             keep_running.store(false);

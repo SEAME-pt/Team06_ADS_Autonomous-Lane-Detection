@@ -519,6 +519,7 @@ CMakeFiles/lane_detection.dir/main.cpp.o: \
  /usr/local/include/casadi/core/filesystem.hpp \
  /usr/local/include/casadi/core/options.hpp \
  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/pid.hpp \
+ /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/trapezoidal.hpp \
  /usr/include/c++/8/condition_variable /usr/include/unistd.h \
  /usr/include/aarch64-linux-gnu/bits/posix_opt.h \
  /usr/include/aarch64-linux-gnu/bits/environments.h \

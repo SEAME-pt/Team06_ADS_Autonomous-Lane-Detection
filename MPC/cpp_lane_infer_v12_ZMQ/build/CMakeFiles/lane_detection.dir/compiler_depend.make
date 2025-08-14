@@ -3958,6 +3958,7 @@ CMakeFiles/lane_detection.dir/main.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS
   /usr/local/include/casadi/core/filesystem.hpp \
   /usr/local/include/casadi/core/options.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/pid.hpp \
+  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/trapezoidal.hpp \
   /usr/include/c++/8/condition_variable \
   /usr/include/unistd.h \
   /usr/include/aarch64-linux-gnu/bits/posix_opt.h \
@@ -6198,6 +6199,8 @@ CMakeFiles/lane_detection.dir/pid.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_
 /usr/local/include/casadi/core/archiver.hpp:
 
 /usr/include/opencv4/opencv2/core/operations.hpp:
+
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/cpp_lane_infer_v12_ZMQ/trapezoidal.hpp:
 
 /usr/include/opencv4/opencv2/video/tracking.hpp:
 
