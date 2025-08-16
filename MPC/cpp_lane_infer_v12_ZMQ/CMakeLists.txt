@@ -70,7 +70,6 @@ add_executable(lane_detection
     mask.cpp
     nmpc.cpp
     pid.cpp
-    autotune.cpp
     ZmqPublisher.cpp
     ../FServo/FServo.cpp
     ../BackMotors/BackMotors.cpp

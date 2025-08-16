@@ -1,33 +1,71 @@
 #include "pid.hpp"
-#include <algorithm>
+#include <cmath>
 
-PIDController::PIDController(double kp, double ki, double kd, double dt, double output_min, double output_max)
-    : kp_(kp), ki_(ki), kd_(kd), dt_(dt), output_min_(output_min), output_max_(output_max),
-      integral_(0.0), prev_error_(0.0) {}
+PID::PID()
+    : iTerm(0.0), prevMeasFilt(0.0), measFilt(0.0), lastOutput(0.0), first(true) {}
 
-double PIDController::compute_control(double setpoint, double measured_value) {
-    // Calculate error
-    double error = setpoint - measured_value;
+double PID::compute(double setpoint, double measurement, double dt) {
+    if (dt <= 0.0) return lastOutput;
 
-    // Proportional term
-    double p_term = kp_ * error;
+    // ---- Filtrar medição para derivada (1ª ordem) ----
+    if (first) {
+        measFilt = measurement;
+        prevMeasFilt = measurement;
+        first = false;
+    } else {
+        measFilt = measFilt + dAlpha * (measurement - measFilt);
+    }
 
-    // Integral term
-    integral_ += error * dt_;
-    double i_term = ki_ * integral_;
+    // Erro (para P e I)
+    double error = setpoint - measurement;
 
-    // Derivative term
-    double derivative = (error - prev_error_) / dt_;
-    double d_term = kd_ * derivative;
+    // Derivada NA MEDIÇÃO (melhor anti-ruído e sem "derivative kick" no setpoint)
+    double dMeas = (measFilt - prevMeasFilt) / dt;
+    double dTerm = -Kd * dMeas; // sinal invertido porque é d(measurement)/dt
+    prevMeasFilt = measFilt;
 
-    // Compute output
-    double output = p_term + i_term + d_term;
+    // Proporcional
+    double pTerm = Kp * error;
 
-    // Limit output
-    output = std::max(output_min_, std::min(output_max_, output));
+    // Integral "candidata": só aplicamos ao iTerm se as condições permitirem
+    double iCandidate = iTerm + Ki * error * dt;
 
-    // Update previous error
-    prev_error_ = error;
+    // Saída "não saturada" usando a integral candidata
+    double outUnsat = pTerm + iCandidate + dTerm;
 
-    return output;
+    // ---- Anti-windup por integração condicional ----
+    // Regras:
+    // 1) Se outUnsat estiver dentro dos limites -> podemos aceitar iCandidate.
+    // 2) Se estiver saturado, só integramos se isso ajudar a sair da saturação.
+    bool within = (outUnsat >= outputMin && outUnsat <= outputMax);
+    bool helpsUpper = (outUnsat > outputMax) && (error < 0.0); // erro negativo puxa para baixo
+    bool helpsLower = (outUnsat < outputMin) && (error > 0.0); // erro positivo puxa para cima
+
+    if (within || helpsUpper || helpsLower) {
+        iTerm = iCandidate;
+        // Limitar contribuição integral
+        iTerm = std::clamp(iTerm, -Imax, Imax);
+    }
+    // Recalcular com iTerm final
+    double rawOutput = pTerm + iTerm + dTerm;
+
+    // Saturação da saída
+    if (rawOutput > outputMax) rawOutput = outputMax;
+    else if (rawOutput < outputMin) rawOutput = outputMin;
+
+    // Limitar variação por ciclo (suavidade extra)
+    double limitedOutput = std::clamp(
+        rawOutput,
+        lastOutput - maxStepChange,
+        lastOutput + maxStepChange
+    );
+
+    lastOutput = limitedOutput;
+    return limitedOutput;
+}
+
+void PID::reset() {
+    iTerm = 0.0;
+    lastOutput = 0.0;
+    first = true;
 }

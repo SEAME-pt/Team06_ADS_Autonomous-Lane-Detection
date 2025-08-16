@@ -1,44 +1,38 @@
 #ifndef PID_HPP
 #define PID_HPP
 
+#include <algorithm>
+
 class PID {
 public:
-    PID(double kp, double ki, double kd, double outMin, double outMax)
-        : Kp(kp), Ki(ki), Kd(kd), outputMin(outMin), outputMax(outMax),
-          integral(0.0), prevError(0.0) {}
+    // === Parâmetros ===
+    double Kp = 5.0; // 5.0
+    double Ki = 1.0; // 0.5
+    double Kd = 0.1; //0.1
 
-    double compute(double setpoint, double measurement, double dt) {
-        double error = setpoint - measurement;
+    double outputMin = 0.0;     // PWM mínimo
+    double outputMax = 30.0;   // PWM máximo
+    double maxStepChange = 2.0; // passo máx do PWM por ciclo (%)
 
-        // Integral com anti-windup
-        integral += error * dt;
-        if (integral > outputMax) integral = outputMax;
-        else if (integral < outputMin) integral = outputMin;
+    // Anti-windup: limite absoluto da parcela integral (em "unidades de saída")
+    // Ex.: 30 => a parte integral nunca contribui com mais que ±30% de PWM
+    double Imax = 30.0;
 
-        // Derivada
-        double derivative = (error - prevError) / dt;
+    // Filtro da derivada (0<alpha<=1). 1.0 = sem filtro, 0.2 = filtragem forte
+    double dAlpha = 0.3;
 
-        // Saída PID
-        double output = Kp * error + Ki * integral + Kd * derivative;
-
-        // Limitar a saída
-        if (output > outputMax) output = outputMax;
-        else if (output < outputMin) output = outputMin;
-
-        prevError = error;
-        return output;
-    }
-
-    void reset() {
-        integral = 0.0;
-        prevError = 0.0;
-    }
+    PID();
+    double compute(double setpoint, double measurement, double dt);
+    void reset();
 
 private:
-    double Kp, Ki, Kd;
-    double outputMin, outputMax;
-    double integral;
-    double prevError;
+    // Estado
+    double iTerm;        // contribuição integral acumulada (em unidades de saída)
+    double prevMeasFilt; // medição filtrada anterior (para derivada)
+    double measFilt;     // medição filtrada corrente
+    double lastOutput;   // saída limitada do passo anterior
+
+    bool first = true;
 };
 
 #endif

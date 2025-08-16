@@ -5,28 +5,37 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <unistd.h>    // Para close(), usleep()
-#include <fcntl.h>     // Para open()
-#include <sys/ioctl.h> 
-#include <csignal> // Biblioteca para manipulação de sinais
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <csignal>
 #include <atomic>
-#include <chrono> // Para cálculos de tempo
-#include <linux/i2c-dev.h>// Interface padrão do Linux para I2C
+#include <chrono>
+#include <linux/i2c-dev.h>
 
-
-class BackMotors{
+class BackMotors {
 private:
-	std::string i2c_device;
-	const int _motorAddr = 0x60;
-	int _fdMotor;
+    std::string i2c_device;
+    const int _motorAddr = 0x60;
+    int _fdMotor;
+
+    // Compensações internas (alterar aqui se necessário)
+    double _compLeft = 0.85;  // 5% mais força no motor esquerdo
+    double _compRight = 1.00; // motor direito normal
 
 public:
-	BackMotors();
-	~BackMotors();
-	bool init_motors();
-	bool setMotorPwm(const int channel, int value);
-	void setSpeed(int speed);
+    BackMotors();
+    ~BackMotors();
 
-	void writeByteData(int fd, uint8_t reg, uint8_t value);
-	uint8_t readByteData(int fd, uint8_t reg);
+    bool init_motors();
+    bool setMotorPwm(const int channel, int value);
+
+    // Define a mesma velocidade para ambos (usa compensação interna)
+    void setSpeed(int speed);
+
+    // Define velocidades independentes (também usa compensação)
+    //void setSpeeds(int leftSpeed, int rightSpeed);
+
+    void writeByteData(int fd, uint8_t reg, uint8_t value);
+    uint8_t readByteData(int fd, uint8_t reg);
 };

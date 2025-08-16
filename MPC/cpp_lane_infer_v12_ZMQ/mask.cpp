@@ -211,8 +211,14 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
     }
 /*     std::cout << "coeffs " << lane_memory.pre_right_coeffs << std::endl << std::endl; 
     std::cout << "edge " << lane_memory.pre_right_edge << std::endl << std::endl; */
-    if (verify == -3)
-        return;
+    if (verify == -3){
+        right_edge_points = lane_memory.pre_right_edge;
+        right_coeffs = lane_memory.pre_right_coeffs;
+        left_edge_points = lane_memory.pre_left_edge;
+        left_coeffs = lane_memory.pre_left_coeffs;
+
+        //return;
+    }
 
     cv::cvtColor(mask_bin, output, cv::COLOR_GRAY2BGR);
     if (!left_line_points.empty())

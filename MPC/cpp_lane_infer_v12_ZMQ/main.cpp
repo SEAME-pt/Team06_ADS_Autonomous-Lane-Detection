@@ -1,7 +1,9 @@
 #include "lane.hpp"
 #include "nmpc.hpp"
 #include "pid.hpp"
-#include "trapezoidal.hpp"
+#include "scurve.hpp"
+#include "MovingAverage.hpp"
+#include "SpeedFilter.hpp"
 #include <iostream>
 #include <chrono>
 #include <vector>
@@ -27,6 +29,11 @@
 #include "ZmqPublisher.hpp"
 #include <zmq.hpp>
 #include <sstream>
+
+// Variável atómica para armazenar a velocidade atual, acessível de forma segura entre threads
+std::atomic<double> current_speed_ms{0.0};
+// Flag atómica para controlar a execução do loop principal
+std::atomic<bool> keep_running{true};
 
 // Handler de sinal para terminar o programa de forma limpa com Ctrl+C
 void signalHandler(int signum) {
@@ -64,7 +71,7 @@ int main() {
         return -1;
     }
 
-    // Inicialização do sistema CAN Bus
+//#### Inicialização do sistema CAN Bus  ##########
     auto spiController = std::make_unique<SPIController>("/dev/spidev0.0");
     auto configurator = std::make_unique<MCP2515Configurator>(*spiController);
     auto messageProcessor = std::make_shared<CANMessageProcessor>();
@@ -94,8 +101,9 @@ int main() {
         std::cerr << "ERRO FATAL: Falha ao iniciar CanBusManager: " << e.what() << std::endl;
         return 1;
     }
+// #################################################
 
-    // --- INICIALIZAÇÃO DO ZMQ ---
+// --- INICIALIZAÇÃO DO ZMQ ---------------
     zmq::context_t context(1);
     const std::string ZMQ_HOST = "127.0.0.1";
     const int ZMQ_PORT = 5558;
@@ -110,27 +118,36 @@ int main() {
         std::cerr << "ERRO FATAL ao iniciar ZMQ Publisher: " << e.what() << std::endl;
         zmq_publisher = nullptr;
     }
+//---------------------------------------------
 
     std::cout << "Pressione Ctrl+C para sair" << std::endl;
 
     auto lastTime = std::chrono::steady_clock::now();
     double smoothedFPS = 0.0;
     const double alpha = 0.9;
+    double last_smoothed_angle = 0.0; // Para filtro low-pass
     double last_delta = 0.0;
     int frameCount = 0;
 
     bool img_entry = false;
 
+    /*PID INICIALIZATION*/
     double setpoint_velocity = 1.0; // m/s desejados
-    PID pid(30.0, 5.0, 0.0, 0.0, 100.0); // Kp, Ki, Kd ajustáveis
-    
+    PID pid;
     auto pid_last_time = std::chrono::steady_clock::now();
-
-    double max_steering_vel_deg_s = 400.0; // 300°/s (ajusta para o teu servo)
-    double max_steering_acc_deg_s2 = 2000.0; // 1500°/s² (ajusta para suavidade)
-    TrapezoidalProfile steering_profile(max_steering_vel_deg_s, max_steering_acc_deg_s2);
+    double motor_pwm = 0.0;
+    /********************/
     
-    // --- PARTE 3: LOOP PRINCIPAL DE CONTROLO ---
+    /*S-CURVE INICIALIZATION*/
+    double max_steering_vel_deg_s = 100.0;  // Velocidade máx: 30°/s (lento)
+    double max_steering_acc_deg_s2 = 300.0; // Aceleração máx: 100°/s²
+    double max_steering_jerk_deg_s3 = 600.0; // Jerk máx: 400°/s³
+    SCurveProfile steering_profile(max_steering_vel_deg_s, max_steering_acc_deg_s2, max_steering_jerk_deg_s3);
+/***************************/
+
+    MovingAverage filter(5);      // média móvel de 5 amostras
+    //SpeedFilter filter(0.1);       // 20% valor novo, 80% suavização
+
     while (keep_running.load()) {
         cv::Mat frame = cam.read();
         if (frame.empty()) continue;
@@ -151,32 +168,38 @@ int main() {
 
         double v_actual = current_speed_ms.load();
         std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
-
+        
         auto pid_now = std::chrono::steady_clock::now();
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
-            
-        if (pid_dt >= 0.05) { // 50 ms → 20 Hz
-            double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-            backMotors.setSpeed(static_cast<int>(motor_pwm)); // aplica PWM de 0 a 100
-            motor_signal = motor_pwm; // para debug e display
+        if (pid_dt >= 0.02) { // 50 ms → 20 Hz
+            motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
+            //backMotors.setSpeed(static_cast<int>(motor_pwm)); // aplica PWM de 0 a 100
             pid_last_time = pid_now;
+            //std::cout << "Motor Signal: " << motor_pwm << " PWM" << std::endl;
         }
-
         
+        double v_filtered = filter.update(v_actual); // velocidade suavizada
+        std::cout << "Velocidade filtrada: " << v_filtered << std::endl;
+
         double offset = intersect.offset;
         double psi = intersect.psi;
         double delta = last_delta;
         if (!std::isnan(offset) && !std::isnan(psi)) {
-            delta = -mpc.computeControl(offset, psi, v_actual);
+            delta = -mpc.computeControl(offset, psi, 0.7);
         } else {
             std::cerr << "AVISO: Offset ou Psi invalido (NaN). Usando delta anterior." << std::endl;
         }
 
         // Converte delta para graus (ângulo desejado)
         double target_steering_angle = delta * 180.0 / M_PI;
+        double smoothed_steering_angle =target_steering_angle;
+        // Aplica perfil S-Curve
+        //double smoothed_steering_angle = steering_profile.computeNext(target_steering_angle, elapsed);
 
-        // Aplica perfil trapezoidal
-        double smoothed_steering_angle = steering_profile.computeNextAngle(target_steering_angle, elapsed);
+/*         // Aplica filtro low-pass leve para suavizar entre ciclos (opcional)
+        const double alpha_lowpass = 0.8; // 0.8 = equilíbrio entre suavidade e reatividade
+        smoothed_steering_angle = alpha_lowpass * smoothed_steering_angle + (1.0 - alpha_lowpass) * last_smoothed_angle;
+        last_smoothed_angle = smoothed_steering_angle; */
 
         // Limita o ângulo final
         int steering_angle = static_cast<int>(smoothed_steering_angle);
@@ -196,24 +219,24 @@ int main() {
         cv::putText(result, fpsText, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         std::string deltaText = "Delta: " + std::to_string(delta * 180.0 / M_PI) + " deg";
         cv::putText(result, deltaText, cv::Point(10, 40), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 2);
-        std::string vRefText = "V_ideal: " + std::to_string(v_ideal) + " m/s";
-        cv::putText(result, vRefText, cv::Point(10, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         std::string vActText = "V_actual: " + std::to_string(v_actual) + " m/s";
-        cv::putText(result, vActText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 2);
-        std::string motorText = "Motor: " + std::to_string(motor_signal);
-        cv::putText(result, motorText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
+        cv::putText(result, vActText, cv::Point(10, 80), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 2);        
+        std::string vFilterText = "V_Filter: " + std::to_string(v_filtered) + " m/s";
+        cv::putText(result, vFilterText, cv::Point(10, 100), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 2);
+        std::string motorText = "Motor: " + std::to_string(motor_pwm);
+        cv::putText(result, motorText, cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         std::string desvText = "Desv Lat: " + std::to_string(offset);
-        cv::putText(result, desvText, cv::Point(10, 120), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 100, 0), 2);
+        cv::putText(result, desvText, cv::Point(10, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 100, 0), 2);
         std::string psiText = "Psi(rad): " + std::to_string(psi) + " (deg): " + std::to_string(psi * 180.0 / M_PI);
-        cv::putText(result, psiText, cv::Point(10, 140), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
+        cv::putText(result, psiText, cv::Point(10, 160), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 255, 0), 2);
         std::string steeringText = "Steering: " + std::to_string(steering_angle) + " deg";
-        cv::putText(result, steeringText, cv::Point(10, 160), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(200, 0, 0), 2);
+        cv::putText(result, steeringText, cv::Point(10, 180), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(200, 0, 0), 2);
         std::string smoothedText = "Smoothed Steering: " + std::to_string(smoothed_steering_angle) + " deg";
-        cv::putText(result, smoothedText, cv::Point(10, 180), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 200, 200), 2);
+        cv::putText(result, smoothedText, cv::Point(10, 2000), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 200, 200), 2);
 
         img_entry = true;
         frameCount++;
-        //cv::imshow("Lane Detection", result);
+        cv::imshow("Lane Detection", result);
 
         if (cv::waitKey(1) == 'q') {
             keep_running.store(false);
