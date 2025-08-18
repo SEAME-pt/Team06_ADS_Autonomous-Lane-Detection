@@ -153,6 +153,30 @@ ZmqPublisher.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/ZmqPublisher.cpp.s
 .PHONY : ZmqPublisher.cpp.s
 
+cam.o: cam.cpp.o
+.PHONY : cam.o
+
+# target to build an object file
+cam.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/cam.cpp.o
+.PHONY : cam.cpp.o
+
+cam.i: cam.cpp.i
+.PHONY : cam.i
+
+# target to preprocess a source file
+cam.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/cam.cpp.i
+.PHONY : cam.cpp.i
+
+cam.s: cam.cpp.s
+.PHONY : cam.s
+
+# target to generate assembly for a file
+cam.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/cam.cpp.s
+.PHONY : cam.cpp.s
+
 home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o: home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp.o
 .PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o
 
@@ -369,6 +393,30 @@ home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServ
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.s
 .PHONY : home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.cpp.s
 
+infer.o: infer.cpp.o
+.PHONY : infer.o
+
+# target to build an object file
+infer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/infer.cpp.o
+.PHONY : infer.cpp.o
+
+infer.i: infer.cpp.i
+.PHONY : infer.i
+
+# target to preprocess a source file
+infer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/infer.cpp.i
+.PHONY : infer.cpp.i
+
+infer.s: infer.cpp.s
+.PHONY : infer.s
+
+# target to generate assembly for a file
+infer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/infer.cpp.s
+.PHONY : infer.cpp.s
+
 lane.o: lane.cpp.o
 .PHONY : lane.o
 
@@ -489,6 +537,30 @@ pid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/pid.cpp.s
 .PHONY : pid.cpp.s
 
+utils.o: utils.cpp.o
+.PHONY : utils.o
+
+# target to build an object file
+utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/utils.cpp.o
+.PHONY : utils.cpp.o
+
+utils.i: utils.cpp.i
+.PHONY : utils.i
+
+# target to preprocess a source file
+utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/utils.cpp.i
+.PHONY : utils.cpp.i
+
+utils.s: utils.cpp.s
+.PHONY : utils.s
+
+# target to generate assembly for a file
+utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/lane_detection.dir/build.make CMakeFiles/lane_detection.dir/utils.cpp.s
+.PHONY : utils.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -501,6 +573,9 @@ help:
 	@echo "... ZmqPublisher.o"
 	@echo "... ZmqPublisher.i"
 	@echo "... ZmqPublisher.s"
+	@echo "... cam.o"
+	@echo "... cam.i"
+	@echo "... cam.s"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.o"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.i"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.s"
@@ -528,6 +603,9 @@ help:
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.o"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.i"
 	@echo "... home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MPC/FServo/FServo.s"
+	@echo "... infer.o"
+	@echo "... infer.i"
+	@echo "... infer.s"
 	@echo "... lane.o"
 	@echo "... lane.i"
 	@echo "... lane.s"
@@ -543,6 +621,9 @@ help:
 	@echo "... pid.o"
 	@echo "... pid.i"
 	@echo "... pid.s"
+	@echo "... utils.o"
+	@echo "... utils.i"
+	@echo "... utils.s"
 .PHONY : help
 
 

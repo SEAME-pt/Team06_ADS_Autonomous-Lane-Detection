@@ -12,17 +12,6 @@
 #include <iostream>
 #include <chrono>
 
-
-using namespace nvinfer1;
-
-class Logger : public ILogger {
-public:
-    void log(Severity severity, const char* msg) noexcept override {
-        if (severity <= Severity::kWARNING)
-            std::cout << msg << std::endl;
-    }
-};
-
 struct LineCoef {
     double m, b;
     bool valid;
@@ -40,12 +29,6 @@ struct LaneMemory {
         pre_left_edge.clear();
         pre_right_edge.clear();
     }
-};
-
-struct Buffer {
-    void* device;
-    float* host;
-    size_t size;
 };
 
 struct LaneData {
@@ -92,47 +75,10 @@ static constexpr double Bsy = 1.61e-03;
 static constexpr double P1_x_car_frame = 0.24;
 static constexpr double P2_x_car_frame = 0.475;
 
-class TensorRTInference {
-public:
-    TensorRTInference(const std::string& engine_path);
-    ~TensorRTInference();
-
-    std::vector<float> infer(const std::vector<float>& inputData);
-
-private:
-    Logger logger;
-    IRuntime* runtime = nullptr;
-    ICudaEngine* engine = nullptr;
-    IExecutionContext* context = nullptr;
-
-    std::vector<Buffer> inputBuffers;
-    std::vector<Buffer> outputBuffers;
-    std::vector<void*> bindings;
-
-    void allocateBuffers();
-};
-
-class CSICamera {
-public:
-    CSICamera(int width, int height, int fps);
-    void start();
-    void stop();
-    cv::Mat read() const;
-
-private:
-    cv::VideoCapture cap;
-    cv::Mat frame;
-    std::thread thread;
-    std::atomic<bool> running{false};
-
-    void update();
-};
-
 std::vector<float>  preprocess_frame(const cv::Mat& frame);
 cv::Mat             postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LaneData& laneData, LineIntersect& intersect);
 LineIntersect       findIntersect(const LineCoef& left_coeffs, const LineCoef& right_coeffs, int height, int width);
 void                findOffset(LineIntersect& intersect);
 void                drawLanes(LineCoef left_coeffs, LineCoef right_coeffs, cv::Mat& result_frame, std::vector<cv::Point> medianPoints, int roi_start_y,  int roi_end_y);
-
 
 #endif

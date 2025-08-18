@@ -57,6 +57,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CASADI_INCLUDE_DIRS}
     ${ZeroMQ_INCLUDE_DIRS}
+    /aux
     ../FServo
     ../BackMotors
     ../Control
@@ -65,22 +66,25 @@ include_directories(
 
 # Adicionar executável
 add_executable(lane_detection
+    ZmqPublisher.cpp
+    utils.cpp
     main.cpp
     lane.cpp
     mask.cpp
     nmpc.cpp
     pid.cpp
-    ZmqPublisher.cpp
-    ../FServo/FServo.cpp
+    cam.cpp
+    infer.cpp
     ../BackMotors/BackMotors.cpp
     ../Control/ControlAssembly.cpp
     ../Control/Controller.cpp
+    ../FServo/FServo.cpp
     # Ficheiros do CAN Bus
-    ../../MCP2515/SPIController.cpp
     ../../MCP2515/MCP2515Configurator.cpp
-    ../../MCP2515/MCP2515Controller.cpp
-    ../../MCP2515/CanBusManager.cpp
     ../../MCP2515/CANMessageProcessor.cpp
+    ../../MCP2515/MCP2515Controller.cpp
+    ../../MCP2515/SPIController.cpp
+    ../../MCP2515/CanBusManager.cpp
 )
 
 # Linkar bibliotecas

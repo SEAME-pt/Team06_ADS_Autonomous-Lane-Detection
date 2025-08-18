@@ -1,108 +1,6 @@
 #include "lane.hpp"
 #include "mask.hpp"
 
-TensorRTInference::TensorRTInference(const std::string& engine_path) {
-    std::ifstream engineFile(engine_path, std::ios::binary);
-    if (!engineFile) throw std::runtime_error("Error engine");
-
-    engineFile.seekg(0, engineFile.end);
-    size_t fsize = engineFile.tellg();
-    engineFile.seekg(0, engineFile.beg);
-
-    std::vector<char> engineData(fsize);
-    engineFile.read(engineData.data(), fsize);
-
-    runtime = createInferRuntime(logger);
-    engine = runtime->deserializeCudaEngine(engineData.data(), fsize);
-    context = engine->createExecutionContext();
-
-    allocateBuffers();
-}
-
-/**************************************************************************************/
-TensorRTInference::~TensorRTInference() {
-    for (auto& mem : inputBuffers) cudaFree(mem.device);
-    for (auto& mem : outputBuffers) cudaFree(mem.device);
-}
-
-/**************************************************************************************/
-void TensorRTInference::allocateBuffers() {
-    int nbBindings = engine->getNbBindings();
-    inputBuffers.resize(1);
-    outputBuffers.resize(1);
-    bindings.resize(nbBindings);
-
-    for (int i = 0; i < nbBindings; ++i) {
-        Dims dims = engine->getBindingDimensions(i);
-        size_t vol = 1;
-        for (int j = 0; j < dims.nbDims; ++j) vol *= dims.d[j];
-
-        size_t typeSize = sizeof(float);
-
-        void* deviceMem;
-        cudaMalloc(&deviceMem, vol * typeSize);
-        float* hostMem = new float[vol];
-
-        bindings[i] = deviceMem;
-        if (engine->bindingIsInput(i)) {
-            inputBuffers[0] = {deviceMem, hostMem, vol * typeSize};
-        } else {
-            outputBuffers[0] = {deviceMem, hostMem, vol * typeSize};
-        }
-    }
-}
-
-/**************************************************************************************/
-std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData) {
-      cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
-        context->executeV2(bindings.data());
-        cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
-        return std::vector<float>(outputBuffers[0].host, outputBuffers[0].host + outputBuffers[0].size / sizeof(float));
-}
-
-/**************************************************************************************/
-CSICamera::CSICamera(int width, int height, int fps) {
-    std::ostringstream pipeline;
-    pipeline << "nvarguscamerasrc sensor-mode=4 ! "
-             << "video/x-raw(memory:NVMM), width=" << width << ", height=" << height
-             << ", format=NV12, framerate=" << fps << "/1 ! "
-             << "nvvidconv flip-method=0 ! video/x-raw, width=" << width
-             << ", height=" << height << ", format=BGRx ! "
-             << "videoconvert ! video/x-raw, format=BGR ! appsink";
-    cap.open(pipeline.str(), cv::CAP_GSTREAMER);
-}
-
-/**************************************************************************************/
-void CSICamera::start() {
-    running = true;
-    thread = std::thread(&CSICamera::update, this);
-}
-
-/**************************************************************************************/
-void CSICamera::stop() {
-    running = false;
-    if (thread.joinable()) thread.join();
-    cap.release();
-}
-
-/**************************************************************************************/
-cv::Mat CSICamera::read() const {
-    return frame.clone();
-}
-
-/**************************************************************************************/
-void CSICamera::update() {
-    while (running) {
-        cv::Mat f;
-        cap.read(f);
-        if (!f.empty()) {
-            cv::resize(f, f, cv::Size(640, 360));  // ou cv::Size(320, 180)
-            frame = f;
-        }
-    }
-}
-
-
 /**************************************************************************************/
 std::vector<float> preprocess_frame(const cv::Mat& frame) {
     cv::Mat resized;
@@ -139,10 +37,6 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     cv::threshold(ll_mask, ll_bin, 0.1, 255, cv::THRESH_BINARY);
     ll_bin.convertTo(ll_bin, CV_8UC1);
 
-/*     // Exibir a máscara usada (opcional para debug)
-    cv::imshow("ll_mask_raw", ll_bin);
-    cv::waitKey(1); */
-
     // Morfologia para limpeza
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
     cv::morphologyEx(ll_bin, ll_bin, cv::MORPH_CLOSE, kernel);
@@ -152,7 +46,6 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     cv::Mat ll_resized;
     cv::resize(ll_bin, ll_resized, original_frame.size(), 0, 0, cv::INTER_NEAREST);
 
-    // Aplicar ROI
     int roi_start_y = static_cast<int>(0.50 * original_frame.rows);
     int roi_end_y = static_cast<int>(0.95 * original_frame.rows);
     ll_resized(cv::Rect(0, 0, original_frame.cols, roi_start_y)) = 0;
@@ -169,12 +62,9 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
 
     // Desenhar linhas diretamente na imagem original
     if (!mask_output.empty()) {
-        // As linhas já foram desenhadas dentro da mask_output, 
-        // então redimensione e sobreponha APENAS elas
         cv::Mat resized_mask_output;
         cv::resize(mask_output, resized_mask_output, original_frame.size(), 0, 0, cv::INTER_NEAREST);
 
-        // Usar canais BGR diretamente (sem máscara binária)
         for (int y = 0; y < resized_mask_output.rows; ++y) {
             for (int x = 0; x < resized_mask_output.cols; ++x) {
                 cv::Vec3b pix = resized_mask_output.at<cv::Vec3b>(y, x);
@@ -185,25 +75,17 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
         }
     }
 
-    // === Resto do processamento de geometria (mantido igual) ===
     laneData.valid = !medianPoints.empty();
     laneData.num_points = 0;
 
     if (medianPoints.size() >= 5) {
-        // desvio do centro da pista
         intersect.xlt = (left_coeffs.m * (height_win / 2) + left_coeffs.b);
         intersect.xlb = (left_coeffs.m * height_win + left_coeffs.b);
         intersect.xrt = (right_coeffs.m * (height_win / 2) + right_coeffs.b);
         intersect.xrb = (right_coeffs.m * height_win + right_coeffs.b);
-/*         std::cout << "xleft top: " << xlt << std::endl;
-        std::cout << "xleft bottom: " << xlb << std::endl;        
-        std::cout << "xright top: " << xrt << std::endl;
-        std::cout << "xright bottom: " << xrb << std::endl << std::endl; */
 
         float xmt = (intersect.xrt + intersect.xlt) / 2;
         float xmb = (intersect.xrb + intersect.xlb) / 2;
-/*         std::cout << "xm top: " << xmt << std::endl;
-        std::cout << "xm bottom: " << xmb << std::endl << std::endl; */
 
         cv::Point xmtop(xmt, height_win / 2);
         cv::Point xmbottom(xmb, height_win);
@@ -213,9 +95,6 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
         float P2_x_img_frame = (Asy * height_win / 2 + Bsy) * (xmt - (width_win / 2) );
         float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame;
         float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame;
-
-        /* std::cout << "P2: " << P2_x_img_frame << std::endl;
-        std::cout << "P1: " << P1_x_img_frame << std::endl << std::endl; */
 
         if (std::abs(deltaX_car_frame) > 1e-8) {
             intersect.slope = deltaY_car_frame / deltaX_car_frame;
