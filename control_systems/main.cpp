@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "utils_control.hpp"
 
 // Variável atómica para armazenar a velocidade atual, acessível de forma segura entre threads
 std::atomic<double> current_speed_ms{0.0};

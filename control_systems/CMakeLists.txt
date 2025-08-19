@@ -67,7 +67,7 @@ include_directories(
 # Adicionar executável
 add_executable(lane_detection
     ZmqPublisher.cpp
-    utils.cpp
+    utils_control.cpp
     main.cpp
     lane.cpp
     mask.cpp
