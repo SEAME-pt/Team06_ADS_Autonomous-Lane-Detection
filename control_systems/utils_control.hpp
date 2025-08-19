@@ -1,5 +1,5 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#ifndef UTILS_CONTROL_HPP
+#define UTILS_CONTROL_HPP
 
 #include "lane.hpp"
 #include "nmpc.hpp"

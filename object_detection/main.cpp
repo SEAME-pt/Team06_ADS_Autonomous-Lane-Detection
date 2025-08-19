@@ -16,7 +16,7 @@
 
 #include "cam.hpp"
 #include "fps.hpp"
-#include "infer.hpp"
+#include "inferObject.hpp"
 #include "frame.hpp"
 
 int main() {

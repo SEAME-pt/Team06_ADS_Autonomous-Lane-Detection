@@ -63,10 +63,11 @@ include_directories(
     /MCP2515
     /control_systems
     /object_detection
+    /engines
 )
 
 # Adicionar executável
-add_executable(lane_detection
+add_executable(integrated_vison
     control_systems/ZmqPublisher.cpp
     control_systems/utils_control.cpp
     control_systems/main.cpp
@@ -90,7 +91,7 @@ add_executable(lane_detection
 )
 
 # Linkar bibliotecas
-target_link_libraries(lane_detection
+target_link_libraries(integrated_vison
     ${OpenCV_LIBRARIES}
     ${CUDA_LIBRARIES}
     ${TensorRT_LIB}

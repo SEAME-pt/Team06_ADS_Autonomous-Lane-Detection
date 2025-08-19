@@ -1,4 +1,4 @@
-#include "utils.hpp"
+#include "utils_control.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
@@ -9,7 +9,7 @@ LaneControl::LaneControl(const std::string& model_path, int width, int height, i
     : trt(model_path), cam(width, height, fps) {}
 
 std::unique_ptr<LaneControl> initLaneControl() {
-    auto laneControl = std::make_unique<LaneControl>("../model.engine", 1280, 720, 30);
+    auto laneControl = std::make_unique<LaneControl>("../engines/model.engine", 1280, 720, 30);
     laneControl->cam.start();
     std::cout << "Lógica de controlo de faixas inicializada com sucesso." << std::endl;
     return laneControl;
