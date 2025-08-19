@@ -1,3 +1,0 @@
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/AutoTuningPID/build/CMakeFiles/canbus_app.dir
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/AutoTuningPID/build/CMakeFiles/edit_cache.dir
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/AutoTuningPID/build/CMakeFiles/rebuild_cache.dir

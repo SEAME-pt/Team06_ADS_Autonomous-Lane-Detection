@@ -58,10 +58,10 @@ include_directories(
     ${CASADI_INCLUDE_DIRS}
     ${ZeroMQ_INCLUDE_DIRS}
     /aux
-    ../FServo
-    ../BackMotors
-    ../Control
-    ../../MCP2515
+    /FServo
+    /BackMotors
+    /Control
+    /../MCP2515
 )
 
 # Adicionar executável
@@ -75,16 +75,16 @@ add_executable(lane_detection
     pid.cpp
     cam.cpp
     infer.cpp
-    ../BackMotors/BackMotors.cpp
-    ../Control/ControlAssembly.cpp
-    ../Control/Controller.cpp
-    ../FServo/FServo.cpp
+    BackMotors/BackMotors.cpp
+    Control/ControlAssembly.cpp
+    Control/Controller.cpp
+    FServo/FServo.cpp
     # Ficheiros do CAN Bus
-    ../../MCP2515/MCP2515Configurator.cpp
-    ../../MCP2515/CANMessageProcessor.cpp
-    ../../MCP2515/MCP2515Controller.cpp
-    ../../MCP2515/SPIController.cpp
-    ../../MCP2515/CanBusManager.cpp
+    ../MCP2515/MCP2515Configurator.cpp
+    ../MCP2515/CANMessageProcessor.cpp
+    ../MCP2515/MCP2515Controller.cpp
+    ../MCP2515/SPIController.cpp
+    ../MCP2515/CanBusManager.cpp
 )
 
 # Linkar bibliotecas

@@ -26,14 +26,14 @@
 #include <sstream>
 
 // Componentes do seu sistema para controlo de motor e CAN Bus
-#include "../FServo/FServo.hpp"
-#include "../Control/ControlAssembly.hpp"
-#include "../BackMotors/BackMotors.hpp"
-#include "../../MCP2515/CanBusManager.hpp"
-#include "../../MCP2515/MCP2515Controller.hpp"
-#include "../../MCP2515/SPIController.hpp"
-#include "../../MCP2515/MCP2515Configurator.hpp"
-#include "../../MCP2515/CANMessageProcessor.hpp"
+#include "FServo/FServo.hpp"
+#include "Control/ControlAssembly.hpp"
+#include "BackMotors/BackMotors.hpp"
+#include "../MCP2515/CanBusManager.hpp"
+#include "../MCP2515/MCP2515Controller.hpp"
+#include "../MCP2515/SPIController.hpp"
+#include "../MCP2515/MCP2515Configurator.hpp"
+#include "../MCP2515/CANMessageProcessor.hpp"
 
 
 // ---- Estruturas ----

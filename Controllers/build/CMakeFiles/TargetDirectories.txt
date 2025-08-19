@@ -1,3 +1,0 @@
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/Controllers/build/CMakeFiles/Controllers.dir
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/Controllers/build/CMakeFiles/edit_cache.dir
-/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/Controllers/build/CMakeFiles/rebuild_cache.dir
