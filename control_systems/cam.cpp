@@ -1,6 +1,5 @@
 #include "cam.hpp"
 
-
 CSICamera::CSICamera(int width, int height, int fps) {
     std::ostringstream pipeline;
     pipeline << "nvarguscamerasrc sensor-mode=4 ! "
