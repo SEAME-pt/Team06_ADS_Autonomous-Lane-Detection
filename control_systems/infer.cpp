@@ -5,7 +5,9 @@
 
 TensorRTInference::TensorRTInference(const std::string& engine_path) {
     std::ifstream engineFile(engine_path, std::ios::binary);
-    if (!engineFile) throw std::runtime_error(std::string("Lane engine not found: ") + engine_path);
+    if (!engineFile) {
+        throw std::runtime_error(std::string("Lane engine not found: ") + engine_path);
+    }
 
     engineFile.seekg(0, engineFile.end);
     size_t fsize = static_cast<size_t>(engineFile.tellg());
@@ -27,14 +29,9 @@ TensorRTInference::TensorRTInference(const std::string& engine_path) {
 }
 
 TensorRTInference::~TensorRTInference() {
-    // libertar device mem
-    for (auto& mem : inputBuffers)  { if (mem.device) cudaFree(mem.device); }
-    for (auto& mem : outputBuffers) { if (mem.device) cudaFree(mem.device); }
-    // libertar host mem
-    for (auto& mem : inputBuffers)  { delete[] mem.host; }
-    for (auto& mem : outputBuffers) { delete[] mem.host; }
+    for (auto& mem : inputBuffers)  { if (mem.device) cudaFree(mem.device);  delete[] mem.host; }
+    for (auto& mem : outputBuffers) { if (mem.device) cudaFree(mem.device);  delete[] mem.host; }
 
-    // Nota: APIs destroy() podem estar deprecadas, mas são válidas nas versões Jetson
     if (context) context->destroy();
     if (engine)  engine->destroy();
     if (runtime) runtime->destroy();
@@ -43,7 +40,6 @@ TensorRTInference::~TensorRTInference() {
 void TensorRTInference::allocateBuffers() {
     const int nbBindings = engine->getNbBindings();
 
-    // temos 1 input e 1 output buffer
     inputBuffers.resize(1);
     outputBuffers.resize(1);
     bindings.resize(nbBindings, nullptr);
@@ -55,8 +51,7 @@ void TensorRTInference::allocateBuffers() {
             vol *= static_cast<size_t>(dims.d[j]);
         }
 
-        const size_t typeSize = sizeof(float);
-        const size_t totalSize = vol * typeSize;
+        const size_t totalSize = vol * sizeof(float);
 
         void* deviceMem = nullptr;
         auto st = cudaMalloc(&deviceMem, totalSize);
@@ -70,16 +65,14 @@ void TensorRTInference::allocateBuffers() {
         if (engine->bindingIsInput(i)) {
             inputBuffers[0] = Buffer{deviceMem, hostMem, totalSize};
         } else {
-            outputBuffers = Buffer{deviceMem, hostMem, totalSize};
+            outputBuffers[0] = Buffer{deviceMem, hostMem, totalSize};
         }
     }
 }
 
 std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData) {
-    // copiar input para GPU
-    cudaMemcpy(inputBuffers.device, inputData.data(), inputBuffers.size, cudaMemcpyHostToDevice);
+    cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
 
-    // executar a inferência
     context->executeV2(bindings.data());
     auto err = cudaPeekAtLastError();
     if (err != cudaSuccess) {
@@ -90,9 +83,8 @@ std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData)
         throw std::runtime_error(std::string("Lane CUDA sync error: ") + cudaGetErrorString(syncErr));
     }
 
-    // copiar output para host
-    cudaMemcpy(outputBuffers[0].host, outputBuffers.device, outputBuffers.size, cudaMemcpyDeviceToHost);
+    cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
 
-    const size_t num_floats = outputBuffers.size / sizeof(float);
-    return std::vector<float>(outputBuffers.host, outputBuffers.host + num_floats);
+    const size_t num_floats = outputBuffers[0].size / sizeof(float);
+    return std::vector<float>(outputBuffers[0].host, outputBuffers[0].host + num_floats);
 }

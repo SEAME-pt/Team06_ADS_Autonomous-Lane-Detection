@@ -16,6 +16,7 @@ int main() {
 
 // --- INICIALIZAÇÃO DA LÓGICA DE CONTROLO DE FAIXAS ---
     auto laneControl = initLaneControl();
+    if (!laneControl) return 1;
     auto& trt = laneControl->trt;
     auto& cam = laneControl->cam;
     
