@@ -1,7 +1,7 @@
-#ifndef INFER_HPP
-#define INFER_HPP
+#ifndef INFEROBJECT_HPP
+#define INFEROBJECT_HPP
 
-using namespace nvinfer1;
+/* using namespace nvinfer1;
 
 // Logger para TensorRT
 class Logger : public ILogger {
@@ -10,7 +10,7 @@ public:
         if (severity <= Severity::kWARNING)
             std::cout << "[TensorRT] " << msg << std::endl;
     }
-};
+}; */
 
 // Estrutura para detecções
 struct Detection {

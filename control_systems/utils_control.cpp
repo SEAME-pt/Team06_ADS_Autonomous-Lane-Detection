@@ -26,7 +26,6 @@ std::unique_ptr<LaneControl> initLaneControl() {
     }
 }
 
-
 // ---- Motores ----
 bool initMotors(BackMotors& backMotors) {
     if (!backMotors.init_motors()) {
@@ -71,6 +70,11 @@ std::unique_ptr<CanBusManager> initCanBus(std::shared_ptr<CANMessageProcessor>& 
     });
     messageProcessor->registerHandler(0x300, [&](const std::vector<uint8_t>& data) {
         canBusManager->handleRPM(data);
+    });
+
+    // Novo: Regista default para evitar erros
+    messageProcessor->registerDefaultHandler([](const std::vector<uint8_t>& data) {
+        std::cout << "Mensagem CAN desconhecida ignorada." << std::endl;
     });
 
     try {
