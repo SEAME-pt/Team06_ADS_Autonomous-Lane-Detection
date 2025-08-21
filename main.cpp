@@ -57,7 +57,6 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
 
         fps_calculator.update();
 
-<<<<<<< HEAD
         std::vector<Detection> detections;
         if (frame_skipper.shouldProcessFrame()) {
             auto start = std::chrono::high_resolution_clock::now();
@@ -73,16 +72,6 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
                 //std::cout << "Tempo médio objetos (últimos 10 frames): " << avg_time << " ms" << std::endl;
                 total_time = 0.0;
                 frame_counter = 0;
-=======
-            // Controlo de velocidade (PID) a 20 Hz
-            const auto pid_now = std::chrono::steady_clock::now();
-            double pid_dt = std::chrono::duration<double>(pid_now - pid_last).count();
-            if (pid_dt >= 0.02) {
-                double v_actual = current_speed_ms.load();
-                double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-                backMotors.setSpeed(static_cast<int>(motor_pwm));
-                pid_last = pid_now;
->>>>>>> parent of a20ace6... update objt+lanes
             }
 
             // Publica apenas nomes se detetado
@@ -107,17 +96,6 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
     }
 }
 
-<<<<<<< HEAD
-=======
-// Objetos (adaptativo, skip agressivo)
-static void objectDetectionThread(
-    TensorRTYOLO& yolo,
-    CSICamera& camera,
-    SyncResults& sync
-) {
-    try {
-        FrameSkipper skipper(FrameSkipper::ADAPTIVE, 8, 15.0);
->>>>>>> parent of a20ace6... update objt+lanes
 
 void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, FServo& servo, BackMotors& backMotors,
                          SCurveProfile& steering_profile, MovingAverage& filter, double setpoint_velocity,
@@ -300,36 +278,8 @@ int main() {
     std::thread obj_thread;
     std::thread lane_thread;
 
-<<<<<<< HEAD
     // Cria contexto
     zmq::context_t zmq_context(1);
-=======
-    try {
-        // 1) Inicializações lane (câmara + engine lanes)
-        laneControl = initLaneControl();         // internamente abre a engine e start() na camera
-        auto& lane_trt = laneControl->trt;
-        auto& camera  = laneControl->cam;
-
-        // 2) Inicialização objetos (engine YOLO)
-        const std::string obj_engine = "../engines/best.engine";
-        TensorRTYOLO yolo(obj_engine, 640);
-
-        // 3) Motores e servo
-        if (!initMotors(backMotors)) throw std::runtime_error("initMotors() failed");
-        if (!initServo(servo))       throw std::runtime_error("initServo() failed");
-
-        // 4) CAN Bus e ZMQ
-        canBusManager = initCanBus(canMsgProcessor);
-        if (!canBusManager) throw std::runtime_error("initCanBus() failed");
-        {
-            zmq::context_t ctx(1);
-            ZmqPublisher* raw = initZmq(ctx);
-            if (!raw) throw std::runtime_error("initZmq() failed");
-            // Embrulhar para garantir delete em cleanup
-            zmq_publisher_ptr.reset(raw);
-            zmq_publisher = zmq_publisher_ptr.get();
-        }
->>>>>>> parent of a20ace6... update objt+lanes
 
     // Inicializa com initZmq
     ZmqPublisher* lanes_publisher = initZmq(zmq_context, "127.0.0.1", 5558);  // Porta para lanes

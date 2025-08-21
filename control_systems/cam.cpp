@@ -1,4 +1,4 @@
-#include "control_systems/cam.hpp"
+#include "cam.hpp"
 
 CSICamera::CSICamera(int width, int height, int fps) {
     std::ostringstream pipeline;
