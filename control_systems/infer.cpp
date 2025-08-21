@@ -68,16 +68,19 @@ void TensorRTInference::allocateBuffers() {
         bindings[i] = deviceMem;
 
         if (engine->bindingIsInput(i)) {
+            // Atribua ao elemento correto do vetor
             inputBuffers[0] = Buffer{deviceMem, hostMem, totalSize};
         } else {
-            outputBuffers = Buffer{deviceMem, hostMem, totalSize};
+            // Atribua ao elemento correto do vetor
+            outputBuffers[0] = Buffer{deviceMem, hostMem, totalSize};
         }
     }
 }
 
 std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData) {
     // copiar input para GPU
-    cudaMemcpy(inputBuffers.device, inputData.data(), inputBuffers.size, cudaMemcpyHostToDevice);
+    // Correção: Aceda ao primeiro elemento do vetor inputBuffers
+    cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
 
     // executar a inferência
     context->executeV2(bindings.data());
@@ -91,8 +94,11 @@ std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData)
     }
 
     // copiar output para host
-    cudaMemcpy(outputBuffers[0].host, outputBuffers.device, outputBuffers.size, cudaMemcpyDeviceToHost);
+    // Correção: Aceda ao primeiro elemento do vetor outputBuffers
+    cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
 
-    const size_t num_floats = outputBuffers.size / sizeof(float);
-    return std::vector<float>(outputBuffers.host, outputBuffers.host + num_floats);
+    // Correção: Aceda ao membro 'size' do primeiro elemento do vetor
+    const size_t num_floats = outputBuffers[0].size / sizeof(float);
+    // Correção: Aceda ao membro 'host' do primeiro elemento do vetor
+    return std::vector<float>(outputBuffers[0].host, outputBuffers[0].host + num_floats);
 }
