@@ -98,7 +98,6 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.s: cmake_force
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp -o CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.s
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 CMakeFiles/integrated_vison.dir/main.cpp.o: CMakeFiles/integrated_vison.dir/flags.make
 CMakeFiles/integrated_vison.dir/main.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp
 CMakeFiles/integrated_vison.dir/main.cpp.o: CMakeFiles/integrated_vison.dir/compiler_depend.ts
@@ -113,8 +112,6 @@ CMakeFiles/integrated_vison.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/integrated_vison.dir/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp -o CMakeFiles/integrated_vison.dir/main.cpp.s
 =======
-=======
->>>>>>> parent of a20ace6... update objt+lanes
 CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o: CMakeFiles/integrated_vison.dir/flags.make
 CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/main.cpp
 CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o: CMakeFiles/integrated_vison.dir/compiler_depend.ts
@@ -128,9 +125,6 @@ CMakeFiles/integrated_vison.dir/control_systems/main.cpp.i: cmake_force
 CMakeFiles/integrated_vison.dir/control_systems/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/integrated_vison.dir/control_systems/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/main.cpp -o CMakeFiles/integrated_vison.dir/control_systems/main.cpp.s
-<<<<<<< HEAD
->>>>>>> parent of a20ace6... update objt+lanes
-=======
 >>>>>>> parent of a20ace6... update objt+lanes
 
 CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o: CMakeFiles/integrated_vison.dir/flags.make
@@ -348,11 +342,7 @@ integrated_vison_OBJECTS = \
 "CMakeFiles/integrated_vison.dir/control_systems/ZmqPublisher.cpp.o" \
 "CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o" \
 <<<<<<< HEAD
-<<<<<<< HEAD
 "CMakeFiles/integrated_vison.dir/main.cpp.o" \
-=======
-"CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o" \
->>>>>>> parent of a20ace6... update objt+lanes
 =======
 "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o" \
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -378,11 +368,7 @@ integrated_vison_EXTERNAL_OBJECTS =
 integrated_vison: CMakeFiles/integrated_vison.dir/control_systems/ZmqPublisher.cpp.o
 integrated_vison: CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o
 <<<<<<< HEAD
-<<<<<<< HEAD
 integrated_vison: CMakeFiles/integrated_vison.dir/main.cpp.o
-=======
-integrated_vison: CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o
->>>>>>> parent of a20ace6... update objt+lanes
 =======
 integrated_vison: CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o
 >>>>>>> parent of a20ace6... update objt+lanes
