@@ -2,337 +2,315 @@
 #include "object_detection/fps.hpp"              // FPSCalculator
 #include "object_detection/frame.hpp"            // FrameSkipper
 #include "object_detection/inferObject.hpp"      // TensorRTYOLO (objetos)
-#include <filesystem>
 
-// Variáveis globais atómicas
-std::atomic<bool> keep_running{true};
+#include <atomic>
+#include <mutex>
+#include <thread>
+#include <sstream>
+#include <csignal>
+
+// ===================== Estado global =====================
 std::atomic<double> current_speed_ms{0.0};
+std::atomic<bool>   keep_running{true};
 
-// Estruturas para resultados
-struct ObjectResults {
-    std::vector<Detection> detections;
-};
+// Sinalização de erro controlada (evita abort/core dump)
+std::atomic<bool> fatal_error{false};
+std::string error_msg;
+std::mutex err_mtx;
 
-struct LaneResults {
-    cv::Mat processed_frame;
-    double offset = 0.0;
-    double psi = 0.0;
-    std::vector<cv::Point> medianPoints;
-    LaneData laneData;
-    LineIntersect intersect;
-};
+static inline void report_fatal(const std::string& msg) {
+    {
+        std::lock_guard<std::mutex> lk(err_mtx);
+        error_msg = msg;
+    }
+    fatal_error.store(true);
+    keep_running.store(false);
+}
 
-// Queues e sincronização
-std::queue<cv::Mat> frame_queue_objects;
-std::queue<cv::Mat> frame_queue_lanes;
-std::mutex mtx_objects, mtx_lanes, mtx_results;
-std::condition_variable cv_objects, cv_lanes, cv_results;
-ObjectResults latest_objects;
-LaneResults latest_lanes;
-bool results_ready = false;
-
-// Signal handler
 void signalHandler(int signum) {
-    std::cout << "\nSinal de interrupção (" << signum << ") recebido." << std::endl;
+    std::cout << "\nSinal de interrupcao (" << signum << ") recebido. A terminar..." << std::endl;
     keep_running.store(false);
 }
 
-// Thread de objetos
-void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, FPSCalculator& fps_calculator) {
-    std::vector<Detection> last_detections;
-    while (keep_running.load()) {
-        cv::Mat frame;
-        {
-            std::unique_lock<std::mutex> lock(mtx_objects);
-            cv_objects.wait(lock, [&] { return !frame_queue_objects.empty() || !keep_running.load(); });
-            if (!keep_running.load()) break;
-            frame = frame_queue_objects.front();
-            frame_queue_objects.pop();
-        }
+// ===================== Estruturas de sincronização =====================
+struct SyncResults {
+    struct {
+        double offset{0.0};
+        double psi{0.0};
+        bool valid{false};
+        cv::Mat processed_frame;
+        std::mutex mtx;
+    } lane;
 
-        fps_calculator.update();
-
+    struct {
         std::vector<Detection> detections;
-        if (frame_skipper.shouldProcessFrame()) {
-            auto start = std::chrono::high_resolution_clock::now();
-            detections = detector.infer(frame);
-            auto end = std::chrono::high_resolution_clock::now();
-            double time = std::chrono::duration<double>(end - start).count();
-            frame_skipper.recordProcessingTime(time);
-            last_detections = detections;
-            if (!detections.empty()) {
-                std::cout << "Objetos detetados (" << detections.size() << "): ";
-                for (const auto& det : detections) {
-                    std::cout << det.class_name << " (" << det.confidence << ") ";
-                }
-                std::cout << std::endl;
-            }
-        } else {
-            detections = last_detections;
-        }
+        bool valid{false};
+        std::mutex mtx;
+    } objects;
+};
 
-        {
-            std::unique_lock<std::mutex> lock(mtx_results);
-            latest_objects.detections = detections;
-            results_ready = true;
-            cv_results.notify_one();
-        }
-    }
-}
-
-// Thread de lanes
-void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, FServo& servo, BackMotors& backMotors,
-                         SCurveProfile& steering_profile, MovingAverage& filter, double setpoint_velocity,
-                         FrameSkipper& frame_skipper) {
-    auto lastTime = std::chrono::steady_clock::now();
-    double last_delta = 0.0;
-    auto pid_last_time = std::chrono::steady_clock::now();
-
-    while (keep_running.load()) {
-        cv::Mat frame;
-        {
-            std::unique_lock<std::mutex> lock(mtx_lanes);
-            cv_lanes.wait(lock, [&] { return !frame_queue_lanes.empty() || !keep_running.load(); });
-            if (!keep_running.load()) break;
-            frame = frame_queue_lanes.front();
-            frame_queue_lanes.pop();
-        }
-
-        if (!frame_skipper.shouldProcessFrame()) continue;
-
-        auto start = std::chrono::high_resolution_clock::now();
-        std::vector<float> input = preprocess_frame(frame);
-        auto outputs = trt.infer(input);
-        std::vector<cv::Point> medianPoints;
-        LaneData laneData;
-        LineIntersect intersect;
-        cv::Mat result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
-        auto end = std::chrono::high_resolution_clock::now();
-        double time = std::chrono::duration<double>(end - start).count();
-        frame_skipper.recordProcessingTime(time);
-
-        auto currentTime = std::chrono::steady_clock::now();
-        double elapsed = std::chrono::duration<double>(currentTime - lastTime).count();
-        lastTime = currentTime;
-
-        double v_actual = current_speed_ms.load();
-        auto pid_now = std::chrono::steady_clock::now();
-        double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
-        if (pid_dt >= 0.02) {
-            double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-            backMotors.setSpeed(static_cast<int>(motor_pwm));
-            pid_last_time = pid_now;
-        }
-
-        double offset = intersect.offset;
-        double psi = intersect.psi;
-        double delta = last_delta;
-        if (!std::isnan(offset) && !std::isnan(psi)) {
-            delta = -mpc.computeControl(offset, psi, 0.7);
-        }
-
-        double target_steering_angle = delta * 180.0 / M_PI;
-        double smoothed_steering_angle = steering_profile.computeNext(target_steering_angle, elapsed);
-        int steering_angle = static_cast<int>(smoothed_steering_angle);
-        steering_angle = std::max(-40, std::min(40, steering_angle));
-        servo.set_steering(steering_angle);
-        last_delta = delta;
-
-        {
-            std::unique_lock<std::mutex> lock(mtx_results);
-            latest_lanes.processed_frame = result;
-            latest_lanes.offset = offset;
-            latest_lanes.psi = psi;
-            latest_lanes.medianPoints = medianPoints;
-            latest_lanes.laneData = laneData;
-            latest_lanes.intersect = intersect;
-            results_ready = true;
-            cv_results.notify_one();
-        }
-    }
-}
-
-// Função combineAndDraw (como antes)
-cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_res, const LaneResults& lane_res,
-                       double smooth_fps, int processed_frames, int skipped_frames) {
-    if (original_frame.empty()) {
-        std::cerr << "Frame original vazio." << std::endl;
-        return cv::Mat();
-    }
-
-    cv::Mat combined = original_frame.clone();
-
-    // Desenhar objetos no combined
-    for (const auto& det : obj_res.detections) {
-        cv::Scalar color = cv::Scalar(255, 0, 0);  // Ou usa det.getColor se disponível
-        cv::rectangle(combined, det.bbox, color, 2);
-        std::string label = det.class_name + ": " + std::to_string(det.confidence).substr(0, 4);
-        cv::putText(combined, label, cv::Point(det.bbox.x, det.bbox.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
-    }
-
-    // Mesclar com lanes usando overlay (novo: preserva desenhos de objetos)
-    if (!lane_res.processed_frame.empty()) {
-        cv::Mat lanes = lane_res.processed_frame;
-        if (lanes.size() != combined.size() || lanes.type() != combined.type()) {
-            cv::resize(lanes, lanes, combined.size());
-            if (lanes.channels() != combined.channels()) {
-                cv::cvtColor(lanes, lanes, cv::COLOR_GRAY2BGR);  // Ajusta se lanes for grayscale
-            }
-        }
-        // Overlay: 70% combined (com objetos) + 30% lanes (ajusta pesos)
-        cv::addWeighted(combined, 0.5, lanes, 0.5, 0, combined);
-    } else {
-        std::cout << "Frame de lanes vazio – mostrando apenas objetos." << std::endl;
-    }
-
-    // Desenhar HUD e stats (como antes)
-    drawHUD(combined, smooth_fps, 0.0, current_speed_ms.load(), 0.0, lane_res.offset, lane_res.psi, 0, 0.0);
-
-    std::string info_text = "FPS: " + std::to_string(smooth_fps).substr(0, 4) +
-                            " | Proc: " + std::to_string(processed_frames) +
-                            " | Skip: " + std::to_string(skipped_frames);
-    cv::putText(combined, info_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0, 255, 0), 2);
-
-    return combined;
-}
-
-// Cleanup
-void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors, 
-             std::unique_ptr<CanBusManager>& canBusManager, std::thread& obj_thread, std::thread& lane_thread) {
-    std::cout << "Iniciando cleanup..." << std::endl;
-    keep_running.store(false);
-
-    cv_objects.notify_all();
-    cv_lanes.notify_all();
-    cv_results.notify_all();
-
-    if (obj_thread.joinable()) obj_thread.join();
-    if (lane_thread.joinable()) lane_thread.join();
-
-    camera.stop();
-    servo.set_steering(0);
-    backMotors.setSpeed(0);
-    if (canBusManager) canBusManager->stop();
-    cv::destroyAllWindows();
-
-    std::cout << "Cleanup completo." << std::endl;
-}
-
-int main() {
-    std::signal(SIGINT, signalHandler);
-
-    CSICamera camera(640, 480, 30);
-    std::unique_ptr<TensorRTYOLO> obj_detector;
-    std::unique_ptr<TensorRTInference> lane_trt;
-    FPSCalculator fps_calculator(30);
-    FrameSkipper obj_skipper(FrameSkipper::FIXED, 8, 15.0);
-    FrameSkipper lane_skipper(FrameSkipper::ADAPTIVE, 0, 15.0);
-    NMPCController mpc;
-    PID pid;
-    BackMotors backMotors;
-    FServo servo;
-    SCurveProfile steering_profile(100.0, 300.0, 600.0);
-    MovingAverage filter(5);
-    double setpoint_velocity = 1.0;
-    std::shared_ptr<CANMessageProcessor> messageProcessor;
-    std::unique_ptr<CanBusManager> canBusManager;
-    std::thread obj_thread;
-    std::thread lane_thread;
-
+// ===================== Threads de processamento =====================
+// Lanes (prioritária, skip=2)
+static void laneDetectionThread(
+    TensorRTInference& lane_trt,
+    CSICamera& camera,
+    NMPCController& mpc,
+    FServo& servo,
+    BackMotors& backMotors,
+    PID& pid,
+    SyncResults& sync,
+    ZmqPublisher* zmq_pub
+) {
     try {
-        std::cout << "Inicializando sistema integrado..." << std::endl;
+        FrameSkipper skipper(FrameSkipper::FIXED, 2, 30.0);  // processa 1 a cada (2+1)=3 frames
+        auto pid_last = std::chrono::steady_clock::now();
+        double last_delta = 0.0;
+        const double setpoint_velocity = 1.0; // m/s alvo
 
-        // Validação e loading de engines
-        std::string obj_engine_path = "../engines/best.engine";
-        std::ifstream check_obj(obj_engine_path);
-        if (!check_obj.good()) {
-            throw std::runtime_error("Engine de objetos não encontrado ou inacessível: " + obj_engine_path);
-        }
-        obj_detector = std::make_unique<TensorRTYOLO>(obj_engine_path, 640);
-        std::cout << "Engine de objetos carregado: " << obj_engine_path << std::endl;
-
-        std::string lane_engine_path = "../engines/model.engine";
-        std::ifstream check_lane(lane_engine_path);
-        if (!check_lane.good()) {
-            throw std::runtime_error("Engine de lanes não encontrado ou inacessível: " + lane_engine_path);
-        }
-        lane_trt = std::make_unique<TensorRTInference>(lane_engine_path);
-        std::cout << "Engine de lanes carregado: " << lane_engine_path << std::endl;
-
-        if (!initMotors(backMotors)) throw std::runtime_error("Falha nos motores");
-        if (!initServo(servo)) throw std::runtime_error("Falha no servo");
-
-        // CAN Bus (com handler default das alterações acima)
-        canBusManager = initCanBus(messageProcessor);
-        if (!canBusManager) throw std::runtime_error("Falha no CAN Bus");
-
-        camera.start();
-
-        // Lançar threads
-        obj_thread = std::thread(objectInferenceThread, std::ref(*obj_detector), std::ref(obj_skipper), std::ref(fps_calculator));
-        lane_thread = std::thread(laneInferenceThread, std::ref(*lane_trt), std::ref(mpc), std::ref(pid), std::ref(servo),
-                                  std::ref(backMotors), std::ref(steering_profile), std::ref(filter), setpoint_velocity,
-                                  std::ref(lane_skipper));
-
-        std::cout << "Threads lançadas. Pressione 'q' para sair." << std::endl;
-
-        // Loop principal
-        int frame_count = 0;
-        int processed_frames = 0;
-        int skipped_frames = 0;
         while (keep_running.load()) {
             cv::Mat frame = camera.read();
             if (frame.empty()) continue;
 
-            frame_count++;
+            if (!skipper.shouldProcessFrame()) continue;
 
-            // Enviar para threads
+            // Inferência lanes
+            const auto t0 = std::chrono::high_resolution_clock::now();
+            std::vector<float> input = preprocess_frame(frame);
+            auto outputs = lane_trt.infer(input);
+
+            std::vector<cv::Point> medianPoints;
+            LaneData laneData;
+            LineIntersect isect;
+            cv::Mat result = postprocess(outputs.data(), frame, medianPoints, laneData, isect);
+            const auto t1 = std::chrono::high_resolution_clock::now();
+            skipper.recordProcessingTime(std::chrono::duration<double>(t1 - t0).count());
+
+            // Controlo de direção (NMPC) e servo
+            double offset = isect.offset;
+            double psi = isect.psi;
+            if (!std::isnan(offset) && !std::isnan(psi)) {
+                double delta = -mpc.computeControl(offset, psi, 0.7);
+                int steering_angle = static_cast<int>(delta * 180.0 / M_PI);
+                steering_angle = std::max(-40, std::min(40, steering_angle));
+                servo.set_steering(steering_angle);
+                last_delta = delta;
+
+                // Publicação ZMQ (opcional)
+                if (zmq_pub && zmq_pub->isConnected()) {
+                    int lane_side = (offset < -0.01) ? 2 : ((offset > 0.02) ? 1 : 0);
+                    std::stringstream ss; ss << "lane:" << lane_side;
+                    zmq_pub->publishMessage(ss.str());
+                }
+            }
+
+            // Controlo de velocidade (PID) a 20 Hz
+            const auto pid_now = std::chrono::steady_clock::now();
+            double pid_dt = std::chrono::duration<double>(pid_now - pid_last).count();
+            if (pid_dt >= 0.02) {
+                double v_actual = current_speed_ms.load();
+                double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
+                //backMotors.setSpeed(static_cast<int>(motor_pwm));
+                pid_last = pid_now;
+            }
+
+            // Guardar resultados para visualização
             {
-                std::unique_lock<std::mutex> lock_obj(mtx_objects);
-                frame_queue_objects.push(frame.clone());
-                cv_objects.notify_one();
+                std::lock_guard<std::mutex> lk(sync.lane.mtx);
+                sync.lane.offset = offset;
+                sync.lane.psi = psi;
+                sync.lane.valid = true;
+                sync.lane.processed_frame = result;
             }
-            {
-                std::unique_lock<std::mutex> lock_lane(mtx_lanes);
-                frame_queue_lanes.push(frame.clone());
-                cv_lanes.notify_one();
-            }
-
-            // Esperar resultados
-            {
-                std::unique_lock<std::mutex> lock(mtx_results);
-                cv_results.wait(lock, [&] { return results_ready || !keep_running.load(); });
-                if (!keep_running.load()) break;
-                results_ready = false;
-            }
-            // Novo: Pequeno delay para dar tempo às threads no início (evita race no primeiro frame)
-            if (frame_count < 5) {  // Apenas nos primeiros frames
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
-
-            // Combinar e exibir
-            double smooth_fps = fps_calculator.getSmoothFPS();
-            cv::Mat displayed = combineAndDraw(frame, latest_objects, latest_lanes, smooth_fps, processed_frames, skipped_frames);
-            
-            if (!displayed.empty()) {  // Novo: Verifica se a imagem é válida
-                cv::imshow("Integrated Detection", displayed);
-            } else std::cout << "Frame vazio ignorado (aguardando processamento)." << std::endl;
-
-            char key = cv::waitKey(1) & 0xFF;
-            if (key == 'q') keep_running.store(false);
-
-            processed_frames++;  // Simplificado
         }
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Erro de runtime (falha inicial): " << e.what() << std::endl;
-        keep_running.store(false);
     } catch (const std::exception& e) {
-        std::cerr << "Erro geral: " << e.what() << std::endl;
-        keep_running.store(false);
+        report_fatal(std::string("Lane thread error: ") + e.what());
+    } catch (...) {
+        report_fatal("Lane thread unknown error");
     }
+}
 
-    // Cleanup
-    cleanup(camera, servo, backMotors, canBusManager, obj_thread, lane_thread);
+// Objetos (adaptativo, skip agressivo)
+static void objectDetectionThread(TensorRTYOLO& yolo, CSICamera& camera, SyncResults& sync) {
+    try {
+        FrameSkipper skipper(FrameSkipper::ADAPTIVE, 8, 15.0);
 
-    return 0;
+        while (keep_running.load()) {
+            cv::Mat frame = camera.read();
+            if (frame.empty()) continue;
+            if (!skipper.shouldProcessFrame()) continue;
+
+            const auto t0 = std::chrono::high_resolution_clock::now();
+            std::vector<Detection> dets = yolo.infer(frame);
+            const auto t1 = std::chrono::high_resolution_clock::now();
+            skipper.recordProcessingTime(std::chrono::duration<double>(t1 - t0).count());
+
+            {
+                std::lock_guard<std::mutex> lk(sync.objects.mtx);
+                sync.objects.detections = std::move(dets);
+                sync.objects.valid = true;
+            }
+        }
+    } catch (const std::exception& e) {
+        report_fatal(std::string("Object thread error: ") + e.what());
+    } catch (...) {
+        report_fatal("Object thread unknown error");
+    }
+}
+
+// ===================== main =====================
+int main() {
+    std::signal(SIGINT, signalHandler);
+
+    // Objetos com duração até ao final para permitir cleanup
+    std::unique_ptr<LaneControl> laneControl;
+    NMPCController mpc;
+    BackMotors backMotors;
+    FServo servo;
+    std::shared_ptr<CANMessageProcessor> canMsgProcessor;
+    std::unique_ptr<CanBusManager> canBusManager;
+    std::unique_ptr<ZmqPublisher> zmq_publisher_ptr; // se initZmq devolver raw*, vamos embrulhar
+    ZmqPublisher* zmq_publisher = nullptr;
+
+    try {
+        // 1) Inicializações lane (câmara + engine lanes)
+        laneControl = initLaneControl();         // internamente abre a engine e start() na camera
+        auto& lane_trt = laneControl->trt;
+        auto& camera  = laneControl->cam;
+        backMotors.setSpeed(0);
+
+        // 2) Inicialização objetos (engine YOLO)
+        const std::string obj_engine = "best.engine";
+        TensorRTYOLO yolo(obj_engine, 640);
+
+        // 3) Motores e servo
+        if (!initMotors(backMotors)) throw std::runtime_error("initMotors() failed");
+        if (!initServo(servo))       throw std::runtime_error("initServo() failed");
+
+        // 4) CAN Bus e ZMQ
+        canBusManager = initCanBus(canMsgProcessor);
+        if (!canBusManager) throw std::runtime_error("initCanBus() failed");
+        {
+            zmq::context_t ctx(1);
+            ZmqPublisher* raw = initZmq(ctx);
+            if (!raw) throw std::runtime_error("initZmq() failed");
+            // Embrulhar para garantir delete em cleanup
+            zmq_publisher_ptr.reset(raw);
+            zmq_publisher = zmq_publisher_ptr.get();
+        }
+
+        // 5) PID
+        PID pid;
+
+        // 6) Sincronização e threads
+        SyncResults sync;
+        std::thread th_lane, th_obj;
+
+        th_lane = std::thread(laneDetectionThread,
+                              std::ref(lane_trt),
+                              std::ref(camera),
+                              std::ref(mpc),
+                              std::ref(servo),
+                              std::ref(backMotors),
+                              std::ref(pid),
+                              std::ref(sync),
+                              zmq_publisher);
+
+        th_obj  = std::thread(objectDetectionThread,
+                              std::ref(yolo),
+                              std::ref(camera),
+                              std::ref(sync));
+
+        // 7) Visualização
+        FPSCalculator fps(30);
+        auto t_last = std::chrono::steady_clock::now();
+        double smoothFPS = 0.0;
+        const double alpha = 0.9;
+
+        std::cout << "Sistema integrado iniciado. [Lane skip=2] [Object ADAPTIVE skip~8]\nPressione 'q' para sair.\n";
+
+        while (keep_running.load()) {
+            if (fatal_error.load()) break;
+
+            fps.update();
+
+            auto t_now = std::chrono::steady_clock::now();
+            double dt = std::chrono::duration<double>(t_now - t_last).count();
+            t_last = t_now;
+            double curFPS = (dt > 1e-6) ? 1.0 / dt : 0.0;
+            smoothFPS = (smoothFPS == 0.0) ? curFPS : alpha * smoothFPS + (1.0 - alpha) * curFPS;
+
+            cv::Mat frame;
+            double offset = 0.0, psi = 0.0;
+            std::vector<Detection> dets;
+
+            {
+                std::lock_guard<std::mutex> lk(sync.lane.mtx);
+                if (sync.lane.valid) {
+                    frame = sync.lane.processed_frame.clone();
+                    offset = sync.lane.offset;
+                    psi = sync.lane.psi;
+                }
+            }
+            {
+                std::lock_guard<std::mutex> lk(sync.objects.mtx);
+                if (sync.objects.valid) dets = sync.objects.detections;
+            }
+
+            if (!frame.empty()) {
+                for (const auto& d : dets) {
+                    cv::Scalar color = cv::Scalar(255, 255, 255); // fallback
+                    // getColor pode lançar? Em princípio não.
+                    // Se preferir, proteja com try/catch aqui.
+                    // Mantemos simples:
+                    // Se tiver getColor no YOLO acessível aqui, teria de passar referência.
+                    // Para manter isolado, refazemos as cores via det.class_id (simples).
+                    // (ou faça YOLO.getColor via referência, o que exigiria partilhar yolo aqui)
+                    cv::rectangle(frame, d.bbox, color, 2);
+                    std::string label = d.class_name + ": " + std::to_string(d.confidence).substr(0, 4);
+                    cv::putText(frame, label, cv::Point(d.bbox.x, d.bbox.y - 5),
+                                cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255), 2);
+                }
+
+                std::string info = "FPS: " + std::to_string(smoothFPS).substr(0,4);
+                cv::putText(frame, info, cv::Point(10, 30),
+                            cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0,255,0), 2);
+
+                cv::imshow("Integrated Vision System", frame);
+            }
+
+            char k = cv::waitKey(1) & 0xFF;
+            if (k == 'q') {
+                keep_running.store(false);
+                break;
+            }
+        }
+
+        // 8) Encerramento limpo
+        if (th_lane.joinable()) th_lane.join();
+        if (th_obj.joinable())  th_obj.join();
+
+        // Paragens seguras
+        try { servo.set_steering(0); } catch (...) {}
+        try { backMotors.setSpeed(0); } catch (...) {}
+        try { laneControl->cam.stop(); } catch (...) {}
+        try { cv::destroyAllWindows(); } catch (...) {}
+        try { if (canBusManager) canBusManager->stop(); } catch (...) {}
+
+        if (fatal_error.load()) {
+            std::lock_guard<std::mutex> lk(err_mtx);
+            std::cerr << "Fatal error: " << error_msg << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Erro fatal: " << e.what() << std::endl;
+        keep_running.store(false);
+        return EXIT_FAILURE;
+    } catch (...) {
+        std::cerr << "Erro fatal: excecao desconhecida" << std::endl;
+        keep_running.store(false);
+        return EXIT_FAILURE;
+    }
 }

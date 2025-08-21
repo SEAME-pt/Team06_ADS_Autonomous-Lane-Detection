@@ -24,12 +24,6 @@
 #include <iomanip>
 #include <zmq.hpp>
 #include <sstream>
-#include <queue>
-#include <signal.h>
-
-#include <opencv2/opencv.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
 
 // Componentes do seu sistema para controlo de motor e CAN Bus
 #include "FServo/FServo.hpp"
