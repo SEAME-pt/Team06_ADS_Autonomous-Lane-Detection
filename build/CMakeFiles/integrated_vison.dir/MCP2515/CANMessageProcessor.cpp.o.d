@@ -147,6 +147,7 @@ CMakeFiles/integrated_vison.dir/MCP2515/CANMessageProcessor.cpp.o: \
  /usr/include/c++/8/bits/stl_algo.h \
  /usr/include/c++/8/bits/algorithmfwd.h \
  /usr/include/c++/8/bits/stl_heap.h /usr/include/c++/8/bits/stl_tempbuf.h \
+<<<<<<< HEAD
  /usr/include/c++/8/bits/uniform_int_dist.h /usr/include/c++/8/iostream \
  /usr/include/c++/8/ostream /usr/include/c++/8/ios \
  /usr/include/c++/8/bits/ios_base.h \
@@ -165,3 +166,6 @@ CMakeFiles/integrated_vison.dir/MCP2515/CANMessageProcessor.cpp.o: \
  /usr/include/c++/8/bits/basic_ios.tcc \
  /usr/include/c++/8/bits/ostream.tcc /usr/include/c++/8/istream \
  /usr/include/c++/8/bits/istream.tcc
+=======
+ /usr/include/c++/8/bits/uniform_int_dist.h
+>>>>>>> parent of a20ace6... update objt+lanes

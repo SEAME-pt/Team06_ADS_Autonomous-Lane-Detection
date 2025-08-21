@@ -441,6 +441,33 @@ control_systems/lane.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.s
 .PHONY : control_systems/lane.cpp.s
 
+<<<<<<< HEAD
+=======
+control_systems/main.o: control_systems/main.cpp.o
+.PHONY : control_systems/main.o
+
+# target to build an object file
+control_systems/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o
+.PHONY : control_systems/main.cpp.o
+
+control_systems/main.i: control_systems/main.cpp.i
+.PHONY : control_systems/main.i
+
+# target to preprocess a source file
+control_systems/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/main.cpp.i
+.PHONY : control_systems/main.cpp.i
+
+control_systems/main.s: control_systems/main.cpp.s
+.PHONY : control_systems/main.s
+
+# target to generate assembly for a file
+control_systems/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/main.cpp.s
+.PHONY : control_systems/main.cpp.s
+
+>>>>>>> parent of a20ace6... update objt+lanes
 control_systems/mask.o: control_systems/mask.cpp.o
 .PHONY : control_systems/mask.o
 
@@ -537,6 +564,7 @@ control_systems/utils_control.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.s
 .PHONY : control_systems/utils_control.cpp.s
 
+<<<<<<< HEAD
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -561,6 +589,8 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -609,6 +639,12 @@ help:
 	@echo "... control_systems/lane.o"
 	@echo "... control_systems/lane.i"
 	@echo "... control_systems/lane.s"
+<<<<<<< HEAD
+=======
+	@echo "... control_systems/main.o"
+	@echo "... control_systems/main.i"
+	@echo "... control_systems/main.s"
+>>>>>>> parent of a20ace6... update objt+lanes
 	@echo "... control_systems/mask.o"
 	@echo "... control_systems/mask.i"
 	@echo "... control_systems/mask.s"
@@ -621,9 +657,12 @@ help:
 	@echo "... control_systems/utils_control.o"
 	@echo "... control_systems/utils_control.i"
 	@echo "... control_systems/utils_control.s"
+<<<<<<< HEAD
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 .PHONY : help
 
 
