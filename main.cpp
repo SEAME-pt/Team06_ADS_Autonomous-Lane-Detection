@@ -300,36 +300,8 @@ int main() {
     std::thread obj_thread;
     std::thread lane_thread;
 
-<<<<<<< HEAD
     // Cria contexto
     zmq::context_t zmq_context(1);
-=======
-    try {
-        // 1) Inicializações lane (câmara + engine lanes)
-        laneControl = initLaneControl();         // internamente abre a engine e start() na camera
-        auto& lane_trt = laneControl->trt;
-        auto& camera  = laneControl->cam;
-
-        // 2) Inicialização objetos (engine YOLO)
-        const std::string obj_engine = "../engines/best.engine";
-        TensorRTYOLO yolo(obj_engine, 640);
-
-        // 3) Motores e servo
-        if (!initMotors(backMotors)) throw std::runtime_error("initMotors() failed");
-        if (!initServo(servo))       throw std::runtime_error("initServo() failed");
-
-        // 4) CAN Bus e ZMQ
-        canBusManager = initCanBus(canMsgProcessor);
-        if (!canBusManager) throw std::runtime_error("initCanBus() failed");
-        {
-            zmq::context_t ctx(1);
-            ZmqPublisher* raw = initZmq(ctx);
-            if (!raw) throw std::runtime_error("initZmq() failed");
-            // Embrulhar para garantir delete em cleanup
-            zmq_publisher_ptr.reset(raw);
-            zmq_publisher = zmq_publisher_ptr.get();
-        }
->>>>>>> parent of a20ace6... update objt+lanes
 
     // Inicializa com initZmq
     ZmqPublisher* lanes_publisher = initZmq(zmq_context, "127.0.0.1", 5558);  // Porta para lanes
