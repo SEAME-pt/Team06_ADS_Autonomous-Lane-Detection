@@ -1,7 +1,20 @@
 #ifndef INFEROBJECT_HPP
 #define INFEROBJECT_HPP
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+
+#include <NvInfer.h>
+#include <opencv2/opencv.hpp>
+#include <cuda_runtime.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <stdexcept>
+>>>>>>> parent of a20ace6... update objt+lanes
 
 #include <NvInfer.h>
 #include <opencv2/opencv.hpp>

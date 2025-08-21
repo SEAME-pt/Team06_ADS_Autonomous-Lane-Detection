@@ -26,6 +26,11 @@ file(REMOVE_RECURSE
   "CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o"
   "CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o.d"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o"
+  "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o.d"
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o"
   "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o.d"
@@ -39,8 +44,11 @@ file(REMOVE_RECURSE
   "CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o"
   "CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o.d"
 <<<<<<< HEAD
+<<<<<<< HEAD
   "CMakeFiles/integrated_vison.dir/main.cpp.o"
   "CMakeFiles/integrated_vison.dir/main.cpp.o.d"
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
   "integrated_vison"

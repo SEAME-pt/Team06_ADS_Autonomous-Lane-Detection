@@ -442,7 +442,10 @@ control_systems/lane.cpp.s:
 .PHONY : control_systems/lane.cpp.s
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 control_systems/main.o: control_systems/main.cpp.o
 .PHONY : control_systems/main.o
 
@@ -467,6 +470,9 @@ control_systems/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/main.cpp.s
 .PHONY : control_systems/main.cpp.s
 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 control_systems/mask.o: control_systems/mask.cpp.o
 .PHONY : control_systems/mask.o
@@ -565,6 +571,7 @@ control_systems/utils_control.cpp.s:
 .PHONY : control_systems/utils_control.cpp.s
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -589,6 +596,8 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 # Help Target
@@ -640,6 +649,12 @@ help:
 	@echo "... control_systems/lane.i"
 	@echo "... control_systems/lane.s"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	@echo "... control_systems/main.o"
+	@echo "... control_systems/main.i"
+	@echo "... control_systems/main.s"
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 	@echo "... control_systems/main.o"
 	@echo "... control_systems/main.i"
@@ -658,9 +673,12 @@ help:
 	@echo "... control_systems/utils_control.i"
 	@echo "... control_systems/utils_control.s"
 <<<<<<< HEAD
+<<<<<<< HEAD
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 .PHONY : help

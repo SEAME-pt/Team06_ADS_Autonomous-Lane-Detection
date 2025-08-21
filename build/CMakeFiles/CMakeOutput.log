@@ -27,6 +27,7 @@ The CXX compiler identification is GNU, found in "/home/jetson/Desktop/Team06/Te
 
 Detecting C compiler ABI info compiled with the following output:
 <<<<<<< HEAD
+<<<<<<< HEAD
 Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-nQfD4L
 
 Run Build Command(s):/usr/bin/make -f Makefile cmTC_6e453/fast && /usr/bin/make  -f CMakeFiles/cmTC_6e453.dir/build.make CMakeFiles/cmTC_6e453.dir/build
@@ -34,12 +35,17 @@ make[1]: Entering directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-L
 Building C object CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o
 /usr/bin/cc   -v -o CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-FE3tcA
 
 Run Build Command(s):/usr/bin/make -f Makefile cmTC_f1216/fast && /usr/bin/make  -f CMakeFiles/cmTC_f1216.dir/build.make CMakeFiles/cmTC_f1216.dir/build
 make[1]: Entering directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-FE3tcA'
 Building C object CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o
 /usr/bin/cc   -v -o CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
@@ -48,8 +54,13 @@ Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 8.4.0-3ubu
 Thread model: posix
 gcc version 8.4.0 (Ubuntu/Linaro 8.4.0-3ubuntu2) 
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/cc1 -quiet -v -imultiarch aarch64-linux-gnu /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccG90tZe.s
+=======
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
+ /usr/lib/gcc/aarch64-linux-gnu/8/cc1 -quiet -v -imultiarch aarch64-linux-gnu /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cc3V2UIj.s
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/cc1 -quiet -v -imultiarch aarch64-linux-gnu /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cc3V2UIj.s
@@ -74,6 +85,7 @@ GNU C17 (Ubuntu/Linaro 8.4.0-3ubuntu2) version 8.4.0 (aarch64-linux-gnu)
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: bb0b986f30f7f93ce275e46b40396570
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
  as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o /tmp/ccG90tZe.s
 GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
@@ -84,6 +96,8 @@ Linking C executable cmTC_6e453
 /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e453.dir/link.txt --verbose=1
 /usr/bin/cc  -v CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -o cmTC_6e453 
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
  as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o /tmp/cc3V2UIj.s
 GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
@@ -93,6 +107,9 @@ COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' 
 Linking C executable cmTC_f1216
 /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f1216.dir/link.txt --verbose=1
 /usr/bin/cc  -v CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -o cmTC_f1216 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
@@ -104,15 +121,21 @@ gcc version 8.4.0 (Ubuntu/Linaro 8.4.0-3ubuntu2)
 COMPILER_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib/:/lib/aarch64-linux-gnu/:/lib/../lib/:/usr/lib/aarch64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../:/lib/:/usr/lib/
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_6e453' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccdOMy5F.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_6e453 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_6e453' '-mlittle-endian' '-mabi=lp64'
 make[1]: Leaving directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-nQfD4L'
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_f1216' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccE5PcZL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_f1216 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_f1216' '-mlittle-endian' '-mabi=lp64'
 make[1]: Leaving directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-FE3tcA'
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 
 
@@ -135,6 +158,7 @@ Parsed C implicit include dir info from above output: rv=done
 Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-nQfD4L]
   ignore line: []
   ignore line: [Run Build Command(s):/usr/bin/make -f Makefile cmTC_6e453/fast && /usr/bin/make  -f CMakeFiles/cmTC_6e453.dir/build.make CMakeFiles/cmTC_6e453.dir/build]
@@ -142,12 +166,17 @@ Parsed C implicit link information from above output:
   ignore line: [Building C object CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o]
   ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c]
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-FE3tcA]
   ignore line: []
   ignore line: [Run Build Command(s):/usr/bin/make -f Makefile cmTC_f1216/fast && /usr/bin/make  -f CMakeFiles/cmTC_f1216.dir/build.make CMakeFiles/cmTC_f1216.dir/build]
   ignore line: [make[1]: Entering directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-FE3tcA']
   ignore line: [Building C object CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o]
   ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c]
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
@@ -156,8 +185,13 @@ Parsed C implicit link information from above output:
   ignore line: [Thread model: posix]
   ignore line: [gcc version 8.4.0 (Ubuntu/Linaro 8.4.0-3ubuntu2) ]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ /usr/lib/gcc/aarch64-linux-gnu/8/cc1 -quiet -v -imultiarch aarch64-linux-gnu /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccG90tZe.s]
+=======
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [ /usr/lib/gcc/aarch64-linux-gnu/8/cc1 -quiet -v -imultiarch aarch64-linux-gnu /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cc3V2UIj.s]
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ /usr/lib/gcc/aarch64-linux-gnu/8/cc1 -quiet -v -imultiarch aarch64-linux-gnu /usr/share/cmake-3.25/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/cc3V2UIj.s]
@@ -182,6 +216,7 @@ Parsed C implicit link information from above output:
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: bb0b986f30f7f93ce275e46b40396570]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o /tmp/ccG90tZe.s]
   ignore line: [GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
@@ -192,6 +227,8 @@ Parsed C implicit link information from above output:
   ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6e453.dir/link.txt --verbose=1]
   ignore line: [/usr/bin/cc  -v CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -o cmTC_6e453 ]
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o /tmp/cc3V2UIj.s]
   ignore line: [GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
@@ -201,6 +238,9 @@ Parsed C implicit link information from above output:
   ignore line: [Linking C executable cmTC_f1216]
   ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f1216.dir/link.txt --verbose=1]
   ignore line: [/usr/bin/cc  -v CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -o cmTC_f1216 ]
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
@@ -212,8 +252,13 @@ Parsed C implicit link information from above output:
   ignore line: [COMPILER_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib/:/lib/aarch64-linux-gnu/:/lib/../lib/:/usr/lib/aarch64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../:/lib/:/usr/lib/]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_6e453' '-mlittle-endian' '-mabi=lp64']
   link line: [ /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccdOMy5F.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_6e453 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o]
+=======
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_f1216' '-mlittle-endian' '-mabi=lp64']
+  link line: [ /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccE5PcZL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_f1216 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o]
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_f1216' '-mlittle-endian' '-mabi=lp64']
   link line: [ /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccE5PcZL.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_f1216 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o]
@@ -223,7 +268,11 @@ Parsed C implicit link information from above output:
     arg [/usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper] ==> ignore
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg [-plugin-opt=-fresolution=/tmp/ccdOMy5F.res] ==> ignore
+=======
+    arg [-plugin-opt=-fresolution=/tmp/ccE5PcZL.res] ==> ignore
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
     arg [-plugin-opt=-fresolution=/tmp/ccE5PcZL.res] ==> ignore
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -247,7 +296,11 @@ Parsed C implicit link information from above output:
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg [cmTC_6e453] ==> ignore
+=======
+    arg [cmTC_f1216] ==> ignore
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
     arg [cmTC_f1216] ==> ignore
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -263,7 +316,11 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/aarch64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/aarch64-linux-gnu/8/../../..]
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg [CMakeFiles/cmTC_6e453.dir/CMakeCCompilerABI.c.o] ==> ignore
+=======
+    arg [CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o] ==> ignore
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
     arg [CMakeFiles/cmTC_f1216.dir/CMakeCCompilerABI.c.o] ==> ignore
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -299,6 +356,7 @@ Parsed C implicit link information from above output:
 
 Detecting CXX compiler ABI info compiled with the following output:
 <<<<<<< HEAD
+<<<<<<< HEAD
 Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-GgqMdL
 
 Run Build Command(s):/usr/bin/make -f Makefile cmTC_70ae0/fast && /usr/bin/make  -f CMakeFiles/cmTC_70ae0.dir/build.make CMakeFiles/cmTC_70ae0.dir/build
@@ -306,12 +364,17 @@ make[1]: Entering directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-L
 Building CXX object CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o
 /usr/bin/c++   -v -o CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-I19PhB
 
 Run Build Command(s):/usr/bin/make -f Makefile cmTC_44115/fast && /usr/bin/make  -f CMakeFiles/cmTC_44115.dir/build.make CMakeFiles/cmTC_44115.dir/build
 make[1]: Entering directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-I19PhB'
 Building CXX object CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o
 /usr/bin/c++   -v -o CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
@@ -320,8 +383,13 @@ Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 8.4.0-3ubu
 Thread model: posix
 gcc version 8.4.0 (Ubuntu/Linaro 8.4.0-3ubuntu2) 
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccWIyaEh.s
+=======
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
+ /usr/lib/gcc/aarch64-linux-gnu/8/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccQtsFXm.s
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccQtsFXm.s
@@ -350,6 +418,7 @@ GNU C++14 (Ubuntu/Linaro 8.4.0-3ubuntu2) version 8.4.0 (aarch64-linux-gnu)
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: ae332f4dddd780dce425de0f4e5e38db
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
  as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccWIyaEh.s
 GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
@@ -360,6 +429,8 @@ Linking CXX executable cmTC_70ae0
 /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_70ae0.dir/link.txt --verbose=1
 /usr/bin/c++  -v CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_70ae0 
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
  as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccQtsFXm.s
 GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34
@@ -369,6 +440,9 @@ COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp
 Linking CXX executable cmTC_44115
 /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_44115.dir/link.txt --verbose=1
 /usr/bin/c++  -v CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_44115 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
@@ -380,15 +454,21 @@ gcc version 8.4.0 (Ubuntu/Linaro 8.4.0-3ubuntu2)
 COMPILER_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib/:/lib/aarch64-linux-gnu/:/lib/../lib/:/usr/lib/aarch64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../:/lib/:/usr/lib/
 <<<<<<< HEAD
+<<<<<<< HEAD
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_70ae0' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cckdKn1J.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_70ae0 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_70ae0' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
 make[1]: Leaving directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-GgqMdL'
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_44115' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
  /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cckcv2bN.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_44115 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o
 COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_44115' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64'
 make[1]: Leaving directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-I19PhB'
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 
 
@@ -417,6 +497,7 @@ Parsed CXX implicit include dir info from above output: rv=done
 Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-GgqMdL]
   ignore line: []
   ignore line: [Run Build Command(s):/usr/bin/make -f Makefile cmTC_70ae0/fast && /usr/bin/make  -f CMakeFiles/cmTC_70ae0.dir/build.make CMakeFiles/cmTC_70ae0.dir/build]
@@ -424,12 +505,17 @@ Parsed CXX implicit link information from above output:
   ignore line: [Building CXX object CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o]
   ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp]
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-I19PhB]
   ignore line: []
   ignore line: [Run Build Command(s):/usr/bin/make -f Makefile cmTC_44115/fast && /usr/bin/make  -f CMakeFiles/cmTC_44115.dir/build.make CMakeFiles/cmTC_44115.dir/build]
   ignore line: [make[1]: Entering directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-I19PhB']
   ignore line: [Building CXX object CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o]
   ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp]
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/c++]
@@ -438,8 +524,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [Thread model: posix]
   ignore line: [gcc version 8.4.0 (Ubuntu/Linaro 8.4.0-3ubuntu2) ]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ /usr/lib/gcc/aarch64-linux-gnu/8/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccWIyaEh.s]
+=======
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [ /usr/lib/gcc/aarch64-linux-gnu/8/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccQtsFXm.s]
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ /usr/lib/gcc/aarch64-linux-gnu/8/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.25/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -o /tmp/ccQtsFXm.s]
@@ -468,6 +559,7 @@ Parsed CXX implicit link information from above output:
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: ae332f4dddd780dce425de0f4e5e38db]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccWIyaEh.s]
   ignore line: [GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
@@ -478,6 +570,8 @@ Parsed CXX implicit link information from above output:
   ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_70ae0.dir/link.txt --verbose=1]
   ignore line: [/usr/bin/c++  -v CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_70ae0 ]
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
   ignore line: [ as -v -EL -mabi=lp64 -o CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccQtsFXm.s]
   ignore line: [GNU assembler version 2.34 (aarch64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.34]
@@ -487,6 +581,9 @@ Parsed CXX implicit link information from above output:
   ignore line: [Linking CXX executable cmTC_44115]
   ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_44115.dir/link.txt --verbose=1]
   ignore line: [/usr/bin/c++  -v CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_44115 ]
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/c++]
@@ -498,8 +595,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [COMPILER_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/aarch64-linux-gnu/8/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib/:/lib/aarch64-linux-gnu/:/lib/../lib/:/usr/lib/aarch64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/aarch64-linux-gnu/8/../../../:/lib/:/usr/lib/]
 <<<<<<< HEAD
+<<<<<<< HEAD
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_70ae0' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
   link line: [ /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cckdKn1J.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_70ae0 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o]
+=======
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_44115' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
+  link line: [ /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cckcv2bN.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_44115 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o]
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_44115' '-shared-libgcc' '-mlittle-endian' '-mabi=lp64']
   link line: [ /usr/lib/gcc/aarch64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/cckcv2bN.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr --hash-style=gnu --as-needed -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-843419 -pie -z now -z relro -o cmTC_44115 /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/Scrt1.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crti.o /usr/lib/gcc/aarch64-linux-gnu/8/crtbeginS.o -L/usr/lib/gcc/aarch64-linux-gnu/8 -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu -L/usr/lib/gcc/aarch64-linux-gnu/8/../../../../lib -L/lib/aarch64-linux-gnu -L/lib/../lib -L/usr/lib/aarch64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/aarch64-linux-gnu/8/../../.. CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/aarch64-linux-gnu/8/crtendS.o /usr/lib/gcc/aarch64-linux-gnu/8/../../../aarch64-linux-gnu/crtn.o]
@@ -509,7 +611,11 @@ Parsed CXX implicit link information from above output:
     arg [/usr/lib/gcc/aarch64-linux-gnu/8/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/aarch64-linux-gnu/8/lto-wrapper] ==> ignore
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg [-plugin-opt=-fresolution=/tmp/cckdKn1J.res] ==> ignore
+=======
+    arg [-plugin-opt=-fresolution=/tmp/cckcv2bN.res] ==> ignore
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
     arg [-plugin-opt=-fresolution=/tmp/cckcv2bN.res] ==> ignore
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -533,7 +639,11 @@ Parsed CXX implicit link information from above output:
     arg [-zrelro] ==> ignore
     arg [-o] ==> ignore
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg [cmTC_70ae0] ==> ignore
+=======
+    arg [cmTC_44115] ==> ignore
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
     arg [cmTC_44115] ==> ignore
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -549,7 +659,11 @@ Parsed CXX implicit link information from above output:
     arg [-L/usr/lib/../lib] ==> dir [/usr/lib/../lib]
     arg [-L/usr/lib/gcc/aarch64-linux-gnu/8/../../..] ==> dir [/usr/lib/gcc/aarch64-linux-gnu/8/../../..]
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg [CMakeFiles/cmTC_70ae0.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+=======
+    arg [CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
     arg [CMakeFiles/cmTC_44115.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -581,6 +695,7 @@ Parsed CXX implicit link information from above output:
 
 Determining if the function pthread_create exists in the pthread passed with the following output:
 <<<<<<< HEAD
+<<<<<<< HEAD
 Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-vEnMAI
 
 Run Build Command(s):/usr/bin/make -f Makefile cmTC_17210/fast && /usr/bin/make  -f CMakeFiles/cmTC_17210.dir/build.make CMakeFiles/cmTC_17210.dir/build
@@ -592,6 +707,8 @@ Linking C executable cmTC_17210
 /usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_17210.dir/CheckFunctionExists.c.o -o cmTC_17210  -lpthread 
 make[1]: Leaving directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-vEnMAI'
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 Change Dir: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-ASVGdz
 
 Run Build Command(s):/usr/bin/make -f Makefile cmTC_8e1de/fast && /usr/bin/make  -f CMakeFiles/cmTC_8e1de.dir/build.make CMakeFiles/cmTC_8e1de.dir/build
@@ -602,6 +719,9 @@ Linking C executable cmTC_8e1de
 /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8e1de.dir/link.txt --verbose=1
 /usr/bin/cc -fPIC -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_8e1de.dir/CheckFunctionExists.c.o -o cmTC_8e1de  -lpthread 
 make[1]: Leaving directory '/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build/CMakeFiles/CMakeScratch/TryCompile-ASVGdz'
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 
 

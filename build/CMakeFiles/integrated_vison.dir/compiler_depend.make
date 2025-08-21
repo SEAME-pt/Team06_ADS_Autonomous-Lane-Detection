@@ -187,6 +187,7 @@ CMakeFiles/integrated_vison.dir/MCP2515/CANMessageProcessor.cpp.o: /home/jetson/
   /usr/include/c++/8/bits/stl_heap.h \
   /usr/include/c++/8/bits/stl_tempbuf.h \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /usr/include/c++/8/bits/uniform_int_dist.h \
   /usr/include/c++/8/iostream \
   /usr/include/c++/8/ostream \
@@ -211,6 +212,9 @@ CMakeFiles/integrated_vison.dir/MCP2515/CANMessageProcessor.cpp.o: /home/jetson/
   /usr/include/c++/8/bits/ostream.tcc \
   /usr/include/c++/8/istream \
   /usr/include/c++/8/bits/istream.tcc
+=======
+  /usr/include/c++/8/bits/uniform_int_dist.h
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   /usr/include/c++/8/bits/uniform_int_dist.h
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -3724,14 +3728,20 @@ CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o: /home/jetson/Desktop
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/mask.hpp
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/mask.cpp \
   /usr/include/stdc-predef.h \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/mask.hpp \
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/main.cpp \
   /usr/include/stdc-predef.h \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.hpp \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/opencv4/opencv2/opencv.hpp \
   /usr/include/opencv4/opencv2/opencv_modules.hpp \
@@ -4146,7 +4156,10 @@ CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o: /home/jetson/Desktop
   /usr/include/opencv4/opencv2/video/tracking.hpp \
   /usr/include/opencv4/opencv2/video/background_segm.hpp \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.hpp \
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/aarch64-linux-gnu/NvInfer.h \
@@ -4169,6 +4182,7 @@ CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o: /home/jetson/Desktop
   /usr/include/aarch64-linux-gnu/c++/8/bits/c++io.h \
   /usr/include/c++/8/bits/fstream.tcc \
   /usr/include/c++/8/thread \
+<<<<<<< HEAD
 <<<<<<< HEAD
   /usr/include/c++/8/atomic
 
@@ -4354,10 +4368,15 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/atomic \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.hpp \
 >>>>>>> parent of a20ace6... update objt+lanes
+=======
+  /usr/include/c++/8/atomic \
+  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.hpp \
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/casadi.hpp \
   /usr/local/include/casadi/core/core.hpp \
   /usr/local/include/casadi/core/sx_elem.hpp \
   /usr/local/include/casadi/core/printable.hpp \
+<<<<<<< HEAD
 <<<<<<< HEAD
   /usr/include/c++/8/iostream \
   /usr/include/c++/8/ostream \
@@ -4442,11 +4461,17 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/iterator \
   /usr/include/c++/8/bits/stream_iterator.h \
 >>>>>>> parent of a20ace6... update objt+lanes
+=======
+  /usr/local/include/casadi/core/casadi_common.hpp \
+  /usr/include/c++/8/iterator \
+  /usr/include/c++/8/bits/stream_iterator.h \
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/casadi_types.hpp \
   /usr/local/include/casadi/core/casadi_logger.hpp \
   /usr/local/include/casadi/core/casadi_export.h \
   /usr/include/c++/8/cstdarg \
   /usr/local/include/casadi/core/exception.hpp \
+<<<<<<< HEAD
 <<<<<<< HEAD
   /usr/include/c++/8/chrono \
   /usr/include/c++/8/ratio \
@@ -4464,6 +4489,8 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/bits/quoted_string.h \
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/casadi_limits.hpp \
   /usr/local/include/casadi/core/matrix_fwd.hpp \
   /usr/local/include/casadi/core/casadi_misc.hpp \
@@ -4471,10 +4498,13 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/calculus.hpp \
   /usr/local/include/casadi/core/serializing_stream.hpp \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /usr/include/c++/8/unordered_map \
   /usr/include/c++/8/bits/hashtable.h \
   /usr/include/c++/8/bits/hashtable_policy.h \
   /usr/include/c++/8/bits/unordered_map.h \
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/polynomial.hpp \
@@ -4571,10 +4601,13 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/sparsity.hpp \
   /usr/local/include/casadi/core/sparsity_interface.hpp \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /usr/include/c++/8/list \
   /usr/include/c++/8/bits/stl_list.h \
   /usr/include/c++/8/bits/allocated_ptr.h \
   /usr/include/c++/8/bits/list.tcc \
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/random \
@@ -4592,9 +4625,12 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/function.hpp \
   /usr/include/c++/8/stack \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /usr/include/c++/8/deque \
   /usr/include/c++/8/bits/stl_deque.h \
   /usr/include/c++/8/bits/deque.tcc \
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/bits/stl_stack.h \
@@ -4625,6 +4661,7 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/optistack.hpp \
   /usr/local/include/casadi/core/serializer.hpp \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /usr/include/c++/8/memory \
   /usr/include/c++/8/bits/stl_raw_storage_iter.h \
   /usr/include/c++/8/ext/concurrence.h \
@@ -4637,10 +4674,13 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/backward/auto_ptr.h \
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/tools.hpp \
   /usr/local/include/casadi/core/resource.hpp \
   /usr/local/include/casadi/core/archiver.hpp \
   /usr/local/include/casadi/core/filesystem.hpp \
+<<<<<<< HEAD
 <<<<<<< HEAD
   /usr/local/include/casadi/core/options.hpp
 
@@ -4650,6 +4690,8 @@ CMakeFiles/integrated_vison.dir/control_systems/pid.cpp.o: /home/jetson/Desktop/
   /usr/include/c++/8/algorithm \
   /usr/include/c++/8/utility \
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/options.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/pid.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/aux/scurve.hpp \
@@ -4758,6 +4800,9 @@ CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop
   /usr/include/opencv4/opencv2/core/cvdef.h \
   /usr/include/opencv4/opencv2/core/version.hpp \
   /usr/include/c++/8/limits \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/aarch64-linux-gnu/c++/8/bits/c++config.h \
   /usr/include/aarch64-linux-gnu/c++/8/bits/os_defines.h \
@@ -4769,7 +4814,10 @@ CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop
   /usr/include/aarch64-linux-gnu/gnu/stubs-lp64.h \
   /usr/include/aarch64-linux-gnu/c++/8/bits/cpu_defines.h \
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/opencv4/opencv2/core/hal/interface.h \
   /usr/include/c++/8/cstddef \
   /usr/lib/gcc/aarch64-linux-gnu/8/include/stddef.h \
@@ -4789,6 +4837,9 @@ CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop
   /usr/lib/gcc/aarch64-linux-gnu/8/include/arm_fp16.h \
   /usr/include/c++/8/array \
   /usr/include/c++/8/utility \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/bits/stl_relops.h \
   /usr/include/c++/8/bits/stl_pair.h \
@@ -4797,10 +4848,13 @@ CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/type_traits \
   /usr/include/c++/8/initializer_list \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /usr/include/c++/8/bits/stl_algobase.h \
   /usr/include/c++/8/bits/functexcept.h \
   /usr/include/c++/8/bits/exception_defines.h \
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/stdexcept \
   /usr/include/c++/8/exception \
   /usr/include/c++/8/bits/exception.h \
@@ -4817,6 +4871,9 @@ CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/bits/char_traits.h \
   /usr/include/c++/8/bits/stl_algobase.h \
   /usr/include/c++/8/bits/functexcept.h \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/bits/cpp_type_traits.h \
   /usr/include/c++/8/ext/type_traits.h \
@@ -4828,6 +4885,7 @@ CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o: /home/jetson/Desktop
   /usr/include/c++/8/bits/ptr_traits.h \
   /usr/include/c++/8/debug/debug.h \
   /usr/include/c++/8/bits/predefined_ops.h \
+<<<<<<< HEAD
 <<<<<<< HEAD
   /usr/include/c++/8/bits/stl_algo.h \
   /usr/include/c++/8/cstdlib \
@@ -5012,6 +5070,8 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
   /usr/include/c++/8/cctype \
   /usr/include/ctype.h \
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/bits/postypes.h \
   /usr/include/c++/8/cwchar \
   /usr/include/wchar.h \
@@ -5037,6 +5097,9 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
   /usr/include/c++/8/iosfwd \
   /usr/include/c++/8/cctype \
   /usr/include/ctype.h \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/aarch64-linux-gnu/bits/endian.h \
   /usr/include/aarch64-linux-gnu/bits/endianness.h \
@@ -5309,6 +5372,7 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
   /usr/include/c++/8/bits/quoted_string.h \
   /usr/include/c++/8/math.h \
   /usr/include/opencv4/opencv2/flann/autotuned_index.h \
+<<<<<<< HEAD
   /usr/include/opencv4/opencv2/flann/ground_truth.h \
   /usr/include/opencv4/opencv2/flann/index_testing.h \
   /usr/include/opencv4/opencv2/flann/timer.h \
@@ -5487,6 +5551,79 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
   /usr/local/include/casadi/core/runtime/casadi_oracle_callback.hpp \
   /usr/local/include/casadi/core/runtime/casadi_ocp_block.hpp \
 =======
+=======
+  /usr/include/opencv4/opencv2/flann/ground_truth.h \
+  /usr/include/opencv4/opencv2/flann/index_testing.h \
+  /usr/include/opencv4/opencv2/flann/timer.h \
+  /usr/include/opencv4/opencv2/flann/sampling.h \
+  /usr/include/opencv4/opencv2/highgui.hpp \
+  /usr/include/opencv4/opencv2/imgcodecs.hpp \
+  /usr/include/opencv4/opencv2/videoio.hpp \
+  /usr/include/opencv4/opencv2/imgproc.hpp \
+  /usr/include/opencv4/opencv2/imgproc/segmentation.hpp \
+  /usr/include/opencv4/opencv2/ml.hpp \
+  /usr/include/opencv4/opencv2/ml/ml.inl.hpp \
+  /usr/include/opencv4/opencv2/objdetect.hpp \
+  /usr/include/opencv4/opencv2/objdetect/aruco_detector.hpp \
+  /usr/include/opencv4/opencv2/objdetect/aruco_dictionary.hpp \
+  /usr/include/opencv4/opencv2/objdetect/aruco_board.hpp \
+  /usr/include/opencv4/opencv2/objdetect/graphical_code_detector.hpp \
+  /usr/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp \
+  /usr/include/opencv4/opencv2/objdetect/face.hpp \
+  /usr/include/opencv4/opencv2/objdetect/charuco_detector.hpp \
+  /usr/include/opencv4/opencv2/objdetect/barcode.hpp \
+  /usr/include/opencv4/opencv2/photo.hpp \
+  /usr/include/opencv4/opencv2/stitching.hpp \
+  /usr/include/opencv4/opencv2/stitching/warpers.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/warpers.hpp \
+  /usr/include/opencv4/opencv2/core/cuda.hpp \
+  /usr/include/opencv4/opencv2/core/cuda_types.hpp \
+  /usr/include/opencv4/opencv2/core/cuda.inl.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/warpers.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/matchers.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/matchers.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/util.hpp \
+  /usr/include/c++/8/list \
+  /usr/include/c++/8/bits/stl_list.h \
+  /usr/include/c++/8/bits/list.tcc \
+  /usr/include/opencv4/opencv2/stitching/detail/util_inl.hpp \
+  /usr/include/c++/8/queue \
+  /usr/include/c++/8/deque \
+  /usr/include/c++/8/bits/stl_deque.h \
+  /usr/include/c++/8/bits/deque.tcc \
+  /usr/include/c++/8/bits/stl_queue.h \
+  /usr/include/opencv4/opencv2/stitching/detail/camera.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/exposure_compensate.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/seam_finders.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/blenders.hpp \
+  /usr/include/opencv4/opencv2/stitching/detail/camera.hpp \
+  /usr/include/opencv4/opencv2/video.hpp \
+  /usr/include/opencv4/opencv2/video/tracking.hpp \
+  /usr/include/opencv4/opencv2/video/background_segm.hpp \
+  /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.hpp \
+  /usr/include/aarch64-linux-gnu/NvInfer.h \
+  /usr/include/aarch64-linux-gnu/NvInferLegacyDims.h \
+  /usr/include/aarch64-linux-gnu/NvInferRuntimeCommon.h \
+  /usr/include/aarch64-linux-gnu/NvInferVersion.h \
+  /usr/include/aarch64-linux-gnu/NvInferRuntime.h \
+  /usr/include/aarch64-linux-gnu/NvInferImpl.h \
+  /usr/local/cuda/include/cuda_runtime_api.h \
+  /usr/local/cuda/include/crt/host_defines.h \
+  /usr/local/cuda/include/builtin_types.h \
+  /usr/local/cuda/include/device_types.h \
+  /usr/local/cuda/include/driver_types.h \
+  /usr/local/cuda/include/vector_types.h \
+  /usr/local/cuda/include/surface_types.h \
+  /usr/local/cuda/include/texture_types.h \
+  /usr/local/cuda/include/cuda_device_runtime_api.h \
+  /usr/include/c++/8/fstream \
+  /usr/include/aarch64-linux-gnu/c++/8/bits/basic_file.h \
+  /usr/include/aarch64-linux-gnu/c++/8/bits/c++io.h \
+  /usr/include/c++/8/bits/fstream.tcc \
+  /usr/include/c++/8/thread \
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/atomic
 
 CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.cpp \
@@ -5860,6 +5997,9 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/runtime/casadi_jac.hpp \
   /usr/local/include/casadi/core/runtime/casadi_oracle_callback.hpp \
   /usr/local/include/casadi/core/runtime/casadi_ocp_block.hpp \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/runtime/casadi_scaled_copy.hpp \
   /usr/local/include/casadi/core/generic_matrix.hpp \
@@ -5873,11 +6013,17 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/sparsity.hpp \
   /usr/local/include/casadi/core/sparsity_interface.hpp \
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/list \
   /usr/include/c++/8/bits/stl_list.h \
   /usr/include/c++/8/bits/allocated_ptr.h \
   /usr/include/c++/8/bits/list.tcc \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/c++/8/random \
   /usr/include/c++/8/bits/random.h \
@@ -5890,6 +6036,7 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
   /usr/local/include/casadi/core/im.hpp \
   /usr/local/include/casadi/core/im_fwd.hpp \
   /usr/local/include/casadi/core/mx.hpp \
+<<<<<<< HEAD
 <<<<<<< HEAD
   /usr/local/include/casadi/core/code_generator.hpp \
   /usr/local/include/casadi/core/function.hpp \
@@ -6026,6 +6173,8 @@ CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o: /home/jetson/Desktop
 
 CMakeFiles/integrated_vison.dir/main.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp \
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /usr/local/include/casadi/core/code_generator.hpp \
   /usr/local/include/casadi/core/function.hpp \
   /usr/include/c++/8/stack \
@@ -6196,6 +6345,9 @@ CMakeFiles/integrated_vison.dir/control_systems/pid.cpp.o: /home/jetson/Desktop/
   /usr/include/c++/8/tr1/riemann_zeta.tcc
 
 CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp \
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
   /usr/include/stdc-predef.h \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.hpp \
@@ -6888,6 +7040,7 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.hpp \
 <<<<<<< HEAD
+<<<<<<< HEAD
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/fps.hpp \
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/frame.hpp \
@@ -6916,10 +7069,15 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp:
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
   /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.hpp
 
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp:
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/aux/MovingAverage.hpp:
@@ -6927,10 +7085,13 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/aux/scurve.hpp:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.hpp:
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp:
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/local/include/casadi/core/options.hpp:
@@ -7164,6 +7325,7 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/opencv4/opencv2/dnn/dict.hpp:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /usr/local/include/casadi/core/runtime/casadi_masked_norm_inf.hpp:
 
 /usr/include/c++/8/bits/parse_numbers.h:
@@ -7188,6 +7350,8 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/c++/8/bits/istream.tcc:
 
 /usr/include/aarch64-linux-gnu/c++/8/bits/error_constants.h:
@@ -7201,10 +7365,13 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/aarch64-linux-gnu/bits/mathcalls-narrow.h:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /usr/include/c++/8/bits/shared_ptr_atomic.h:
 
 /usr/include/c++/8/bits/streambuf_iterator.h:
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/wctype.h:
@@ -7232,7 +7399,10 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/c++/8/set:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 /usr/local/include/casadi/core/runtime/casadi_masked_norm_inf.hpp:
 
 /usr/include/c++/8/bits/parse_numbers.h:
@@ -7259,6 +7429,9 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 
 /usr/include/c++/8/bits/stl_algo.h:
 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.hpp:
 
@@ -7425,8 +7598,11 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/c++/8/ext/numeric_traits.h:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /usr/include/c++/8/bits/fs_fwd.h:
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/aarch64-linux-gnu/c++/8/bits/atomic_word.h:
@@ -7542,8 +7718,11 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/aarch64-linux-gnu/bits/struct_rwlock.h:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /usr/include/c++/8/condition_variable:
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/aarch64-linux-gnu/NvInferLegacyDims.h:
@@ -7663,15 +7842,21 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/c++/8/bits/stl_iterator_base_funcs.h:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /usr/include/c++/8/bits/stl_raw_storage_iter.h:
 
 /usr/include/c++/8/bits/shared_ptr.h:
 
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/c++/8/bits/shared_ptr.h:
 
 /usr/include/c++/8/bits/stl_raw_storage_iter.h:
 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/aarch64-linux-gnu/bits/setjmp.h:
 
@@ -7848,11 +8033,17 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/c++/8/csignal:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.cpp:
 
 /usr/include/c++/8/bits/stl_pair.h:
 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/c++/8/bits/stl_numeric.h:
 
@@ -7971,8 +8162,11 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/c++/8/tr1/modified_bessel_func.tcc:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/inferObject.hpp:
 
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/c++/8/tr1/poly_hermite.tcc:
@@ -7992,6 +8186,11 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/local/cuda/include/crt/host_config.h:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.hpp:
+
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.hpp:
 
@@ -8341,11 +8540,17 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 /usr/include/c++/8/bits/deque.tcc:
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/c++/8/condition_variable:
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/main.cpp:
 
+<<<<<<< HEAD
+>>>>>>> parent of a20ace6... update objt+lanes
+=======
 >>>>>>> parent of a20ace6... update objt+lanes
 /usr/include/c++/8/bits/stl_map.h:
 
@@ -8395,9 +8600,12 @@ CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o: /home/jetso
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.hpp:
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /usr/include/c++/8/bits/stl_pair.h:
 
 /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.cpp:
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes

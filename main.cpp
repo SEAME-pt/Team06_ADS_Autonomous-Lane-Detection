@@ -81,6 +81,7 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
                 double v_actual = current_speed_ms.load();
                 double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
                 backMotors.setSpeed(static_cast<int>(motor_pwm));
+                backMotors.setSpeed(static_cast<int>(motor_pwm));
                 pid_last = pid_now;
 >>>>>>> parent of a20ace6... update objt+lanes
             }
@@ -110,6 +111,11 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
 <<<<<<< HEAD
 =======
 // Objetos (adaptativo, skip agressivo)
+static void objectDetectionThread(
+    TensorRTYOLO& yolo,
+    CSICamera& camera,
+    SyncResults& sync
+) {
 static void objectDetectionThread(
     TensorRTYOLO& yolo,
     CSICamera& camera,

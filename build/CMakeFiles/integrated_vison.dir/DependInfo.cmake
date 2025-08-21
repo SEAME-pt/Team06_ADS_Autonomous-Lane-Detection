@@ -22,6 +22,10 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/infer.cpp" "CMakeFiles/integrated_vison.dir/control_systems/infer.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/control_systems/infer.cpp.o.d"
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.cpp" "CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o.d"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/main.cpp" "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o.d"
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/main.cpp" "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/control_systems/main.cpp.o.d"
 >>>>>>> parent of a20ace6... update objt+lanes
@@ -30,7 +34,10 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/pid.cpp" "CMakeFiles/integrated_vison.dir/control_systems/pid.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/control_systems/pid.cpp.o.d"
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp" "CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o.d"
 <<<<<<< HEAD
+<<<<<<< HEAD
   "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp" "CMakeFiles/integrated_vison.dir/main.cpp.o" "gcc" "CMakeFiles/integrated_vison.dir/main.cpp.o.d"
+=======
+>>>>>>> parent of a20ace6... update objt+lanes
 =======
 >>>>>>> parent of a20ace6... update objt+lanes
   )
