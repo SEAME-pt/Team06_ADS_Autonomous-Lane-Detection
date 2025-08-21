@@ -55,7 +55,7 @@ std::unique_ptr<LaneControl> initLaneControl();
 bool initMotors(BackMotors& backMotors);
 bool initServo(FServo& servo);
 std::unique_ptr<CanBusManager> initCanBus(std::shared_ptr<CANMessageProcessor>& messageProcessor);
-ZmqPublisher* initZmq(zmq::context_t& context);
+ZmqPublisher* initZmq(zmq::context_t& context, const std::string& ZMQ_HOST, int ZMQ_PORT);
 
 void drawHUD(cv::Mat& frame,
              double smoothedFPS,
