@@ -89,16 +89,18 @@ std::unique_ptr<CanBusManager> initCanBus(std::shared_ptr<CANMessageProcessor>& 
 }
 
 // ---- ZMQ ----
-// ---- ZMQ ----
-ZmqPublisher* initZmq(zmq::context_t& context, const std::string& ZMQ_HOST = "127.0.0.1", int ZMQ_PORT = 5558) {
+ZmqPublisher* initZmq(zmq::context_t& context) {
+    const std::string ZMQ_HOST = "127.0.0.1";
+    const int ZMQ_PORT = 5558;
+
     try {
         auto* zmq_publisher = new ZmqPublisher(context, ZMQ_HOST, ZMQ_PORT);
         if (!zmq_publisher->isConnected()) {
-            std::cerr << "AVISO: Falha ao inicializar o ZMQ Publisher na porta " << ZMQ_PORT << "." << std::endl;
+            std::cerr << "AVISO: Falha ao inicializar o ZMQ Publisher." << std::endl;
         }
         return zmq_publisher;
     } catch (const std::exception& e) {
-        std::cerr << "ERRO FATAL ao iniciar ZMQ Publisher na porta " << ZMQ_PORT << ": " << e.what() << std::endl;
+        std::cerr << "ERRO FATAL ao iniciar ZMQ Publisher: " << e.what() << std::endl;
         return nullptr;
     }
 }
