@@ -70,7 +70,7 @@ include_directories(
 add_executable(integrated_vison
     control_systems/ZmqPublisher.cpp
     control_systems/utils_control.cpp
-    main.cpp
+    control_systems/main.cpp
     control_systems/lane.cpp
     control_systems/mask.cpp
     control_systems/nmpc.cpp

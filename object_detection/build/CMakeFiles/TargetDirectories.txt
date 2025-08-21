@@ -1,0 +1,3 @@
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/build/CMakeFiles/objetct_detection.dir
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/build/CMakeFiles/edit_cache.dir
+/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/build/CMakeFiles/rebuild_cache.dir

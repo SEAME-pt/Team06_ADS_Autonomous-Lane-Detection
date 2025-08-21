@@ -9,23 +9,11 @@ LaneControl::LaneControl(const std::string& model_path, int width, int height, i
     : trt(model_path), cam(width, height, fps) {}
 
 std::unique_ptr<LaneControl> initLaneControl() {
-    try {
-        auto laneControl = std::make_unique<LaneControl>("../model.engine", 1280, 720, 30);
-        laneControl->cam.start();
-        std::cout << "Lógica de controlo de faixas inicializada com sucesso." << std::endl;
-        return laneControl;
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Erro ao inicializar o controlo de faixas: " << e.what() << std::endl;
-        std::cerr << "Verifique se o ficheiro do modelo existe em '../engines/model.engine'." << std::endl;
-        // Aqui podes adicionar mais lógica, como sair do programa ou retornar nullptr
-        return nullptr;
-    } catch (const std::exception& e) {
-        // Captura exceções genéricas para maior robustez
-        std::cerr << "Erro inesperado ao inicializar o controlo de faixas: " << e.what() << std::endl;
-        return nullptr;
-    }
+    auto laneControl = std::make_unique<LaneControl>("../engines/model.engine", 1280, 720, 30);
+    laneControl->cam.start();
+    std::cout << "Lógica de controlo de faixas inicializada com sucesso." << std::endl;
+    return laneControl;
 }
-
 
 // ---- Motores ----
 bool initMotors(BackMotors& backMotors) {

@@ -109,7 +109,7 @@ static void laneDetectionThread(
             if (pid_dt >= 0.02) {
                 double v_actual = current_speed_ms.load();
                 double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-                //backMotors.setSpeed(static_cast<int>(motor_pwm));
+                backMotors.setSpeed(static_cast<int>(motor_pwm));
                 pid_last = pid_now;
             }
 
@@ -130,7 +130,11 @@ static void laneDetectionThread(
 }
 
 // Objetos (adaptativo, skip agressivo)
-static void objectDetectionThread(TensorRTYOLO& yolo, CSICamera& camera, SyncResults& sync) {
+static void objectDetectionThread(
+    TensorRTYOLO& yolo,
+    CSICamera& camera,
+    SyncResults& sync
+) {
     try {
         FrameSkipper skipper(FrameSkipper::ADAPTIVE, 8, 15.0);
 
@@ -176,10 +180,9 @@ int main() {
         laneControl = initLaneControl();         // internamente abre a engine e start() na camera
         auto& lane_trt = laneControl->trt;
         auto& camera  = laneControl->cam;
-        backMotors.setSpeed(0);
 
         // 2) Inicialização objetos (engine YOLO)
-        const std::string obj_engine = "best.engine";
+        const std::string obj_engine = "../engines/best.engine";
         TensorRTYOLO yolo(obj_engine, 640);
 
         // 3) Motores e servo
