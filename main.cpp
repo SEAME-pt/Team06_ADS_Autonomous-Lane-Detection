@@ -4,6 +4,7 @@
 #include "object_detection/inferObject.hpp"      // TensorRTYOLO (objetos)
 #include <filesystem>
 
+
 // Variáveis globais atómicas
 std::atomic<bool> keep_running{true};
 std::atomic<double> current_speed_ms{0.0};
@@ -33,7 +34,7 @@ bool results_ready = false;
 
 // Signal handler
 void signalHandler(int signum) {
-    std::cout << "\nSinal de interrupção (" << signum << ") recebido." << std::endl;
+    std::cout << "/nSinal de interrupção (" << signum << ") recebido." << std::endl;
     keep_running.store(false);
 }
 
@@ -60,15 +61,15 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
             double time = std::chrono::duration<double>(end - start).count();
             frame_skipper.recordProcessingTime(time);
             last_detections = detections;
-            if (!detections.empty()) {
-                std::cout << "Objetos detetados (" << detections.size() << "): ";
-                for (const auto& det : detections) {
-                    std::cout << det.class_name << " (" << det.confidence << ") ";
-                }
-                std::cout << std::endl;
-            }
         } else {
             detections = last_detections;
+        }
+        if (!detections.empty()) {
+            std::cout << "Objetos detetados (" << detections.size() << "): ";
+            for (const auto& det : detections) {
+                std::cout << det.class_name << " (" << det.confidence << ") ";
+            }
+            std::cout << std::endl;
         }
 
         {
@@ -120,7 +121,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
         if (pid_dt >= 0.02) {
             double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-            backMotors.setSpeed(static_cast<int>(motor_pwm));
+            //backMotors.setSpeed(static_cast<int>(motor_pwm));
             pid_last_time = pid_now;
         }
 
@@ -156,36 +157,27 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
 cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_res, const LaneResults& lane_res,
                        double smooth_fps, int processed_frames, int skipped_frames) {
     if (original_frame.empty()) {
-        std::cerr << "Frame original vazio." << std::endl;
-        return cv::Mat();
+        std::cerr << "Frame original vazio em combineAndDraw." << std::endl;
+        return cv::Mat();  // Retorna empty explicitamente
     }
 
     cv::Mat combined = original_frame.clone();
 
-    // Desenhar objetos no combined
+    // Desenhar objetos
     for (const auto& det : obj_res.detections) {
-        cv::Scalar color = cv::Scalar(255, 0, 0);  // Ou usa det.getColor se disponível
+        cv::Scalar color = cv::Scalar(255, 0, 0);
         cv::rectangle(combined, det.bbox, color, 2);
         std::string label = det.class_name + ": " + std::to_string(det.confidence).substr(0, 4);
         cv::putText(combined, label, cv::Point(det.bbox.x, det.bbox.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
     }
 
-    // Mesclar com lanes usando overlay (novo: preserva desenhos de objetos)
+    // Desenhar lanes (verifica se processed_frame não é empty)
     if (!lane_res.processed_frame.empty()) {
-        cv::Mat lanes = lane_res.processed_frame;
-        if (lanes.size() != combined.size() || lanes.type() != combined.type()) {
-            cv::resize(lanes, lanes, combined.size());
-            if (lanes.channels() != combined.channels()) {
-                cv::cvtColor(lanes, lanes, cv::COLOR_GRAY2BGR);  // Ajusta se lanes for grayscale
-            }
-        }
-        // Overlay: 70% combined (com objetos) + 30% lanes (ajusta pesos)
-        cv::addWeighted(combined, 0.5, lanes, 0.5, 0, combined);
+        combined = lane_res.processed_frame.clone();  // Novo: Check para evitar cópia de empty
     } else {
-        std::cout << "Frame de lanes vazio – mostrando apenas objetos." << std::endl;
+        std::cout << "Processed frame de lanes vazio – usando original." << std::endl;
     }
 
-    // Desenhar HUD e stats (como antes)
     drawHUD(combined, smooth_fps, 0.0, current_speed_ms.load(), 0.0, lane_res.offset, lane_res.psi, 0, 0.0);
 
     std::string info_text = "FPS: " + std::to_string(smooth_fps).substr(0, 4) +
@@ -195,6 +187,7 @@ cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_r
 
     return combined;
 }
+
 
 // Cleanup
 void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors, 
@@ -221,12 +214,14 @@ void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors,
 int main() {
     std::signal(SIGINT, signalHandler);
 
+
+    // Declarações fora do try
     CSICamera camera(640, 480, 30);
     std::unique_ptr<TensorRTYOLO> obj_detector;
     std::unique_ptr<TensorRTInference> lane_trt;
     FPSCalculator fps_calculator(30);
-    FrameSkipper obj_skipper(FrameSkipper::FIXED, 8, 15.0);
-    FrameSkipper lane_skipper(FrameSkipper::ADAPTIVE, 0, 15.0);
+    FrameSkipper obj_skipper(FrameSkipper::FIXED, 10, 15.0);
+    FrameSkipper lane_skipper(FrameSkipper::FIXED, 2, 15.0);
     NMPCController mpc;
     PID pid;
     BackMotors backMotors;
@@ -238,6 +233,7 @@ int main() {
     std::unique_ptr<CanBusManager> canBusManager;
     std::thread obj_thread;
     std::thread lane_thread;
+
 
     try {
         std::cout << "Inicializando sistema integrado..." << std::endl;
@@ -262,31 +258,29 @@ int main() {
         if (!initMotors(backMotors)) throw std::runtime_error("Falha nos motores");
         if (!initServo(servo)) throw std::runtime_error("Falha no servo");
 
-        // CAN Bus (com handler default das alterações acima)
+         //CAN Bus (com handler default das alterações acima)
         canBusManager = initCanBus(messageProcessor);
         if (!canBusManager) throw std::runtime_error("Falha no CAN Bus");
 
         camera.start();
 
-        // Lançar threads
+        // Lançar threads (usa obj_detector.get() para referência)
         obj_thread = std::thread(objectInferenceThread, std::ref(*obj_detector), std::ref(obj_skipper), std::ref(fps_calculator));
         lane_thread = std::thread(laneInferenceThread, std::ref(*lane_trt), std::ref(mpc), std::ref(pid), std::ref(servo),
-                                  std::ref(backMotors), std::ref(steering_profile), std::ref(filter), setpoint_velocity,
-                                  std::ref(lane_skipper));
+                              std::ref(backMotors), std::ref(steering_profile), std::ref(filter), setpoint_velocity,
+                              std::ref(lane_skipper));
 
         std::cout << "Threads lançadas. Pressione 'q' para sair." << std::endl;
 
-        // Loop principal
+        //Loop principal
         int frame_count = 0;
         int processed_frames = 0;
         int skipped_frames = 0;
         while (keep_running.load()) {
             cv::Mat frame = camera.read();
             if (frame.empty()) continue;
-
             frame_count++;
-
-            // Enviar para threads
+             //Enviar para threads
             {
                 std::unique_lock<std::mutex> lock_obj(mtx_objects);
                 frame_queue_objects.push(frame.clone());
@@ -298,31 +292,33 @@ int main() {
                 cv_lanes.notify_one();
             }
 
-            // Esperar resultados
+
+             //Esperar resultados
             {
                 std::unique_lock<std::mutex> lock(mtx_results);
                 cv_results.wait(lock, [&] { return results_ready || !keep_running.load(); });
                 if (!keep_running.load()) break;
                 results_ready = false;
             }
-            // Novo: Pequeno delay para dar tempo às threads no início (evita race no primeiro frame)
-            if (frame_count < 5) {  // Apenas nos primeiros frames
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
+
 
             // Combinar e exibir
             double smooth_fps = fps_calculator.getSmoothFPS();
             cv::Mat displayed = combineAndDraw(frame, latest_objects, latest_lanes, smooth_fps, processed_frames, skipped_frames);
-            
             if (!displayed.empty()) {  // Novo: Verifica se a imagem é válida
                 cv::imshow("Integrated Detection", displayed);
-            } else std::cout << "Frame vazio ignorado (aguardando processamento)." << std::endl;
+            } else
+                std::cout << "Frame vazio ignorado (aguardando processamento)." << std::endl;
 
+            cv::imshow("Integrated Detection", displayed);
             char key = cv::waitKey(1) & 0xFF;
             if (key == 'q') keep_running.store(false);
 
-            processed_frames++;  // Simplificado
+
+            processed_frames++; //  Simplificado
         }
+
+
     } catch (const std::runtime_error& e) {
         std::cerr << "Erro de runtime (falha inicial): " << e.what() << std::endl;
         keep_running.store(false);
@@ -331,8 +327,10 @@ int main() {
         keep_running.store(false);
     }
 
+
     // Cleanup
     cleanup(camera, servo, backMotors, canBusManager, obj_thread, lane_thread);
+
 
     return 0;
 }
