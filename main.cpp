@@ -41,7 +41,7 @@ void signalHandler(int signum) {
 }
 
 // Thread de objetos
-void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, FPSCalculator& fps_calculator) {
+void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, FPSCalculator& fps_calculator, ZmqPublisher* lane_pub) {
     std::vector<Detection> last_detections;
     while (keep_running.load()) {
         cv::Mat frame;
@@ -71,6 +71,15 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
                 std::cout << det.class_name << " (" << det.confidence << ") ";
             }
             std::cout << std::endl;
+            
+            // Publicar nomes dos objetos via ZMQ na porta 5558
+            if (lane_pub && lane_pub->isConnected()) {
+                for (const auto& det : detections) {
+                    std::stringstream ss;
+                    ss << "object:" << det.class_name;
+                    lane_pub->publishMessage(ss.str());
+                }
+            }
         }
         {
             std::unique_lock<std::mutex> lock(mtx_results);
@@ -84,7 +93,7 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
 // Thread de lanes
 void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, FServo& servo, BackMotors& backMotors,
                          SCurveProfile& steering_profile, MovingAverage& filter, double setpoint_velocity,
-                         FrameSkipper& frame_skipper) {
+                         FrameSkipper& frame_skipper, ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub) {
     auto lastTime = std::chrono::steady_clock::now();
     double last_delta = 0.0;
     auto pid_last_time = std::chrono::steady_clock::now();
@@ -120,8 +129,9 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
         auto pid_now = std::chrono::steady_clock::now();
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
+        double motor_pwm = 0.0;
         if (pid_dt >= 0.02) { // 50 ms → 20 Hz
-            double motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
+            motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
             backMotors.setSpeed(static_cast<int>(motor_pwm));
             pid_last_time = pid_now;
             std::cout << "Motor Signal: " << motor_pwm << " PWM" << std::endl;
@@ -141,7 +151,18 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         steering_angle = std::max(-40, std::min(40, steering_angle));
         servo.set_steering(steering_angle);
         last_delta = delta;
-
+        // Publicar via ZMQ
+        int lane = (offset < -0.01) ? 2 : ((offset > 0.02) ? 1 : 0);
+        if (lane_pub && lane_pub->isConnected()) {
+            std::stringstream ss;
+            ss << "lane:" << lane;
+            lane_pub->publishMessage(ss.str());
+        }
+        if (ctrl_pub && ctrl_pub->isConnected()) {
+            std::stringstream ss2;
+            ss2 << "throttle:" << motor_pwm << ";steering:" << steering_angle << ";";
+            ctrl_pub->publishMessage(ss2.str());
+        }
         {
             std::unique_lock<std::mutex> lock(mtx_results);
             latest_lanes.processed_frame = result;
@@ -150,8 +171,8 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
             latest_lanes.medianPoints = medianPoints;
             latest_lanes.laneData = laneData;
             latest_lanes.intersect = intersect;
-            latest_lanes.delta_rad = delta; // NOVO
-            latest_lanes.steering_angle_deg = steering_angle; // NOVO
+            latest_lanes.delta_rad = delta;
+            latest_lanes.steering_angle_deg = steering_angle;
             results_ready = true;
             cv_results.notify_one();
         }
@@ -195,8 +216,8 @@ cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_r
 
 
 // Cleanup
-void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors, 
-             std::unique_ptr<CanBusManager>& canBusManager, std::thread& obj_thread, std::thread& lane_thread) {
+void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors, std::unique_ptr<CanBusManager>& canBusManager, 
+            std::thread& obj_thread, std::thread& lane_thread, ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub, ZmqPublisher* obj_pub) {
     std::cout << "Iniciando cleanup..." << std::endl;
     keep_running.store(false);
 
@@ -212,6 +233,10 @@ void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors,
     backMotors.setSpeed(0);
     if (canBusManager) canBusManager->stop();
     cv::destroyAllWindows();
+
+    if (lane_pub) delete lane_pub;
+    if (ctrl_pub) delete ctrl_pub;
+    if (obj_pub) delete obj_pub;
 
     std::cout << "Cleanup completo." << std::endl;
 }
@@ -236,6 +261,10 @@ int main() {
     std::unique_ptr<CanBusManager> canBusManager;
     std::thread obj_thread;
     std::thread lane_thread;
+    zmq::context_t zmq_context(1);
+    ZmqPublisher* lane_pub = nullptr;  // Para porta 5558 (object)
+    ZmqPublisher* ctrl_pub = nullptr;  // Para porta 5560 (throttle e steering)
+    ZmqPublisher* obj_pub = nullptr;  // Para porta 5559 (object)
 
     try {
         std::cout << "Inicializando sistema integrado..." << std::endl;
@@ -262,13 +291,20 @@ int main() {
          //CAN Bus (com handler default das alterações acima)
         canBusManager = initCanBus(messageProcessor);
         if (!canBusManager) throw std::runtime_error("Falha no CAN Bus");
+        // Inicializar ZMQ publishers
+        lane_pub = new ZmqPublisher(zmq_context, "127.0.0.1", 5558, "tcp");
+        if (!lane_pub->isConnected()) throw std::runtime_error("Falha ao inicializar ZMQ na porta 5558");
+        ctrl_pub = new ZmqPublisher(zmq_context, "127.0.0.1", 5560, "tcp");
+        if (!ctrl_pub->isConnected()) throw std::runtime_error("Falha ao inicializar ZMQ na porta 5560");
+        obj_pub = new ZmqPublisher(zmq_context, "127.0.0.1", 5559, "tcp");
+        if (!ctrl_pub->isConnected()) throw std::runtime_error("Falha ao inicializar ZMQ na porta 5559");
 
         camera.start();
         // Lançar threads (usa obj_detector.get() para referência)
-        obj_thread = std::thread(objectInferenceThread, std::ref(*obj_detector), std::ref(obj_skipper), std::ref(fps_calculator));
+        obj_thread = std::thread(objectInferenceThread, std::ref(*obj_detector), std::ref(obj_skipper), std::ref(fps_calculator), obj_pub);
         lane_thread = std::thread(laneInferenceThread, std::ref(*lane_trt), std::ref(mpc), std::ref(pid), std::ref(servo),
                               std::ref(backMotors), std::ref(steering_profile), std::ref(filter), setpoint_velocity,
-                              std::ref(lane_skipper));
+                              std::ref(lane_skipper), lane_pub, ctrl_pub);
         std::cout << "Threads lançadas. Pressione 'q' para sair." << std::endl;
         //Loop principal
         int frame_count = 0;
@@ -313,7 +349,7 @@ int main() {
         std::cerr << "Erro geral: " << e.what() << std::endl;
         keep_running.store(false);
     }
-    cleanup(camera, servo, backMotors, canBusManager, obj_thread, lane_thread);
+    cleanup(camera, servo, backMotors, canBusManager, obj_thread, lane_thread, lane_pub, ctrl_pub, obj_pub);
 
     return 0;
 }
