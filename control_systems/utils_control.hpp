@@ -64,7 +64,5 @@ void drawHUD(cv::Mat& frame,
              double motor_pwm,
              double offset,
              double psi,
-             int steering_angle,
-             double smoothed_steering_angle);
-
+             int steering_angle);
 #endif

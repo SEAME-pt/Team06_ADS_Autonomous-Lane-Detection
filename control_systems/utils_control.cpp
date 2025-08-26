@@ -113,8 +113,7 @@ void drawHUD(cv::Mat& frame,
              double motor_pwm,
              double offset,
              double psi,
-             int steering_angle,
-             double smoothed_steering_angle) 
+             int steering_angle) 
 {
     int y = 20; 
     int step = 20;
@@ -133,5 +132,4 @@ void drawHUD(cv::Mat& frame,
     put("Psi(rad): " + std::to_string(psi) + 
         " (deg): " + std::to_string(psi * 180.0 / M_PI), cv::Scalar(0, 255, 0));
     put("Steering: " + std::to_string(steering_angle) + " deg", cv::Scalar(200, 0, 0));
-    put("Smoothed Steering: " + std::to_string(smoothed_steering_angle) + " deg", cv::Scalar(0, 200, 200));
 }

@@ -132,7 +132,7 @@ int main() {
         }
 
         drawHUD(result, smoothedFPS, delta, v_actual,motor_pwm, offset, 
-            psi, steering_angle, steering_angle);
+            psi, steering_angle);
 
         frameCount++;
         cv::imshow("Lane Detection", result);
