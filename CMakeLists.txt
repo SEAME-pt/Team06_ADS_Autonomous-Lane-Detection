@@ -69,6 +69,7 @@ include_directories(
 # Adicionar executável
 add_executable(integrated_vison
     control_systems/ZmqPublisher.cpp
+    control_systems/ZmqSubscriber.cpp
     control_systems/utils_control.cpp
     main.cpp
     control_systems/lane.cpp
@@ -110,3 +111,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Ofast")
 # Mensagens de depuração
 message(STATUS "Final CASADI_INCLUDE_DIRS: ${CASADI_INCLUDE_DIRS}")
 message(STATUS "Final CASADI_LIBRARIES: ${CASADI_LIBRARIES}")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(-fsanitize=address -fsanitize=thread -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address -fsanitize=thread)
+endif()
+

@@ -8,6 +8,7 @@
 #include "aux/MovingAverage.hpp"
 #include "aux/SpeedFilter.hpp"
 #include "ZmqPublisher.hpp"
+#include "ZmqSubscriber.hpp"
 #include "cam.hpp"
 #include "infer.hpp"
 

@@ -19,6 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/integrated_vison.dir/control_systems/FServo/FServo.cpp.o.d"
   "CMakeFiles/integrated_vison.dir/control_systems/ZmqPublisher.cpp.o"
   "CMakeFiles/integrated_vison.dir/control_systems/ZmqPublisher.cpp.o.d"
+  "CMakeFiles/integrated_vison.dir/control_systems/ZmqSubscriber.cpp.o"
+  "CMakeFiles/integrated_vison.dir/control_systems/ZmqSubscriber.cpp.o.d"
   "CMakeFiles/integrated_vison.dir/control_systems/cam.cpp.o"
   "CMakeFiles/integrated_vison.dir/control_systems/cam.cpp.o.d"
   "CMakeFiles/integrated_vison.dir/control_systems/infer.cpp.o"

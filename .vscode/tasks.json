@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake Build Debug",
+            "type": "shell",
+            "command": "/usr/bin/cmake --build ${workspaceFolder}/build --config Debug --target integrated_vison -j 2 --",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Build the integrated_vison target in Debug mode"
+        }
+    ]
+}

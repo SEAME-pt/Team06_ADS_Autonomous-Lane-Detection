@@ -3,7 +3,7 @@
 #include <cstring> // Adicionado para memcpy
 #include <atomic> // Incluir a biblioteca atomic
 
-extern std::atomic<double> current_speed_ms; // Declarar a variável global
+extern std::atomic<double> current_speed; // Declarar a variável global
 
 /*!
  * @brief Construct a new CanBusManager::CanBusManager object
@@ -56,7 +56,7 @@ void CanBusManager::handleSpeed(const std::vector<uint8_t>& data) {
     if (data.size() == sizeof(float)) {
         float speed;
         memcpy(&speed, data.data(), sizeof(float));
-        current_speed_ms.store(speed); // Atualiza a variável atómica global
+        current_speed.store(speed); // Atualiza a variável atómica global
         //std::cout << "Speed: " << speed << " m/s" << std::endl;
     }
 }

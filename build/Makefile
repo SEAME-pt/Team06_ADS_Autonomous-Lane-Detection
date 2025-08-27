@@ -369,6 +369,30 @@ control_systems/ZmqPublisher.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/ZmqPublisher.cpp.s
 .PHONY : control_systems/ZmqPublisher.cpp.s
 
+control_systems/ZmqSubscriber.o: control_systems/ZmqSubscriber.cpp.o
+.PHONY : control_systems/ZmqSubscriber.o
+
+# target to build an object file
+control_systems/ZmqSubscriber.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/ZmqSubscriber.cpp.o
+.PHONY : control_systems/ZmqSubscriber.cpp.o
+
+control_systems/ZmqSubscriber.i: control_systems/ZmqSubscriber.cpp.i
+.PHONY : control_systems/ZmqSubscriber.i
+
+# target to preprocess a source file
+control_systems/ZmqSubscriber.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/ZmqSubscriber.cpp.i
+.PHONY : control_systems/ZmqSubscriber.cpp.i
+
+control_systems/ZmqSubscriber.s: control_systems/ZmqSubscriber.cpp.s
+.PHONY : control_systems/ZmqSubscriber.s
+
+# target to generate assembly for a file
+control_systems/ZmqSubscriber.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/integrated_vison.dir/build.make CMakeFiles/integrated_vison.dir/control_systems/ZmqSubscriber.cpp.s
+.PHONY : control_systems/ZmqSubscriber.cpp.s
+
 control_systems/cam.o: control_systems/cam.cpp.o
 .PHONY : control_systems/cam.o
 
@@ -600,6 +624,9 @@ help:
 	@echo "... control_systems/ZmqPublisher.o"
 	@echo "... control_systems/ZmqPublisher.i"
 	@echo "... control_systems/ZmqPublisher.s"
+	@echo "... control_systems/ZmqSubscriber.o"
+	@echo "... control_systems/ZmqSubscriber.i"
+	@echo "... control_systems/ZmqSubscriber.s"
 	@echo "... control_systems/cam.o"
 	@echo "... control_systems/cam.i"
 	@echo "... control_systems/cam.s"
