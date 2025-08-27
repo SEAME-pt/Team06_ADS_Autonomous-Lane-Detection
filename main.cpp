@@ -72,7 +72,7 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
                 std::cout << det.class_name << " (" << det.confidence << ") ";
             }
             std::cout << std::endl;
-            
+
             // Publicar nomes dos objetos via ZMQ na porta 5558
             if (lane_pub && lane_pub->isConnected()) {
                 for (const auto& det : detections) {
@@ -217,7 +217,7 @@ cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_r
 
 // Cleanup
 void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors, /* std::unique_ptr<CanBusManager>& canBusManager, */
-             std::thread& obj_thread, std::thread& lane_thread, ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub, 
+             std::thread& obj_thread, std::thread& lane_thread, ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub,
              ZmqPublisher* obj_pub, ZmqSubscriber* speed_sub) {
     std::cout << "Iniciando cleanup..." << std::endl;
     keep_running.store(false);
@@ -308,7 +308,7 @@ int main() {
         if (!obj_pub->isConnected()) throw std::runtime_error("Falha ao inicializar ZMQ na porta 5559");
 
         // Novo: Inicializar ZMQ Subscriber para velocidade na porta 5555
-        speed_sub = new ZmqSubscriber(zmq_context, "100.93.45.188", 5555, current_speed_ms);
+        speed_sub = new ZmqSubscriber(zmq_context, "127.0.0.1", 5555, current_speed_ms);
         if (!speed_sub->isConnected()) {
             throw std::runtime_error("Falha ao inicializar ZMQ Subscriber na porta 5555");
         }
