@@ -1,0 +1,97 @@
+[
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/ZmqPublisher.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZmqPublisher.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZmqPublisher.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/ZmqSubscriber.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZmqSubscriber.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZmqSubscriber.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/main.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/lane.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/lane.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/mask.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/mask.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/mask.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/nmpc.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/nmpc.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/pid.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/pid.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/pid.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/cam.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/cam.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/cam.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/infer.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/infer.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/infer.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/BackMotors/BackMotors.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/BackMotors/BackMotors.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/BackMotors/BackMotors.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/Control/ControlAssembly.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Control/ControlAssembly.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Control/ControlAssembly.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/Control/Controller.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Control/Controller.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Control/Controller.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/FServo/FServo.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/FServo/FServo.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/FServo/FServo.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/MCP2515/MCP2515Configurator.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Configurator.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/MCP2515/CANMessageProcessor.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CANMessageProcessor.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/MCP2515/MCP2515Controller.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/MCP2515Controller.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/MCP2515/SPIController.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/SPIController.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/control_systems/FServo -I/control_systems/BackMotors -I/control_systems/Control -I/MCP2515 -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/MCP2515/CanBusManager.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/MCP2515/CanBusManager.cpp"
+}
+]
