@@ -71,9 +71,20 @@ void TensorRTInference::allocateBuffers() {
 }
 
 std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData) {
-    cudaMemcpy(inputBuffers[0].device, inputData.data(), inputBuffers[0].size, cudaMemcpyHostToDevice);
+    // Validate input size
+    if (inputData.size() * sizeof(float) > inputBuffers[0].size) {
+        throw std::runtime_error("Lane: Input data size exceeds buffer capacity");
+    }
 
-    context->executeV2(bindings.data());
+    auto copyH2D = cudaMemcpy(inputBuffers[0].device, inputData.data(), inputData.size() * sizeof(float), cudaMemcpyHostToDevice);
+    if (copyH2D != cudaSuccess) {
+        throw std::runtime_error(std::string("Lane: cudaMemcpy H2D failed: ") + cudaGetErrorString(copyH2D));
+    }
+
+    if (!context->executeV2(bindings.data())) {
+        throw std::runtime_error("Lane: executeV2 failed");
+    }
+
     auto err = cudaPeekAtLastError();
     if (err != cudaSuccess) {
         throw std::runtime_error(std::string("Lane CUDA kernel error: ") + cudaGetErrorString(err));
@@ -83,7 +94,10 @@ std::vector<float> TensorRTInference::infer(const std::vector<float>& inputData)
         throw std::runtime_error(std::string("Lane CUDA sync error: ") + cudaGetErrorString(syncErr));
     }
 
-    cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
+    auto copyD2H = cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
+    if (copyD2H != cudaSuccess) {
+        throw std::runtime_error(std::string("Lane: cudaMemcpy D2H failed: ") + cudaGetErrorString(copyD2H));
+    }
 
     const size_t num_floats = outputBuffers[0].size / sizeof(float);
     return std::vector<float>(outputBuffers[0].host, outputBuffers[0].host + num_floats);

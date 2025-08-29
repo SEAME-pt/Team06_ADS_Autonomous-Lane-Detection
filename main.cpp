@@ -194,10 +194,17 @@ cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_r
 
     // Desenhar objetos
     for (const auto& det : obj_res.detections) {
-        cv::Scalar color = cv::Scalar(255, 0, 0);
-        cv::rectangle(combined, det.bbox, color, 2);
-        std::string label = det.class_name + ": " + std::to_string(det.confidence).substr(0, 4);
-        cv::putText(combined, label, cv::Point(det.bbox.x, det.bbox.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        // Validate bounding box is within image bounds
+        if (det.bbox.x >= 0 && det.bbox.y >= 0 &&
+            det.bbox.x + det.bbox.width <= combined.cols &&
+            det.bbox.y + det.bbox.height <= combined.rows) {
+            cv::Scalar color = cv::Scalar(255, 0, 0);
+            cv::rectangle(combined, det.bbox, color, 2);
+            std::string label = det.class_name + ": " + std::to_string(det.confidence).substr(0, 4);
+            // Ensure text position is within bounds
+            int text_y = std::max(15, det.bbox.y - 5);
+            cv::putText(combined, label, cv::Point(det.bbox.x, text_y), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 255, 255), 2);
+        }
     }
 
     // Desenhar lanes (verifica se processed_frame não é empty)
@@ -222,12 +229,28 @@ void cleanup(CSICamera& camera,/* FServo& servo, BackMotors& backMotors, std::un
              std::thread& obj_thread, std::thread& lane_thread, ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub,
              ZmqPublisher* obj_pub, ZmqSubscriber* speed_sub) {
     std::cout << "Iniciando cleanup..." << std::endl;
+
+    // Signal all threads to stop
     keep_running.store(false);
+
+    // Wake up all waiting threads
     cv_objects.notify_all();
     cv_lanes.notify_all();
     cv_results.notify_all();
-    if (obj_thread.joinable()) obj_thread.join();
-    if (lane_thread.joinable()) lane_thread.join();
+
+    // Give threads time to see the stop signal
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    // Join threads with timeout protection
+    if (obj_thread.joinable()) {
+        obj_thread.join();
+        std::cout << "Object thread joined" << std::endl;
+    }
+    if (lane_thread.joinable()) {
+        lane_thread.join();
+        std::cout << "Lane thread joined" << std::endl;
+    }
+
     camera.stop();
     //servo.set_steering(0);
     //backMotors.setSpeed(0);

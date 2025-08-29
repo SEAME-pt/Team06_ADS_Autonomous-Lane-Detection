@@ -48,8 +48,14 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
 
     int roi_start_y = static_cast<int>(0.50 * original_frame.rows);
     int roi_end_y = static_cast<int>(0.95 * original_frame.rows);
-    ll_resized(cv::Rect(0, 0, original_frame.cols, roi_start_y)) = 0;
-    ll_resized(cv::Rect(0, roi_end_y, original_frame.cols, original_frame.rows - roi_end_y)) = 0;
+
+    // Validate ROI bounds
+    if (roi_start_y > 0 && roi_start_y < original_frame.rows) {
+        ll_resized(cv::Rect(0, 0, original_frame.cols, roi_start_y)) = 0;
+    }
+    if (roi_end_y > 0 && roi_end_y < original_frame.rows && (original_frame.rows - roi_end_y) > 0) {
+        ll_resized(cv::Rect(0, roi_end_y, original_frame.cols, original_frame.rows - roi_end_y)) = 0;
+    }
 
     // Processar a máscara
     MaskProcessor processor;
@@ -89,7 +95,7 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
 
         cv::Point xmtop(xmt, height_win / 2);
         cv::Point xmbottom(xmb, height_win);
-        cv::line(result_frame, xmtop, xmbottom, cv::Scalar(255, 255, 255), 2); 
+        cv::line(result_frame, xmtop, xmbottom, cv::Scalar(255, 255, 255), 2);
 
         float P1_x_img_frame = (Asy * height_win + Bsy) * ( xmb -(width_win / 2) );
         float P2_x_img_frame = (Asy * height_win / 2 + Bsy) * (xmt - (width_win / 2) );

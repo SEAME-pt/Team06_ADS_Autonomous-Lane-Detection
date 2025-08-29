@@ -161,7 +161,12 @@ public:
         dw = (input_size - nw) / 2;
         dh = (input_size - nh) / 2;
 
-        resized.copyTo(padded(cv::Rect(dw, dh, nw, nh)));
+        // Validate bounds before copying
+        if (dw >= 0 && dh >= 0 && dw + nw <= input_size && dh + nh <= input_size) {
+            resized.copyTo(padded(cv::Rect(dw, dh, nw, nh)));
+        } else {
+            throw std::runtime_error("TensorRTYOLO: Invalid ROI bounds for image padding");
+        }
 
         padded.convertTo(padded, CV_32FC3, 1.0 / 255.0);
 
@@ -183,6 +188,10 @@ public:
         try {
             // Assumindo formato YOLOv8: [batch_size, 4 + num_classes, num_detections]
             int total_elements = output.size();
+            if (total_elements == 0 || (4 + num_classes) == 0) {
+                std::cerr << "TensorRTYOLO: Invalid output data or num_classes" << std::endl;
+                return detections;
+            }
             int num_detections = total_elements / (4 + num_classes);
 
             std::vector<cv::Rect> boxes;
@@ -191,6 +200,12 @@ public:
 
             // Reorganizar dados para formato [num_detections, 4 + num_classes]
             for (int i = 0; i < num_detections; ++i) {
+                // Validate array bounds
+                if (i >= num_detections || (4 + num_classes - 1) * num_detections + i >= total_elements) {
+                    std::cerr << "TensorRTYOLO: Array bounds check failed for detection " << i << std::endl;
+                    break;
+                }
+
                 // Extrair coordenadas da bounding box (formato YOLOv8: cx, cy, w, h)
                 float cx = output[i];
                 float cy = output[num_detections + i];
@@ -258,15 +273,33 @@ public:
             int dw, dh;
             std::vector<float> input_data = preprocess(image, scale, dw, dh);
 
-            // Copiar dados para GPU
+                        // Copiar dados para GPU
             std::copy(input_data.begin(), input_data.end(), inputBuffers[0].host);
-            cudaMemcpy(inputBuffers[0].device, inputBuffers[0].host, inputBuffers[0].size, cudaMemcpyHostToDevice);
+            auto copy_status = cudaMemcpy(inputBuffers[0].device, inputBuffers[0].host, inputBuffers[0].size, cudaMemcpyHostToDevice);
+            if (copy_status != cudaSuccess) {
+                throw std::runtime_error(std::string("TensorRTYOLO: cudaMemcpy H2D failed: ") + cudaGetErrorString(copy_status));
+            }
 
             // Executar inferência
-            context->executeV2(bindings.data());
+            if (!context->executeV2(bindings.data())) {
+                throw std::runtime_error("TensorRTYOLO: executeV2 failed");
+            }
+
+            // Check for CUDA errors after kernel execution
+            auto kernel_err = cudaPeekAtLastError();
+            if (kernel_err != cudaSuccess) {
+                throw std::runtime_error(std::string("TensorRTYOLO: CUDA kernel error: ") + cudaGetErrorString(kernel_err));
+            }
+            auto sync_err = cudaDeviceSynchronize();
+            if (sync_err != cudaSuccess) {
+                throw std::runtime_error(std::string("TensorRTYOLO: CUDA sync error: ") + cudaGetErrorString(sync_err));
+            }
 
             // Copiar resultados de volta
-            cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
+            auto copy_back_status = cudaMemcpy(outputBuffers[0].host, outputBuffers[0].device, outputBuffers[0].size, cudaMemcpyDeviceToHost);
+            if (copy_back_status != cudaSuccess) {
+                throw std::runtime_error(std::string("TensorRTYOLO: cudaMemcpy D2H failed: ") + cudaGetErrorString(copy_back_status));
+            }
 
             // Converter para vector
             std::vector<float> output(outputBuffers[0].host, outputBuffers[0].host + output_size);
