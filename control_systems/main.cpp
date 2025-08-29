@@ -19,7 +19,7 @@ int main() {
     if (!laneControl) return 1;
     auto& trt = laneControl->trt;
     auto& cam = laneControl->cam;
-    
+
     NMPCController mpc;
 
 // --- INICIALIZAÇÃO DO CONTROLO DE VELOCIDADE E MOTORES ---
@@ -55,7 +55,7 @@ int main() {
     auto pid_last_time = std::chrono::steady_clock::now();
     double motor_pwm = 0.0;
 /********************/
-    
+
 /*S-CURVE INICIALIZATION*/
     double max_steering_vel_deg_s = 100.0;  // Velocidade máx: 30°/s (lento)
     double max_steering_acc_deg_s2 = 300.0; // Aceleração máx: 100°/s²
@@ -86,7 +86,7 @@ int main() {
 
         double v_actual = current_speed_ms.load();
         std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
-        
+
         auto pid_now = std::chrono::steady_clock::now();
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
         if (pid_dt >= 0.02) { // 50 ms → 20 Hz
@@ -95,7 +95,7 @@ int main() {
             pid_last_time = pid_now;
             //std::cout << "Motor Signal: " << motor_pwm << " PWM" << std::endl;
         }
-        
+
         //double v_filtered = filter.update(v_actual); // velocidade suavizada
         //std::cout << "Velocidade filtrada: " << v_filtered << std::endl;
 
@@ -131,7 +131,7 @@ int main() {
             zmq_publisher->publishMessage(ss.str());
         }
 
-        drawHUD(result, smoothedFPS, delta, v_actual,motor_pwm, offset, 
+        drawHUD(result, smoothedFPS, delta, v_actual,motor_pwm, offset,
             psi, steering_angle);
 
         frameCount++;

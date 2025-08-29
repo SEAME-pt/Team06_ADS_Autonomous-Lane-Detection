@@ -113,7 +113,11 @@ message(STATUS "Final CASADI_INCLUDE_DIRS: ${CASADI_INCLUDE_DIRS}")
 message(STATUS "Final CASADI_LIBRARIES: ${CASADI_LIBRARIES}")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_compile_options(-fsanitize=address -fsanitize=thread -fno-omit-frame-pointer)
-    add_link_options(-fsanitize=address -fsanitize=thread)
+    add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=address)
 endif()
 
+
+#cd build  # Vai para a pasta de build
+#cmake ..  # Reconfigura com as novas opções (detecta CMAKE_BUILD_TYPE=Debug)
+#cmake --build . --config Debug  # Recompila

@@ -5,6 +5,7 @@
 #include <thread>
 #include <atomic>
 #include <fstream>
+#include <mutex>
 
 class CSICamera {
 public:
@@ -18,6 +19,7 @@ private:
     cv::Mat frame;
     std::thread thread;
     std::atomic<bool> running{false};
+    mutable std::mutex frame_mutex;
 
     void update();
 };

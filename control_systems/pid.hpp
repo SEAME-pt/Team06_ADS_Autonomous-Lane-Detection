@@ -6,9 +6,9 @@
 class PID {
 public:
     // === Parâmetros ===
-    double Kp = 5.0; // 5.0
-    double Ki = 1.0; // 0.5
-    double Kd = 0.1; //0.1
+    double Kp = 15.0; // 5.0
+    double Ki = 1.5; // 0.5
+    double Kd = 1.0; //0.1
 
     double outputMin = 0.0;     // PWM mínimo
     double outputMax = 30.0;   // PWM máximo

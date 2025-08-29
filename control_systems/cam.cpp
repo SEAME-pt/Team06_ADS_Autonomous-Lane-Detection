@@ -1,4 +1,6 @@
 #include "cam.hpp"
+#include <sstream>
+#include <iostream>
 
 CSICamera::CSICamera(int width, int height, int fps) {
     std::ostringstream pipeline;
@@ -7,10 +9,20 @@ CSICamera::CSICamera(int width, int height, int fps) {
              << ", format=NV12, framerate=" << fps << "/1 ! "
              << "nvvidconv flip-method=0 ! video/x-raw, width=" << width
              << ", height=" << height << ", format=BGRx ! "
-             << "videoconvert ! video/x-raw, format=BGR ! appsink";
+             << "videoconvert ! video/x-raw, format=BGR ! appsink drop=1 max-buffers=1";
+
+    std::cout << "Trying CSI camera with pipeline: " << pipeline.str() << std::endl;
     cap.open(pipeline.str(), cv::CAP_GSTREAMER);
+
     if (!cap.isOpened()) {
-        throw std::runtime_error("CSICamera: failed to open GStreamer pipeline");
+        std::cout << "CSI camera failed, trying USB camera fallback..." << std::endl;
+        cap.open(0); // Try USB camera fallback
+        if (!cap.isOpened()) {
+            throw std::runtime_error("CSICamera: failed to open both GStreamer pipeline and USB camera");
+        }
+        std::cout << "Using USB camera fallback" << std::endl;
+    } else {
+        std::cout << "CSI camera initialized successfully" << std::endl;
     }
 }
 
@@ -26,6 +38,10 @@ void CSICamera::stop() {
 }
 
 cv::Mat CSICamera::read() const {
+    std::lock_guard<std::mutex> lock(frame_mutex);
+    if (frame.empty()) {
+        return cv::Mat();  // Return empty Mat if frame not ready
+    }
     return frame.clone();
 }
 
@@ -35,7 +51,10 @@ void CSICamera::update() {
         cap.read(f);
         if (!f.empty()) {
             cv::resize(f, f, cv::Size(640, 360));
-            frame = f;
+            {
+                std::lock_guard<std::mutex> lock(frame_mutex);
+                frame = f;
+            }
         }
     }
 }
