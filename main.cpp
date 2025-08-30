@@ -58,6 +58,11 @@ void objectInferenceThread(TensorRTYOLO& detector, FrameSkipper& frame_skipper, 
         std::vector<Detection> detections;
         if (frame_skipper.shouldProcessFrame()) {
             auto start = std::chrono::high_resolution_clock::now();
+            if (frame.empty()) {
+                std::cerr << "Frame vazio em objectInferenceThread! Pulando inferencia." << std::endl;
+                continue;
+            }
+            
             detections = detector.infer(frame);
             auto end = std::chrono::high_resolution_clock::now();
             double time = std::chrono::duration<double>(end - start).count();
@@ -112,6 +117,10 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         if (!frame_skipper.shouldProcessFrame()) continue;
 
         auto start = std::chrono::high_resolution_clock::now();
+        if (frame.empty()) {
+            std::cerr << "Frame vazio em laneInferenceThread! Pulando." << std::endl;
+            continue;
+        }
         std::vector<float> input = preprocess_frame(frame);
         auto outputs = trt.infer(input);
         std::vector<cv::Point> medianPoints;
@@ -127,7 +136,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         lastTime = currentTime;
 
         double v_actual = current_speed_ms.load();
-        //std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
+        std::cout << "Speed now: " << v_actual << " m/s" << std::endl;
         auto pid_now = std::chrono::steady_clock::now();
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
         double motor_pwm = 0.0;
@@ -135,14 +144,13 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
             motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
             //backMotors.setSpeed(static_cast<int>(motor_pwm));
             pid_last_time = pid_now;
-            //std::cout << "Motor Signal: " << motor_pwm << " PWM" << std::endl;
         }
 
         double offset = intersect.offset;
         double psi = intersect.psi;
         double delta = last_delta;
         if (!std::isnan(offset) && !std::isnan(psi)) {
-            delta = -mpc.computeControl(offset, psi, 0.7);
+            delta = -mpc.computeControl(offset, psi, v_actual);
         }
 
         double target_steering_angle = delta * 180.0 / M_PI;
@@ -244,7 +252,6 @@ void cleanup(CSICamera& camera, FServo& servo, BackMotors& backMotors, /* std::u
 int main() {
     std::signal(SIGINT, signalHandler);
 
-    // Declarações fora do try
     CSICamera camera(640, 480, 15);
     std::unique_ptr<TensorRTYOLO> obj_detector;
     std::unique_ptr<TensorRTInference> lane_trt;
@@ -257,7 +264,7 @@ int main() {
     FServo servo;
     SCurveProfile steering_profile(100.0, 300.0, 600.0);
     MovingAverage filter(5);
-    double setpoint_velocity = 0.2;
+    double setpoint_velocity = 0.5;
     //std::shared_ptr<CANMessageProcessor> messageProcessor;
     //std::unique_ptr<CanBusManager> canBusManager;
     std::thread obj_thread;
@@ -270,8 +277,6 @@ int main() {
 
     try {
         std::cout << "Inicializando sistema integrado..." << std::endl;
-
-        // Validação e loading de engines
         std::string obj_engine_path = "../engines/best.engine";
         std::ifstream check_obj(obj_engine_path);
         if (!check_obj.good()) {
@@ -307,7 +312,6 @@ int main() {
         obj_pub = new ZmqPublisher(zmq_context, "127.0.0.1", 5559, "tcp");
         if (!obj_pub->isConnected()) throw std::runtime_error("Falha ao inicializar ZMQ na porta 5559");
 
-        // Novo: Inicializar ZMQ Subscriber para velocidade na porta 5555
         speed_sub = new ZmqSubscriber(zmq_context, "127.0.0.1", 5555, current_speed_ms);
         if (!speed_sub->isConnected()) {
             throw std::runtime_error("Falha ao inicializar ZMQ Subscriber na porta 5555");
@@ -315,6 +319,7 @@ int main() {
         speed_sub->start();  // Inicia o thread de receção
 
         camera.start();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Espera 0.5s para primeiro frame
 
         // Lançar threads (usa obj_detector.get() para referência)
         obj_thread = std::thread(objectInferenceThread, std::ref(*obj_detector), std::ref(obj_skipper), std::ref(fps_calculator), obj_pub);
@@ -332,8 +337,6 @@ int main() {
             cv::Mat frame = camera.read();
             if (frame.empty()) continue;
             frame_count++;
-
-            //Enviar para threads
             {
                 std::unique_lock lock_obj(mtx_objects);
                 frame_queue_objects.push(frame.clone());
@@ -345,16 +348,12 @@ int main() {
                 frame_queue_lanes.push(frame.clone());
                 cv_lanes.notify_one();
             }
-
-            //Esperar resultados
             {
                 std::unique_lock lock(mtx_results);
                 cv_results.wait(lock, [&] { return results_ready || !keep_running.load(); });
                 if (!keep_running.load()) break;
                 results_ready = false;
             }
-
-            //Combinar e exibir
             double smooth_fps = fps_calculator.getSmoothFPS();
             cv::Mat displayed = combineAndDraw(frame, latest_objects, latest_lanes, smooth_fps, processed_frames, skipped_frames);
             if (!displayed.empty()) cv::imshow("Integrated Detection", displayed);

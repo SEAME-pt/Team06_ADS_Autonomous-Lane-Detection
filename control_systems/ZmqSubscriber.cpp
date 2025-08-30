@@ -91,10 +91,7 @@ void ZmqSubscriber::receiveLoop() {
 
             if (result) {
                 messageCount++;
-                // Debug: Show message size and raw content
                 size_t msg_size = message.size();
-                std::cout << "ZMQ: Received message #" << messageCount << " of " << msg_size << " bytes" << std::endl;
-
                 std::string data;  // Declare data variable here
 
                 if (msg_size == 0) {
@@ -119,27 +116,20 @@ void ZmqSubscriber::receiveLoop() {
                         continue;
                     }
                 } else {
-                    // Extract message content (like working example)
                     data = std::string(static_cast<char*>(message.data()), message.size());
-                    std::cout << "ZMQ received: '" << data << "'" << std::endl;
                 }
 
-                // Only process if we have actual data
                 if (msg_size > 0) {
-                    // Parsing simples e rápida: "speed:0.69;"
                     if (data.find("speed:") == 0) {
                         size_t colon_pos = data.find(':');
                         size_t semicolon_pos = data.find(';');
 
                         if (colon_pos != std::string::npos && semicolon_pos != std::string::npos && semicolon_pos > colon_pos) {
                             std::string value_str = data.substr(colon_pos + 1, semicolon_pos - colon_pos - 1);
-                            std::cout << "ZMQ: Extracted speed value: '" << value_str << "'" << std::endl;
                             try {
                                 double speed_kmh = std::stod(value_str);
-                                double speed_ms = speed_kmh * (5.0 / 18.0);  // Conversão km/h -> m/s
+                                double speed_ms = speed_kmh / 1000;  // Conversão mm/s -> m/s
                                 _speed_var.store(speed_ms);  // Atualiza atómica
-                                std::cout << "Velocidade recebida: " << speed_kmh << " km/h" << std::endl;
-                                std::cout << "Velocidade convertida: " << speed_ms << " m/s" << std::endl;
                             } catch (const std::exception& e) {
                                 std::cerr << "ZMQ Subscriber ERROR: Erro ao converter velocidade '" << value_str << "': " << e.what() << std::endl;
                             }
@@ -152,7 +142,6 @@ void ZmqSubscriber::receiveLoop() {
                     }
                 }
             } else {
-                // Timeout occurred (like working example)
                 auto now = std::chrono::steady_clock::now();
                 if (std::chrono::duration_cast<std::chrono::seconds>(now - last_heartbeat).count() >= 5) {
                     heartbeat_counter++;

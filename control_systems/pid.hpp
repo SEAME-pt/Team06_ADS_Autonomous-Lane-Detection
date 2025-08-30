@@ -6,12 +6,12 @@
 class PID {
 public:
     // === Parâmetros ===
-    double Kp = 5.0; // 5.0
-    double Ki = 1.0; // 0.5
-    double Kd = 0.1; //0.1
+    double Kp = 6.0; // 5.0
+    double Ki = 2.0; // 0.5
+    double Kd = 0.5; //0.1
 
     double outputMin = 0.0;     // PWM mínimo
-    double outputMax = 30.0;   // PWM máximo
+    double outputMax = 40.0;   // PWM máximo
     double maxStepChange = 2.0; // passo máx do PWM por ciclo (%)
 
     // Anti-windup: limite absoluto da parcela integral (em "unidades de saída")

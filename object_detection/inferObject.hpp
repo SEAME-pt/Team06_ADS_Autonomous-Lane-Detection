@@ -11,6 +11,8 @@ public:
             std::cout << "[TensorRT] " << msg << std::endl;
     }
 }; */
+#include <memory>  // Para std::unique_ptr
+
 
 // Estrutura para detecções
 struct Detection {
@@ -24,9 +26,9 @@ struct Detection {
 class TensorRTYOLO {
 private:
     Logger logger;
-    IRuntime* runtime = nullptr;
-    ICudaEngine* engine = nullptr;
-    IExecutionContext* context = nullptr;
+    std::unique_ptr<nvinfer1::IRuntime> runtime;
+    std::unique_ptr<nvinfer1::ICudaEngine> engine;
+    std::unique_ptr<nvinfer1::IExecutionContext> context;
     
     struct Buffer {
         void* device;
@@ -75,9 +77,20 @@ public:
         std::vector<char> engineData(fsize);
         engineFile.read(engineData.data(), fsize);
 
-        runtime = createInferRuntime(logger);
-        engine = runtime->deserializeCudaEngine(engineData.data(), fsize);
-        context = engine->createExecutionContext();
+        runtime = std::unique_ptr<nvinfer1::IRuntime>(createInferRuntime(logger));
+        if (!runtime) {
+            throw std::runtime_error("Falha ao criar IRuntime");
+        }
+
+        engine = std::unique_ptr<nvinfer1::ICudaEngine>(runtime->deserializeCudaEngine(engineData.data(), fsize));
+        if (!engine) {
+            throw std::runtime_error("Falha ao deserializar ICudaEngine");
+        }
+
+        context = std::unique_ptr<nvinfer1::IExecutionContext>(engine->createExecutionContext());
+        if (!context) {
+            throw std::runtime_error("Falha ao criar IExecutionContext");
+        }
 
         allocateBuffers();
         
@@ -96,10 +109,6 @@ public:
             cudaFree(mem.device);
             delete[] mem.host;
         }
-        
-        if (context) context->destroy();
-        if (engine) engine->destroy();
-        if (runtime) runtime->destroy();
     }
 
     void allocateBuffers() {
@@ -133,15 +142,27 @@ public:
     }
 
     std::vector<float> preprocess(const cv::Mat& image, float& scale, int& dw, int& dh) {
+        if (image.empty()) {
+            throw std::runtime_error("Imagem de entrada vazia em preprocess! Verifique a captura da camera.");
+        }
         int h = image.rows;
         int w = image.cols;
+        if (w <= 0 || h <= 0) {
+            throw std::runtime_error("Dimensoes da imagem invalidas (largura ou altura <= 0).");
+        }
         
         scale = std::min(static_cast<float>(input_size) / w, static_cast<float>(input_size) / h);
         int nw = static_cast<int>(scale * w);
         int nh = static_cast<int>(scale * h);
+        if (nw <= 0 || nh <= 0) {
+            throw std::runtime_error("Dimensoes redimensionadas invalidas (nw ou nh <= 0).");
+        }
         
         cv::Mat resized;
         cv::resize(image, resized, cv::Size(nw, nh));
+        if (resized.empty()) {
+            throw std::runtime_error("Falha ao redimensionar: resized vazia.");
+        }
         
         cv::Mat padded = cv::Mat::ones(input_size, input_size, CV_8UC3) * 114;
         dw = (input_size - nw) / 2;

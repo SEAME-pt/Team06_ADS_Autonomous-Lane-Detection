@@ -33,9 +33,13 @@ void CSICamera::update() {
     while (running) {
         cv::Mat f;
         cap.read(f);
-        if (!f.empty()) {
-            cv::resize(f, f, cv::Size(640, 360));
-            frame = f;
+        if (f.empty()) {
+            std::cerr << "Falha ao ler frame da camera! Continuando..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Evita loop apertado
+            continue;
         }
+        cv::resize(f, f, cv::Size(640, 360));
+        frame = f;
     }
 }
+
