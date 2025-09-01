@@ -72,6 +72,7 @@
         "strstream": "cpp",
         "__string": "cpp",
         "ios": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "csignal": "cpp"
     }
 }

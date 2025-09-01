@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Integrated Vision (GDB)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/integrated_vison",  // Caminho para o executável do build
+            "args": [],  // Argumentos opcionais (ex: ["--debug"])
+            "stopAtEntry": true,  // Para automaticamente no main() para testes
+            "cwd": "${workspaceFolder}",  // Diretório de trabalho (raiz do projeto)
+            "environment": [],  // Variáveis de ambiente (ex: para CUDA: [{"name": "CUDA_VISIBLE_DEVICES", "value": "0"}])
+            "externalConsole": false,  // Usa terminal integrado do VSCode
+            "MIMode": "gdb",  // Usa GDB como debugger
+            "miDebuggerPath": "/usr/bin/gdb",  // Confirma com 'which gdb' no terminal
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake Build Debug"  // Roda a task de build antes de depurar
+        }
+    ]
+}
+
