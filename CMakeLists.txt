@@ -57,13 +57,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CASADI_INCLUDE_DIRS}
     ${ZeroMQ_INCLUDE_DIRS}
-    /control_systems/FServo
-    /control_systems/BackMotors
-    /control_systems/Control
     control_systems/LanesGeometry
     control_systems/MPC
     control_systems/PID
-    /MCP2515
     /control_systems
     /object_detection
     /engines
@@ -75,22 +71,13 @@ add_executable(integrated_vison
     control_systems/ZmqSubscriber.cpp
     control_systems/utils_control.cpp
     main.cpp
+    utils.cpp
     control_systems/LanesGeometry/lane.cpp
     control_systems/LanesGeometry/mask.cpp
     control_systems/MPC/nmpc.cpp
     control_systems/PID/pid.cpp
     control_systems/cam.cpp
     control_systems/LanesGeometry/infer.cpp
-    control_systems/BackMotors/BackMotors.cpp
-    control_systems/Control/ControlAssembly.cpp
-    control_systems/Control/Controller.cpp
-    control_systems/FServo/FServo.cpp
-    # Ficheiros do CAN Bus
-    MCP2515/MCP2515Configurator.cpp
-    MCP2515/CANMessageProcessor.cpp
-    MCP2515/MCP2515Controller.cpp
-    MCP2515/SPIController.cpp
-    MCP2515/CanBusManager.cpp
 )
 
 # Linkar bibliotecas

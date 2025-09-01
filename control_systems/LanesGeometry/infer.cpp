@@ -16,25 +16,26 @@ TensorRTInference::TensorRTInference(const std::string& engine_path) {
     std::vector<char> engineData(fsize);
     engineFile.read(engineData.data(), fsize);
 
-    runtime = createInferRuntime(logger);
-    if (!runtime) throw std::runtime_error("Lane: createInferRuntime() returned null");
-
-    engine = runtime->deserializeCudaEngine(engineData.data(), fsize);
-    if (!engine) throw std::runtime_error("Lane: deserializeCudaEngine() failed");
-
-    context = engine->createExecutionContext();
-    if (!context) throw std::runtime_error("Lane: createExecutionContext() failed");
-
+    runtime = std::unique_ptr<nvinfer1::IRuntime>(createInferRuntime(logger));
+    if (!runtime) {
+        throw std::runtime_error("Failed to create IRuntime");
+    }
+    
+    engine = std::unique_ptr<nvinfer1::ICudaEngine>(runtime->deserializeCudaEngine(engineData.data(), fsize));
+    if (!engine) {
+        throw std::runtime_error("Failed to deserialize ICudaEngine");
+    }
+    
+    context = std::unique_ptr<nvinfer1::IExecutionContext>(engine->createExecutionContext());
+    if (!context) {
+        throw std::runtime_error("Failed to create IExecutionContext");
+    }
     allocateBuffers();
 }
 
 TensorRTInference::~TensorRTInference() {
     for (auto& mem : inputBuffers)  { if (mem.device) cudaFree(mem.device);  delete[] mem.host; }
     for (auto& mem : outputBuffers) { if (mem.device) cudaFree(mem.device);  delete[] mem.host; }
-
-    if (context) context->destroy();
-    if (engine)  engine->destroy();
-    if (runtime) runtime->destroy();
 }
 
 void TensorRTInference::allocateBuffers() {

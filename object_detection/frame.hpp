@@ -1,7 +1,6 @@
 #ifndef FRAME_HPP
 #define FRAME_HPP
 
-// Classe para frame skipping
 class FrameSkipper {
 public:
     enum Strategy { FIXED, ADAPTIVE, TIME_BASED };

@@ -81,7 +81,6 @@ void MaskProcessor::processEdges(const cv::Mat& mask_bin, std::vector<cv::Point>
             else left_contig++;
         }
         if (left_contig > 10 && left_count < 50) {
-            std::cout << " reset left" << std::endl;
             left_x = -1;
             left_contig = -1;
             left_count = 0;
@@ -151,12 +150,10 @@ int MaskProcessor::verifyLanes(std::vector<cv::Point>& left_edge_points, std::ve
     return value;
 }
 
-// Sobrecarga para LineCoef
 std::ostream& operator<<(std::ostream& os, const LineCoef& coef) {
     return os << "m=" << coef.m << ", b=" << coef.b << ", valid=" << (coef.valid ? "true" : "false");
 }
 
-// Sobrecarga para std::vector<cv::Point>
 std::ostream& operator<<(std::ostream& os, const std::vector<cv::Point>& points) {
     os << "[";
     for (size_t i = 0; i < points.size(); ++i) {
@@ -179,7 +176,6 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
     processEdges(mask_bin, left_edge_points, right_edge_points);
     int verify = verifyLanes(left_edge_points, right_edge_points, bottom_left, bottom_right, top_left, top_right);
 
-    /********Linear Regression *********/
     if (verify == 0) {
         left_line_points = linearRegression(left_edge_points, top_left, bottom_left, width, left_coeffs);
         right_line_points = linearRegression(right_edge_points, top_right, bottom_right, width, right_coeffs);
@@ -214,10 +210,6 @@ void MaskProcessor::processMask(const cv::Mat& ll_mask, cv::Mat& output, std::ve
         cv::line(output, left_line_points.front(), left_line_points.back(), cv::Scalar(0, 0, 255), 2);
     if (!right_line_points.empty())
         cv::line(output, right_line_points.front(), right_line_points.back(), cv::Scalar(255, 0, 0), 2);
-    if (!right_line_points.empty() && !left_line_points.empty()) {
-        float sy1 = (Asy * 180 + Bsy) * ((intersect.xrt - intersect.xlt) / std::cos(intersect.slope));
-        float sy2 = (Asy * 360 + Bsy) * ((intersect.xrb - intersect.xlb) / std::cos(intersect.slope));
-    }
 
     medianPoints.clear();
     for (int y = top_y; y < height; y++) {

@@ -4,48 +4,47 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <casadi/casadi.hpp> // Inclua a biblioteca CasADi
+#include <casadi/casadi.hpp>
 
 class NMPCController {
 public:
-    // Construtor
     NMPCController(
-        double L = 0.15,        // Distância entre rodas (m)
-        double dt = 0.1,        // Intervalo de tempo (s)
-        int N_pred = 10,        // Horizonte de previsão
-        double max_delta_rad = 40.0 * M_PI / 180.0, // Delta máximo em radianos
-        double Q_offset = 3.0, // Peso para erro lateral
-        double Q_psi = 0.60,   // Peso para erro de orientação
-        double R_delta_rate = 0.1 // Peso para taxa de mudança de delta
+        double L = 0.15,        // Wheelbase (m)
+        double dt = 0.1,        // Time step (s)
+        int N_pred = 10,        // Prediction horizon
+        double max_delta_rad = 40.0 * M_PI / 180.0, // Max steering angle (rad)
+        double Q_offset = 3.0,  // Weight for lateral error
+        double Q_psi = 0.60,    // Weight for heading error
+        double R_delta_rate = 0.1 // Weight for steering rate change
     );
 
-    // Função para calcular o ângulo de controle delta
-    // offset_m: erro lateral em metros
-    // psi_rad: erro de orientação em radianos
-    // current_velocity_mps: velocidade atual do veículo em m/s
-    // O parâmetro 'current_theta_rad' foi removido, pois não é usado na lógica do MPC.
+    // Compute steering command (delta).
+    // offset_m: lateral error in meters.
+    // psi_rad: heading error in radians.
+    // current_velocity_mps: current vehicle speed in m/s.
+    // Note: parameter 'current_theta_rad' was removed as unused by the MPC logic.
     double computeControl(double offset_m, double psi_rad, double current_velocity_mps);
 
 private:
-    double L; // Distância entre rodas
-    double dt; // Intervalo de tempo
-    int N_pred; // Horizonte de previsão
+    double L;      // Wheelbase
+    double dt;     // Time step
+    int N_pred;    // Prediction horizon
 
-    // Pesos da função custo (reordenados para corresponder ao construtor)
+    // Cost function weights (ordered to match constructor)
     double Q_offset;
     double Q_psi;
     double R_delta_rate;
 
-    double max_delta_rad; // Delta máximo em radianos
+    double max_delta_rad; // Max steering angle in radians
 
-    casadi::Function solver; // Objeto solver do CasADi
-    std::map<std::string, casadi::DM> arg; // Argumentos para o solver
-    std::map<std::string, casadi::DM> res; // Resultados do solver
+    casadi::Function solver;                       // CasADi NLP solver
+    std::map<std::string, casadi::DM> arg;        // Solver arguments
+    std::map<std::string, casadi::DM> res;        // Solver results
 
-    double prev_delta; // Armazena o delta calculado no passo anterior para penalizar a taxa de mudança
-    double prev_x, prev_y, prev_theta; // Estado inicial da última otimização (prev_x é o mais relevante para warm-start)
+    double prev_delta;                 // Previous steering command to penalize rate of change
+    double prev_x, prev_y, prev_theta; // Initial state used for warm start (prev_x is most relevant)
 
-    // Método para inicializar o problema de otimização do CasADi
+    // Initialize the CasADi optimization problem
     void setupCasADiProblem();
 };
 

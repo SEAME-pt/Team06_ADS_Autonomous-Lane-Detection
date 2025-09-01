@@ -1,7 +1,6 @@
 #ifndef FPS_HPP
 #define FPS_HPP
 
-// Classe para cálculo de FPS
 class FPSCalculator {
 private:
     std::deque<double> frame_times;

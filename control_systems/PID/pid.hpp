@@ -5,20 +5,20 @@
 
 class PID {
 public:
-    // === Parâmetros ===
-    double Kp = 6.0; // 5.0
-    double Ki = 2.0; // 0.5
-    double Kd = 0.5; //0.1
+    // === Parameters ===
+    double Kp = 6.0;  // proportional gain (was 5.0 as a prior tuning note)
+    double Ki = 2.0;  // integral gain (was 0.5 as a prior tuning note)
+    double Kd = 0.5;  // derivative gain (was 0.1 as a prior tuning note)
 
-    double outputMin = 0.0;     // PWM mínimo
-    double outputMax = 40.0;   // PWM máximo
-    double maxStepChange = 2.0; // passo máx do PWM por ciclo (%)
+    double outputMin = 0.0;     // minimum PWM
+    double outputMax = 40.0;    // maximum PWM
+    double maxStepChange = 2.0; // max PWM step per cycle (%)
 
-    // Anti-windup: limite absoluto da parcela integral (em "unidades de saída")
-    // Ex.: 30 => a parte integral nunca contribui com mais que ±30% de PWM
+    // Anti-windup: absolute limit for the integral term (in output units)
+    // Example: 30 => integral contribution is limited to ±30% PWM
     double Imax = 30.0;
 
-    // Filtro da derivada (0<alpha<=1). 1.0 = sem filtro, 0.2 = filtragem forte
+    // Derivative filter (0 < alpha <= 1). 1.0 = no filter, 0.2 = strong filtering
     double dAlpha = 0.3;
 
     PID();
@@ -26,11 +26,11 @@ public:
     void reset();
 
 private:
-    // Estado
-    double iTerm;        // contribuição integral acumulada (em unidades de saída)
-    double prevMeasFilt; // medição filtrada anterior (para derivada)
-    double measFilt;     // medição filtrada corrente
-    double lastOutput;   // saída limitada do passo anterior
+    // State
+    double iTerm;        // accumulated integral contribution (output units)
+    double prevMeasFilt; // previous filtered measurement (for derivative)
+    double measFilt;     // current filtered measurement
+    double lastOutput;   // last limited output
 
     bool first = true;
 };

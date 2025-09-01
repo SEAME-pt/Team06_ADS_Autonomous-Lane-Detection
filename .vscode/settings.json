@@ -73,6 +73,9 @@
         "__string": "cpp",
         "ios": "cpp",
         "locale": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "__node_handle": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }

@@ -1,7 +1,10 @@
 #include "lane.hpp"
 #include "mask.hpp"
 
-/**************************************************************************************/
+/**
+ * Preprocess for lane model: resize to 224x224, BGR->RGB, normalize per channel,
+ * and return CHW float buffer (R, G, B). Chosen stats match model training.
+ */
 std::vector<float> preprocess_frame(const cv::Mat& frame) {
     cv::Mat resized;
     cv::resize(frame, resized, cv::Size(224, 224));
@@ -20,28 +23,35 @@ std::vector<float> preprocess_frame(const cv::Mat& frame) {
     }
     return inputData;
 }
-/**************************************************************************************/
+
+/**
+ * Postprocess model output (float[C,H,W]) to overlay lanes and compute pose terms.
+ * Assumptions:
+ * - selected_channel indexes the lane of interest per model semantics.
+ * - Threshold/morphology stabilize the mask; ROI focuses on near-field evidence.
+ * - Fallbacks set offset/psi to 0 when evidence is insufficient or geometry degenerates.
+ */
 cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LineIntersect& intersect) {
     const int height_mask = 224;
     const int width_mask = 224;
     const int width_win = 640;
     const int height_win = 360;
 
-    // ✅ Usa apenas o canal que representa a linha desejada (ex: canal 1 = linha central)
+    // Select lane channel as defined by the model (e.g., 0 = center lane)
     int selected_channel = 0;
     cv::Mat ll_mask(height_mask, width_mask, CV_32FC1, ll_output + selected_channel * height_mask * width_mask);
 
-    // Binarização
+    // Threshold chosen to reject weak activations while keeping lane signal
     cv::Mat ll_bin;
     cv::threshold(ll_mask, ll_bin, 0.1, 255, cv::THRESH_BINARY);
     ll_bin.convertTo(ll_bin, CV_8UC1);
 
-    // Morfologia para limpeza
+    // Light morphology to close small gaps without over-smoothing
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
     cv::morphologyEx(ll_bin, ll_bin, cv::MORPH_CLOSE, kernel);
     cv::dilate(ll_bin, ll_bin, kernel);
 
-    // Redimensionar para o tamanho do frame original
+    // Scale to frame and restrict to near-field ROI for stability
     cv::Mat ll_resized;
     cv::resize(ll_bin, ll_resized, original_frame.size(), 0, 0, cv::INTER_NEAREST);
 
@@ -50,16 +60,14 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
     ll_resized(cv::Rect(0, 0, original_frame.cols, roi_start_y)) = 0;
     ll_resized(cv::Rect(0, roi_end_y, original_frame.cols, original_frame.rows - roi_end_y)) = 0;
 
-    // Processar a máscara
+    // Extract lane geometry (median points, fitted lines, and intersections)
     MaskProcessor processor;
     LineCoef left_coeffs, right_coeffs;
     cv::Mat mask_output;
     processor.processMask(ll_resized, mask_output, medianPoints, left_coeffs, right_coeffs, intersect);
 
-    // Criar uma cópia da imagem original para desenhar as linhas
+    // Overlay lane visualization onto original frame if available
     cv::Mat result_frame = original_frame.clone();
-
-    // Desenhar linhas diretamente na imagem original
     if (!mask_output.empty()) {
         cv::Mat resized_mask_output;
         cv::resize(mask_output, resized_mask_output, original_frame.size(), 0, 0, cv::INTER_NEAREST);
@@ -68,7 +76,7 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
             for (int x = 0; x < resized_mask_output.cols; ++x) {
                 cv::Vec3b pix = resized_mask_output.at<cv::Vec3b>(y, x);
                 if (pix != cv::Vec3b(0, 0, 0)) {
-                    result_frame.at<cv::Vec3b>(y, x) = pix;  // Desenha o pixel colorido sobre a original
+                    result_frame.at<cv::Vec3b>(y, x) = pix;
                 }
             }
         }
@@ -100,12 +108,12 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
         } else {
             intersect.offset = 0.0f;
             intersect.psi = 0.0f;
-            std::cout << "Aviso: deltaX_car_frame é zero, valores padrão definidos para intersect." << std::endl;
+            std::cout << "Warning: deltaX_car_frame is zero, default values, set to intersect." << std::endl;
         }
     } else {
         intersect.offset = 0.0f;
         intersect.psi = 0.0f;
-        std::cout << "Aviso: medianPoints está vazio, valores padrão definidos para intersect." << std::endl;
+        std::cout << "Warning: medianPoints is empty, default values set to intersect." << std::endl;
     }
 
     return result_frame;

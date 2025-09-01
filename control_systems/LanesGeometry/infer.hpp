@@ -7,6 +7,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <memory>
 
 using namespace nvinfer1;
 
@@ -33,9 +34,9 @@ public:
 
 private:
     Logger logger;
-    IRuntime* runtime = nullptr;
-    ICudaEngine* engine = nullptr;
-    IExecutionContext* context = nullptr;
+    std::unique_ptr<nvinfer1::IRuntime> runtime;
+    std::unique_ptr<nvinfer1::ICudaEngine> engine;
+    std::unique_ptr<nvinfer1::IExecutionContext> context;
 
     std::vector<Buffer> inputBuffers;
     std::vector<Buffer> outputBuffers;
