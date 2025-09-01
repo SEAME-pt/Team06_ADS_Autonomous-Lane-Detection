@@ -1,16 +1,16 @@
 #ifndef UTILS_CONTROL_HPP
 #define UTILS_CONTROL_HPP
 
-#include "lane.hpp"
-#include "nmpc.hpp"
-#include "pid.hpp"
+#include "LanesGeometry/lane.hpp"
+#include "MPC/nmpc.hpp"
+#include "PID/pid.hpp"
 #include "aux/scurve.hpp"
 #include "aux/MovingAverage.hpp"
 #include "aux/SpeedFilter.hpp"
 #include "ZmqPublisher.hpp"
 #include "ZmqSubscriber.hpp"
 #include "cam.hpp"
-#include "infer.hpp"
+#include "LanesGeometry/infer.hpp"
 
 #include <iostream>
 #include <chrono>

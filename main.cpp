@@ -22,7 +22,6 @@ struct LaneResults {
     double delta_rad = 0.0; // delta em radianos (ou converte para graus)
     int steering_angle_deg = 0;
     std::vector<cv::Point> medianPoints;
-    LaneData laneData;
     LineIntersect intersect;
 };
 
@@ -124,9 +123,8 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         std::vector<float> input = preprocess_frame(frame);
         auto outputs = trt.infer(input);
         std::vector<cv::Point> medianPoints;
-        LaneData laneData;
         LineIntersect intersect;
-        cv::Mat result = postprocess(outputs.data(), frame, medianPoints, laneData, intersect);
+        cv::Mat result = postprocess(outputs.data(), frame, medianPoints, intersect);
         auto end = std::chrono::high_resolution_clock::now();
         double time = std::chrono::duration<double>(end - start).count();
         frame_skipper.recordProcessingTime(time);
@@ -178,7 +176,6 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
             latest_lanes.offset = offset;
             latest_lanes.psi = psi;
             latest_lanes.medianPoints = medianPoints;
-            latest_lanes.laneData = laneData;
             latest_lanes.intersect = intersect;
             latest_lanes.delta_rad = delta;
             latest_lanes.steering_angle_deg = steering_angle;
@@ -264,7 +261,7 @@ int main() {
     FServo servo;
     SCurveProfile steering_profile(100.0, 300.0, 600.0);
     MovingAverage filter(5);
-    double setpoint_velocity = 0.5;
+    double setpoint_velocity = 0.4;
     //std::shared_ptr<CANMessageProcessor> messageProcessor;
     //std::unique_ptr<CanBusManager> canBusManager;
     std::thread obj_thread;

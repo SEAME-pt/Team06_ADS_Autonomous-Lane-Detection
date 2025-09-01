@@ -60,6 +60,9 @@ include_directories(
     /control_systems/FServo
     /control_systems/BackMotors
     /control_systems/Control
+    control_systems/LanesGeometry
+    control_systems/MPC
+    control_systems/PID
     /MCP2515
     /control_systems
     /object_detection
@@ -72,12 +75,12 @@ add_executable(integrated_vison
     control_systems/ZmqSubscriber.cpp
     control_systems/utils_control.cpp
     main.cpp
-    control_systems/lane.cpp
-    control_systems/mask.cpp
-    control_systems/nmpc.cpp
-    control_systems/pid.cpp
+    control_systems/LanesGeometry/lane.cpp
+    control_systems/LanesGeometry/mask.cpp
+    control_systems/MPC/nmpc.cpp
+    control_systems/PID/pid.cpp
     control_systems/cam.cpp
-    control_systems/infer.cpp
+    control_systems/LanesGeometry/infer.cpp
     control_systems/BackMotors/BackMotors.cpp
     control_systems/Control/ControlAssembly.cpp
     control_systems/Control/Controller.cpp
@@ -88,7 +91,6 @@ add_executable(integrated_vison
     MCP2515/MCP2515Controller.cpp
     MCP2515/SPIController.cpp
     MCP2515/CanBusManager.cpp
-
 )
 
 # Linkar bibliotecas

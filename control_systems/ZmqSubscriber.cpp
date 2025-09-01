@@ -127,8 +127,8 @@ void ZmqSubscriber::receiveLoop() {
                         if (colon_pos != std::string::npos && semicolon_pos != std::string::npos && semicolon_pos > colon_pos) {
                             std::string value_str = data.substr(colon_pos + 1, semicolon_pos - colon_pos - 1);
                             try {
-                                double speed_kmh = std::stod(value_str);
-                                double speed_ms = speed_kmh / 1000;  // Conversão mm/s -> m/s
+                                double speed_mms = std::stod(value_str);
+                                double speed_ms = speed_mms / 1000;  // Conversão mm/s -> m/s
                                 _speed_var.store(speed_ms);  // Atualiza atómica
                             } catch (const std::exception& e) {
                                 std::cerr << "ZMQ Subscriber ERROR: Erro ao converter velocidade '" << value_str << "': " << e.what() << std::endl;
