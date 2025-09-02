@@ -4,7 +4,7 @@
 #include "control_systems/utils_control.hpp"
 #include "object_detection/fps.hpp"
 #include "object_detection/frame.hpp"
-#include "object_detection/inferObject.hpp"
+#include "object_detection/TensorRTYOLO.hpp"
 #include <opencv2/opencv.hpp>
 #include <thread>
 #include <queue>

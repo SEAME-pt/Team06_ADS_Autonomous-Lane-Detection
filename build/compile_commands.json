@@ -1,0 +1,72 @@
+[
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/ZMQ/ZmqPublisher.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZMQ/ZmqPublisher.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZMQ/ZmqPublisher.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/ZMQ/ZmqSubscriber.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZMQ/ZmqSubscriber.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/ZMQ/ZmqSubscriber.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/utils_control.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/utils_control.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/main.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/main.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/utils.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/utils.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/utils.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/LanesGeometry/lane.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry/lane.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry/lane.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/LanesGeometry/mask.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry/mask.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry/mask.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/MPC/nmpc.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC/nmpc.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC/nmpc.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/PID/pid.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID/pid.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID/pid.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/Cam/cam.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam/cam.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam/cam.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/control_systems/LanesGeometry/infer.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry/infer.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry/infer.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/object_detection/TensorRTYOLO.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/TensorRTYOLO.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/TensorRTYOLO.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/object_detection/frame.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/frame.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/frame.cpp"
+},
+{
+  "directory": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++  -I/usr/local/cuda/include -I/usr/src/tensorrt/include -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/LanesGeometry -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/MPC -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/PID -I/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/control_systems/Cam -I/control_systems -I/object_detection -I/engines -isystem /usr/include/opencv4  -Wall -Ofast -g -std=gnu++17 -o CMakeFiles/integrated_vison.dir/object_detection/fps.cpp.o -c /home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/fps.cpp",
+  "file": "/home/jetson/Desktop/Team06/Team06_ADS_Autonomous-Lane-Detection/object_detection/fps.cpp"
+}
+]

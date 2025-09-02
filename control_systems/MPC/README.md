@@ -1,173 +1,87 @@
-# Model Predictive Control (MPC) for Autonomous Driving on Jetson Nano with CARLA
-This project focuses on implementing a Model Predictive Control (MPC) for autonomous driving, tested in the CARLA simulator and optimized for the Jetson Nano, a resource-constrained embedded platform. The goal is to provide a practical design, comparing linear and non-linear MPC approaches, and offering implementation guidelines for integration with CARLA.
+# MPC (Model Predictive Control) — Lateral Control Specification
 
-## What is MPC?
-Model Predictive Control (MPC) is an advanced control strategy that uses a dynamic model of the system (here, a vehicle) to predict its future behavior and optimize control actions (e.g., acceleration, braking, steering) over a prediction horizon. It solves a real-time optimization problem, respecting physical constraints and objectives like trajectory tracking or energy efficiency.
+This document specifies the lateral Model Predictive Control (MPC, Model Predictive Control) module for lane keeping on Jetson Nano, covering scope, interfaces, plant model, discretization, horizons, objective, constraints, solver configuration, warm‑start strategy, real‑time (RT, real‑time) behavior, tuning rationale, safety, verification and validation (V&V, Verification and Validation), and studied future work not yet implemented.
 
-## Essential Components of an MPC
+## Purpose and scope
+The controller minimizes lateral offset and yaw error subject to discrete kinematic vehicle dynamics, issuing a steering command that respects actuator limits for lane‑center tracking in typical on‑road conditions. Lane‑center following is used as the immediate reference, i.e., the target is \(y=0\) and \(\psi=0\) at each prediction step rather than consuming an external preview path at this stage.
 
-An MPC requires the following elements:
+## Interfaces
+Inputs per control cycle are lateral offset \(y\) [m], yaw error \(\psi\) [rad], and the measured longitudinal speed \(v\) [m/s] passed each iteration to the controller; the output is the steering angle \(\delta\) [rad], later converted to degrees and saturated to ±30° in the actuator layer.
 
-* Dynamic Model: Represents the vehicle's behavior (position, velocity, orientation). The kinematic bicycle model is commonly used for its simplicity and effectiveness at moderate speeds.
-* Cost Function: Defines optimization goals, such as minimizing trajectory error or control effort for smooth driving.
-* Constraints: Include physical limits (e.g., maximum steering angle) and safety constraints (e.g., collision avoidance).
-* Prediction Horizon: Number of future time steps considered (e.g., 1 second ahead).
-* Control Horizon: Number of steps where control inputs (e.g., steering, acceleration) are optimized.
-* Optimization Algorithm: Solves the numerical optimization problem in real-time (e.g., Quadratic Programming for linear MPC, IPOPT for non-linear MPC).
-* Discretization: Converts the continuous model into discrete time steps (e.g., 0.1 s) for computational implementation.
+## Plant model
+A discrete kinematic bicycle model is used with states \(x, y, \psi\) and control \(\delta\), while the measured speed \(v\) is treated as a constant parameter across the prediction horizon within each iteration to reflect current operating conditions with reduced decision dimension. The component‑wise state update is:
 
-## Key Equations for MPC
-## 1. Dynamic Model (Kinematic Bicycle Model)
-The kinematic bicycle model is widely used in autonomous driving for its simplicity. It describes the vehicle's dynamics based on position $(x, y)$, orientation $\psi$, and velocity $v$. The control inputs are the steering angle $\delta$ and acceleration $a$. The continuous-time equations are:
-$$\dot{x} = v \cos(\psi)$$
-$$\dot{y} = v \sin(\psi)$$
-$$\dot{\psi} = \frac{v}{L} \tan(\delta)$$
-$$\dot{v} = a$$
-Where:
-
-* $x, y$: Vehicle coordinates in the plane.
-* $\psi$: Yaw angle (orientation).
-* $v$: Longitudinal velocity.
-* $\delta$: Steering angle.
-* $a$: Acceleration.
-* $L$: Wheelbase (fixed vehicle parameter).
-
-For MPC, these equations are discretized using, e.g., the Euler method:
 $$x_{k+1} = x_k + v_k \cos(\psi_k) \cdot \Delta t$$
 $$y_{k+1} = y_k + v_k \sin(\psi_k) \cdot \Delta t$$
 $$\psi_{k+1} = \psi_k + \frac{v_k}{L} \tan(\delta_k) \cdot \Delta t$$
+
+If longitudinal dynamics are also modeled in a coupled NMPC (Nonlinear Model Predictive Control), the speed update can be included as:
+
 $$v_{k+1} = v_k + a_k \cdot \Delta t$$
-Where $\Delta t$ is the time step (e.g., 0.1 s), and $k$ is the step index.
 
-## 2. Cost Function
-The cost function $J$ minimizes the error between the vehicle's current state and the desired trajectory, while penalizing excessive control effort. A typical form is:
-$$J = \sum_{k=1}^{N_p} \left[ | \mathbf{x}k - \mathbf{x}{ref,k} |_Q^2 + | \mathbf{u}_k |_R^2 \right]$$
-Where:
+Here \(L\) is the wheelbase and \(\Delta t\) is the sampling time; in the current implementation \(v_k\) is the measured speed used as a parameter along the horizon of that iteration rather than a decision variable.
 
-* $\mathbf{x}_k = [x_k, y_k, \psi_k, v_k]^T$: State vector at step $k$.
-* $\mathbf{x}_{ref,k}$: Reference state (desired trajectory).
-* $\mathbf{u}_k = [\delta_k, a_k]^T$: Control vector.
-* $N_p$: Prediction horizon.
-* $Q$: Weight matrix for state errors (e.g., prioritizing position accuracy).
-* $R$: Weight matrix for control effort (e.g., penalizing abrupt steering).
+## Discretization and horizons
+Forward‑Euler discretization is applied via a symbolic model assembled in CasADi (CasADi, Computer Algebra for Automatic Differentiation and Optimization) and compiled to a Nonlinear Programming (NLP, Nonlinear Programming) problem with equality constraints enforcing stepwise dynamics across the prediction horizon. The prediction horizon uses \(N\) steps with decision variables for states at \(k=0\ldots N\) and controls at \(k=0\ldots N-1\), balancing look‑ahead and feasibility on embedded hardware.
 
-## 3. Constraints
-Examples of constraints:
+## Objective function
+The stage cost penalizes lateral offset, yaw error, and steering rate changes for smoothness, including an initial term relative to the previously applied steering to avoid a first‑step jump. The cost used is:
 
-* States: Velocity limits ($v_{min} \leq v_k \leq v_{max}$).
-* Controls: Steering limits ($\delta_{min} \leq \delta_k \leq \delta_{max}$) and acceleration limits ($a_{min} \leq a_k \leq a_{max}$).
-* Safety: Obstacle avoidance.
+$$
+J = \sum_{k=0}^{N-1}\Big( Q_{\text{offset}}\; y_k^2 + Q_{\psi}\; \psi_k^2 + R_{\Delta\delta}\; (\delta_k-\delta_{k-1})^2 \Big)
+$$
 
-## 4. Optimization Problem
-The MPC solves:
-$$\min_{\mathbf{u}} J(\mathbf{x}, \mathbf{u})$$
-Subject to:
+Weights \(Q_{\text{offset}}, Q_{\psi}, R_{\Delta\delta}\) are empirically calibrated to balance tracking accuracy and command smoothness under typical operating conditions.
 
-* Dynamic model: $\mathbf{x}_{k+1} = f(\mathbf{x}_k, \mathbf{u}_k)$.
-* Constraints: $\mathbf{x}_k \in \mathcal{X}$, $\mathbf{u}_k \in \mathcal{U}$.
+## Constraints
+A hard bound on steering is enforced as \(|\delta_k|\leq 40^\circ\) (applied in radians internally), aligned with actuator saturation downstream. There are currently no state constraints (e.g., lateral corridor) and no hard bound on the steering rate \(|\Delta\delta_k|\), with smoothness handled by the rate penalty only.
 
-## Linear vs. Non-Linear MPC
-### Linear MPC
+## Solver and formulation
+The optimization is posed as an NLP with stacked state and input trajectories, equality constraints for dynamics, and bounds for inputs, solved by IPOPT (IPOPT, Interior Point OPTimizer) via CasADi’s nlpsol interface; typical configurations include capped iterations and print suppression for embedded use. Primal warm‑start of the decision vector between cycles is used to reduce interior‑point iteration counts and improve timing stability.
 
-How it works: Linearizes the dynamic model around an operating condition (e.g., $\delta = 0$, $v = v_0$), using a linear model like:
+## Initialization and warm start
+Per cycle, parameters include the initial state \([x_0,y_0,\psi_0]\), the measured speed \(v\), and the previously applied steering \(\delta_{-1}\), while the primal initial guess is taken from the previous solution to accelerate convergence. Dual warm‑starts (lam_x0/lam_g0, Lagrange multipliers initial guesses) are not currently provided but are supported and can further reduce interior‑point iterations if needed .
 
-$\mathbf{x}_{k+1} = A \mathbf{x}_k + B \mathbf{u}_k$.
+## Real‑time behavior
+The sampling time \(\Delta t\) should match end‑to‑end perception plus optimization latency so the closed loop meets real‑time timing on Jetson Nano; empirical profiling of average/worst solve time, IPOPT iteration counts, and jitter should be recorded to demonstrate budget compliance. The measured speed is passed every cycle and held constant across the horizon for that iteration to reduce problem size while reflecting current operating conditions.
 
-### Advantages:
+## Tuning rationale
+Weights \(Q_{\text{offset}}, Q_{\psi}, R_{\Delta\delta}\) are tuned empirically using lateral RMS error, yaw RMS error, and command smoothness to avoid oscillations and minimize actuator stress . The horizon \(N\) balances preview and computation, trading anticipation of curvature against solve time on the embedded target.
 
-* Computationally lightweight, suitable for Jetson Nano's limited resources.
-* Fast and reliable Quadratic Programming (QP) solvers (e.g., OSQP).
-* Effective for smooth trajectories and moderate speeds.
+## Safety and fallbacks
+Actuator saturation should be enforced both in the solver and in the actuator layer to avoid interface mismatches that could cause clipping or unintended behavior. It is recommended to check solver status before applying the new steering and to fall back to the last valid filtered command on failure, consistent with ISO 26262 (ISO 26262, Road vehicles — Functional safety) supporting processes for fault handling and safe state strategies.
 
+## Verification and validation (V&V)
+Recommended tests include unit tests for dynamics constraint satisfaction and bound enforcement, integration tests in closed loop on recorded scenarios, and system tests with requirements‑tied metrics (e.g., lateral RMS error thresholds and maximum allowed steering slew) archived with parameter versions and solver logs, per ISO 26262‑6 (Product development at the software level) expectations. Capturing solver objective values, iteration counts, and timing per run provides auditable evidence for calibration changes and supports regression control.
 
-### Disadvantages:
-* Loses accuracy in non-linear conditions (e.g., tight curves, high speeds).
-* Less robust to significant dynamic changes.
+## Known limitations
+- No terminal cost/set (terminal quadratic cost or invariant terminal set), which limits formal stability/recursive feasibility guarantees commonly used in stabilizing MPC (stabilizing MPC, stabilizing Model Predictive Control).  
+- No lateral corridor (state constraints) derived from lane geometry/obstacles, reducing safety margins in narrow or curved roads compared to corridor‑constrained MPC formulations.  
+- No hard bound on steering rate \(|\Delta\delta_k|\), relying solely on a rate penalty that can still allow rapid steps if locally optimal under current weights .
 
+## Studied future work
+- Add terminal cost \(V_f(x_N)\) and/or terminal set to improve stability margins and recursive feasibility under constraints for constrained tracking MPC.
+- Introduce a road‑aligned lateral corridor (hard/soft) from lane geometry and obstacle envelopes to enforce state safety bounds with comfort.
+- Enforce hard bounds on steering rate \(|\Delta\delta_k|\) to reflect actuator slew limits alongside the existing smoothness penalty .  
+- Warm‑start dual variables (lam_x0/lam_g0) in IPOPT to reduce iteration counts; CasADi nlpsol exposes these initializations for interior‑point warm starts (IPM, Interior‑Point Method warm starts) .  
+- Implement solver‑status checks and safe fallbacks (e.g., hold last valid filtered command) to handle occasional non‑convergence without unsafe transients .  
+- Add structured logging of parameters, objectives, iterations, and timings per cycle for traceability, calibration audits, and regression testing under safety processes .  
+- Evaluate a convex Quadratic Program (QP, Quadratic Program) formulation with linearization (LTV, Linear Time‑Varying) and an operator‑splitting solver such as OSQP (OSQP, Operator Splitting Quadratic Program) for more predictable timing where applicable, while preserving NMPC for higher fidelity .
 
-### Non-Linear MPC (NMPC)
+## Parameters 
+| Parameter | Value | |
+|---|---:|---|
+| Wheelbase L | 0.15 m |  |
+| Sample time dt | 0.1 s |  |
+| Prediction horizon N | 10 steps |  |
+| Steering limit | ±30° (rad internally) |  |
+| Q_offset | 3.0 | |
+| Q_psi | 0.60 | |
+| R_delta_rate | 0.1 | |
 
-How it works: Uses the non-linear dynamic model directly (e.g., kinematic bicycle equations without linearization).
+## API and usage
+Call computeControl(offset_m, psi_rad, current_velocity_mps) each control tick with SI units; the function returns steering \(\delta\) [rad] that is subsequently converted to degrees and saturated for the actuator interface. The controller maintains internal warm‑start state (previous solution and steering), so calls should be sequential within a single control loop for consistent performance.
 
-### Advantages:
-* More accurate in complex scenarios (e.g., sharp turns, evasive maneuvers).
-* Better handles non-linear vehicle dynamics.
-
-
-### Disadvantages:
-* Computationally intensive, challenging for Jetson Nano without optimization.
-* Requires complex solvers (e.g., IPOPT), which may be slow on embedded hardware.
-* More complex to implement.
-
-
-### Implementation Steps
-
-#### 1. Define the Dynamic Model:
-* The discretized kinematic bicycle model.
-* Vehicle parameters (e.g., $L$, limits for $\delta$ and $a$).
-
-
-#### 2. Set Up the Cost Function:
-* Choose weights $Q$ and $R$ to balance trajectory accuracy and control smoothness.
-* Example: $Q = \text{diag}(10, 10, 5, 1)$ for prioritizing position and orientation, $R = \text{diag}(1, 1)$ for controls.
-
-
-#### 3. Define Constraints:
-* Example: $\delta \in [-30^\circ, 30^\circ]$, $a \in [-3 , \text{m/s}^2, 3 , \text{m/s}^2]$, $v \in [0, 20 , \text{m/s}]$.
-* Sensors (cameras) for obstacle avoidance constraints.
-
-
-#### 4. Choose a Solver:
-* For linear MPC: Use lightweight solvers like OSQP or qpOASES.
-* For NMPC: Use CasADi with IPOPT, optimized for real-time performance.
-
-
-#### 5. Integrate with CARLA:
-* CARLA's Python API to obtain states ($x, y, \psi, v$) and reference trajectories.
-* Send control commands ($\delta, a$) to the simulated vehicle.
-
-
-#### 6. Optimize for Jetson Nano:
-* C++ for efficiency.
-* Reduce prediction horizon (e.g., $N_p = 10$, $N_c = 2$).
-* Compile solvers.
-
-
-## dependencies
-
-sudo apt-get update
-sudo apt-get install libopencv-dev
-
-## Compile process_mask
-g++ -o process_mask process_mask.cpp `pkg-config --cflags --libs opencv4`
-./process_mask
-
-## Compile dynamic_model
-g++ -o dynamic_model dynamic_model.cpp
-./dynamic_model
-
-## Compile MPC
-g++ -o mpc mpc.cpp -I/usr/include/eigen3
-./mpc
-
-## Compile mpc_integrated
-g++ -o mpc_integrated mpc_integrated.cpp `pkg-config --cflags --libs opencv4` -I/usr/include/eigen3
-./mpc_integrated
-
-## Compile mpc_carla
-g++ -o mpc_carla mpc_carla.cpp `pkg-config --cflags --libs opencv4` -I/home/ndo-vale/Desktop/carla/include -L/home/ndo-vale/Desktop/carla/lib -lcarla_client -lboost_python
-./mpc_carla
-
-## Compile cpp_infer lane_dete
-g++ -o lane_detec_v2 lane_detec.cpp `pkg-config --cflags --libs opencv4` \
--I/usr/local/cuda/include -L/usr/local/cuda/lib64 -lcudart \
--I/usr/include/aarch64-linux-gnu -L/usr/lib/aarch64-linux-gnu \
--lnvinfer -lnvinfer_plugin -lpthread
-
-## Compile cpp_infer infer_test.cpp
-g++ -o infer_test infer_test.cpp `pkg-config --cflags --libs opencv4` \
--I/usr/local/cuda/include -L/usr/local/cuda/lib64 -lcudart \
--I/usr/include/aarch64-linux-gnu -L/usr/lib/aarch64-linux-gnu \
--lnvinfer -lnvinfer_plugin -lpthread
-
+## ISO 26262 alignment note
+To align with ISO 26262‑6 (Product development at the software level), maintain work products for software safety requirements, architectural design, unit and integration test evidence, parameter versioning, configuration/change management, and tool usage documentation tied to solver and tuning changes; the present code implements the control logic but compliance depends on the surrounding lifecycle, documentation, and verification artifacts. These “Known limitations” and “Studied future work” sections document design decisions and planned mitigations, supporting safety case traceability when features are deferred due to schedule constraints.
 

@@ -4,9 +4,9 @@
 #include "LanesGeometry/lane.hpp"
 #include "MPC/nmpc.hpp"
 #include "PID/pid.hpp"
-#include "ZmqPublisher.hpp"
-#include "ZmqSubscriber.hpp"
-#include "cam.hpp"
+#include "ZMQ/ZmqPublisher.hpp"
+#include "ZMQ/ZmqSubscriber.hpp"
+#include "Cam/cam.hpp"
 #include "LanesGeometry/infer.hpp"
 
 #include <iostream>

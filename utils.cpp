@@ -120,7 +120,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid,
         double psi = intersect.psi;
         double delta = last_delta;
         if (!std::isnan(offset) && !std::isnan(psi)) {
-            delta = -mpc.computeControl(offset, psi, v_actual);
+            delta = -mpc.computeControl(offset, psi, 0.4);
         }
 
         double target_steering_angle = delta * 180.0 / M_PI;
