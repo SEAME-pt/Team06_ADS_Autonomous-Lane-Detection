@@ -1,9 +1,8 @@
-name: CI
 on:
-  push:            
-    branches: [ linenet ]
-  pull_request:    # e em PRs com base no 'linenet'
-    branches: [ linenet ]
+  push:
+    branches: ['**']   # corre em todos os branches
+  pull_request:
+    branches: ['**']
   workflow_dispatch: {}   # permite arrancar manualmente no separador Actions
 
 concurrency:
