@@ -218,8 +218,8 @@ pytest -q
 ```yaml
 name: CI
 on:
-  push: { branches: [ TwinLiteNet ] }
-  pull_request: { branches: [ TwinLiteNet ] }
+  push: { branches: [ LiteNet ] }
+  pull_request: { branches: [ LiteNet ] }
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
