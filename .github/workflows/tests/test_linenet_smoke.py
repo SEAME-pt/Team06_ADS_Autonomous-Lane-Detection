@@ -16,5 +16,5 @@ def test_all_variants_forward():
         with torch.no_grad():
             y = m(x)
         assert y.ndim == 4 and y.shape[1] == 1
-PY
+
 
