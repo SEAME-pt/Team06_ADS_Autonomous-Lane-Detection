@@ -1,5 +1,9 @@
 # LineNet — Lightweight Lane‑Line Segmentation (PyTorch)
 
+
+![CI](https://github.com/SEAME-pt/Team06_ADS_Autonomous-Lane-Detection/actions/workflows/ci.yml/badge.svg?branch=TwinLiteNet)
+
+
 > **Purpose.** Pixel‑wise lane‑line segmentation from a single forward camera frame. Designed to be **small, fast, and Jetson‑friendly**.
 
 <p align="center">
@@ -238,11 +242,7 @@ jobs:
         run: pytest -q
 ```
 
-Badge for README (replace `<USER>/<REPO>`):
 
-```md
-![CI](https://github.com/SEAME-pt/Team06_ADS_Autonomous-Lane-Detection/tree/LineNet/actions/workflows/ci.yml/badge.svg?branch=TwinLiteNet)
-```
 
 ---
 
