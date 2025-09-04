@@ -13,9 +13,9 @@ public:
         double dt = 0.1,        // Time step (s)
         int N_pred = 10,        // Prediction horizon
         double max_delta_rad = 40.0 * M_PI / 180.0, // Max steering angle (rad)
-        double Q_offset = 3.0,  // Weight for lateral error
-        double Q_psi = 0.60,    // Weight for heading error
-        double R_delta_rate = 0.1 // Weight for steering rate change
+        double Q_offset = 20000.0, // Peso para erro lateral
+        double Q_psi = 6000.0,   // Peso para erro de orientação
+        double R_delta_rate = 80.0 // Peso para taxa de mudança de delta
     );
 
     // Compute steering command (delta).

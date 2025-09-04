@@ -42,7 +42,7 @@ void drawHUD(cv::Mat& frame,
         y += step;
     };
 
-    put("FPS: " + std::to_string(static_cast<int>(smoothedFPS)), cv::Scalar(0, 255, 0));
+    //put("FPS: " + std::to_string(static_cast<int>(smoothedFPS)), cv::Scalar(0, 255, 0));
     put("Delta: " + std::to_string(delta * 180.0 / M_PI) + " deg", cv::Scalar(0, 0, 255));
     put("V_actual: " + std::to_string(v_actual) + " m/s", cv::Scalar(0, 0, 255));
     put("Motor: " + std::to_string(motor_pwm), cv::Scalar(0, 255, 0));

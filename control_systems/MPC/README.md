@@ -8,7 +8,7 @@ The controller minimizes lateral offset and yaw error subject to discrete kinema
 ## Interfaces
 Inputs per control cycle are lateral offset \(y\) [m], yaw error \(\psi\) [rad], and the measured longitudinal speed \(v\) [m/s] passed each iteration to the controller; the output is the steering angle \(\delta\) [rad], later converted to degrees and saturated to ±30° in the actuator layer.
 
-## Plant model
+## Kinematic bicycle model
 A discrete kinematic bicycle model is used with states \(x, y, \psi\) and control \(\delta\), while the measured speed \(v\) is treated as a constant parameter across the prediction horizon within each iteration to reflect current operating conditions with reduced decision dimension. The component‑wise state update is:
 
 $$x_{k+1} = x_k + v_k \cos(\psi_k) \cdot \Delta t$$

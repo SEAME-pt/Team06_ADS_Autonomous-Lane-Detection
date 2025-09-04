@@ -62,8 +62,8 @@ static LaneMemory lane_memory;
 
 static constexpr double Asy = -3.39e-06;
 static constexpr double Bsy = 1.61e-03;
-static constexpr double P1_x_car_frame = 0.24;
-static constexpr double P2_x_car_frame = 0.475;
+static constexpr double P2_y_img_frame = 0.24;
+static constexpr double P1_y_img_frame = 0.475;
 
 std::vector<float>  preprocess_frame(const cv::Mat& frame);
 cv::Mat             postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::Point>& medianPoints, LineIntersect& intersect);

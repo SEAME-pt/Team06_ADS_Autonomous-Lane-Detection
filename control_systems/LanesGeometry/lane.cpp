@@ -95,14 +95,14 @@ cv::Mat postprocess(float* ll_output, cv::Mat& original_frame, std::vector<cv::P
         cv::Point xmbottom(xmb, height_win);
         cv::line(result_frame, xmtop, xmbottom, cv::Scalar(255, 255, 255), 2); 
 
-        float P1_x_img_frame = (Asy * height_win + Bsy) * ( xmb -(width_win / 2) );
-        float P2_x_img_frame = (Asy * height_win / 2 + Bsy) * (xmt - (width_win / 2) );
-        float deltaX_car_frame = P2_x_car_frame - P1_x_car_frame;
-        float deltaY_car_frame = P2_x_img_frame - P1_x_img_frame;
+        float P2_x_img_frame = (Asy * height_win + Bsy) * ( xmb -(width_win / 2) );
+        float P1_x_img_frame = (Asy * height_win / 2 + Bsy) * (xmt - (width_win / 2) );
+        float deltaX_car_frame = P1_y_img_frame - P2_y_img_frame;
+        float deltaY_car_frame = P1_x_img_frame - P2_x_img_frame;
 
         if (std::abs(deltaX_car_frame) > 1e-8) {
             intersect.slope = deltaY_car_frame / deltaX_car_frame;
-            intersect.offset = P2_x_img_frame - intersect.slope * P2_x_car_frame;
+            intersect.offset = P2_x_img_frame - intersect.slope * P1_y_img_frame;
 
             intersect.psi = std::atan(intersect.slope);
         } else {

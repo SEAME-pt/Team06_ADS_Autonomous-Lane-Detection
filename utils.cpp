@@ -108,6 +108,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid,
         lastTime = currentTime;
 
         double v_actual = current_speed_ms.load();
+        std::cout << "Speed: " << v_actual << std::endl;
         auto pid_now = std::chrono::steady_clock::now();
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
         double motor_pwm = 0.0;
@@ -120,7 +121,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid,
         double psi = intersect.psi;
         double delta = last_delta;
         if (!std::isnan(offset) && !std::isnan(psi)) {
-            delta = -mpc.computeControl(offset, psi, 0.4);
+            delta = -mpc.computeControl(offset, psi, 0.7);
         }
 
         double target_steering_angle = delta * 180.0 / M_PI;
@@ -182,30 +183,44 @@ cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_r
     drawHUD(combined, smooth_fps, lane_res.delta_rad, current_speed_ms.load(), 0.0, 
             lane_res.offset, lane_res.psi, lane_res.steering_angle_deg);
 
-    std::string info_text = "FPS: " + std::to_string(smooth_fps).substr(0, 4) +
-                           " | Proc: " + std::to_string(processed_frames) +
-                           " | Skip: " + std::to_string(skipped_frames);
-    cv::putText(combined, info_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 
-               0.6, cv::Scalar(0, 255, 0), 2);
-
     return combined;
 }
 
 void cleanup(CSICamera& camera, std::thread& obj_thread, std::thread& lane_thread, 
-            ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub, ZmqPublisher* obj_pub, 
-            ZmqSubscriber* speed_sub) {
+             ZmqPublisher* lane_pub, ZmqPublisher* ctrl_pub, ZmqPublisher* obj_pub, 
+             ZmqSubscriber* speed_sub) {
     std::cout << "Initializing cleanup..." << std::endl;
     keep_running.store(false);
     cv_objects.notify_all();
     cv_lanes.notify_all();
     cv_results.notify_all();
     
+    // Send final "zero" messages before shutting down publishers
+    if (ctrl_pub && ctrl_pub->isConnected()) {
+        std::string zero_msg = "throttle:0;steering:0;";
+        ctrl_pub->publishMessage(zero_msg);
+        std::cout << "Sent final control message: " << zero_msg << std::endl;
+    }
+    if (lane_pub && lane_pub->isConnected()) {
+        std::string zero_msg = "lane:0";
+        lane_pub->publishMessage(zero_msg);
+        std::cout << "Sent final lane message: " << zero_msg << std::endl;
+    }
+    if (obj_pub && obj_pub->isConnected()) {
+        std::string zero_msg = "objects:0";
+        obj_pub->publishMessage(zero_msg);
+        std::cout << "Sent final object message: " << zero_msg << std::endl;
+    }
+
+    // Wait for threads to finish
     if (obj_thread.joinable()) obj_thread.join();
     if (lane_thread.joinable()) lane_thread.join();
     
+    // Stop camera and destroy windows
     camera.stop();
     cv::destroyAllWindows();
     
+    // Clean up ZeroMQ publishers and subscriber
     if (lane_pub) delete lane_pub;
     if (ctrl_pub) delete ctrl_pub;
     if (obj_pub) delete obj_pub;

@@ -38,7 +38,7 @@ $$x_m(y)=\tfrac{1}{2}\big(x_{\text{left}}(y)+x_{\text{right}}(y)\big)$$
 - xlt = x_left(y1), xrt = x_right(y1); xlb = x_left(y2), xrb = x_right(y2).  
 - x_c = image center column (width/2).  
 - W = lane width in meters (constant), here W = 0.26 m.  
-- P1_x_car_frame, P2_x_car_frame = known forward distances (meters) from the vehicle’s CoM to rows y2 (bottom ROI) and y1 (top ROI), respectively.
+- P2_y_img_frame, P1_y_img_frame = known forward distances (meters) from the vehicle’s CoM to rows y2 (bottom ROI) and y1 (top ROI), respectively.
 
 ## Row‑dependent pixel‑to‑meter scale s(y)
 Define the pixel gap between lane edges at row y:
@@ -81,7 +81,7 @@ $$\text{offset}=Y_{\text{car}}(y_2)=s(y_2)\cdot\big(x_m(y_2)-x_c\big)$$
 - Morphology: kernel 5×5 (close + dilate).  
 - Edge search: bounded horizontal ranges around last detected x with continuity counters; validator thresholds (e.g., min_size_line=50) tuned empirically.  
 - Lane width: W = 0.26 m.  
-- Longitudinal spacings: P1_x_car_frame (to bottom ROI), P2_x_car_frame (to top ROI) set from camera mounting and geometry.  
+- Longitudinal spacings: P2_y_img_frame (to bottom ROI), P1_y_img_frame (to top ROI) set from camera mounting and geometry.  
 - Fallback memory: prior edges/coefficients reused under partial/total loss (codes −1/−2/−3) to stabilize the median and derived ψ/offset.
 
 ## Notes
