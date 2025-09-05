@@ -20,7 +20,7 @@ private:
     int _fdMotor;
 
     // Compensações internas (alterar aqui se necessário)
-    double _compLeft = 0.85;  // 5% mais força no motor esquerdo
+    double _compLeft = 0.875;  // 5% mais força no motor esquerdo
     double _compRight = 1.00; // motor direito normal
 
 public:

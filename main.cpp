@@ -139,8 +139,8 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         double pid_dt = std::chrono::duration<double>(pid_now - pid_last_time).count();
         double motor_pwm = 0.0;
         if (pid_dt >= 0.02) { // 50 ms → 20 Hz
-            motor_pwm = pid.compute(setpoint_velocity, v_actual, pid_dt);
-            //backMotors.setSpeed(static_cast<int>(motor_pwm));
+            motor_pwm = pid.compute(setpoint_velocity, v_actual);
+            backMotors.setSpeed(static_cast<int>(motor_pwm));
             pid_last_time = pid_now;
         }
 
@@ -156,7 +156,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         //double smoothed_steering_angle = steering_profile.computeNext(target_steering_angle, elapsed);
         int steering_angle = static_cast<int>(smoothed_steering_angle);
         steering_angle = std::max(-40, std::min(40, steering_angle));
-        //servo.set_steering(steering_angle);
+        servo.set_steering(steering_angle);
         last_delta = delta;
         // Publicar via ZMQ
         int lane = (offset < -0.01) ? 2 : ((offset > 0.02) ? 1 : 0);
@@ -167,7 +167,7 @@ void laneInferenceThread(TensorRTInference& trt, NMPCController& mpc, PID& pid, 
         }
         if (ctrl_pub && ctrl_pub->isConnected()) {
             std::stringstream ss2;
-            ss2 << "throttle:" << motor_pwm << ";steering:" << steering_angle << ";";
+            ss2 << "throttle:" << 0.0 << ";steering:" << 0 << ";";
             ctrl_pub->publishMessage(ss2.str());
         }
         {
@@ -211,12 +211,6 @@ cv::Mat combineAndDraw(const cv::Mat& original_frame, const ObjectResults& obj_r
     }
 
     drawHUD(combined, smooth_fps, lane_res.delta_rad, current_speed_ms.load(), 0.0, lane_res.offset, lane_res.psi, lane_res.steering_angle_deg);
-
-    std::string info_text = "FPS: " + std::to_string(smooth_fps).substr(0, 4) +
-                            " | Proc: " + std::to_string(processed_frames) +
-                            " | Skip: " + std::to_string(skipped_frames);
-    cv::putText(combined, info_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0, 255, 0), 2);
-
     return combined;
 }
 
@@ -296,8 +290,8 @@ int main() {
         if (!initServo(servo)) throw std::runtime_error("Falha no servo");
 
         //CAN Bus (com handler default das alterações acima)
-        //canBusManager = initCanBus(messageProcessor);
-        //if (!canBusManager) throw std::runtime_error("Falha no CAN Bus");
+        /* canBusManager = initCanBus(messageProcessor);
+        if (!canBusManager) throw std::runtime_error("Falha no CAN Bus"); */
 
         // Inicializar ZMQ publishers
         lane_pub = new ZmqPublisher(zmq_context, "127.0.0.1", 5558, "tcp");
@@ -367,6 +361,6 @@ int main() {
         keep_running.store(false);
     }
 
-    cleanup(camera, servo, backMotors/*,  canBusManager */, obj_thread, lane_thread, lane_pub, ctrl_pub, obj_pub, speed_sub);
+    cleanup(camera, servo, backMotors/* , canBusManager */, obj_thread, lane_thread, lane_pub, ctrl_pub, obj_pub, speed_sub);
     return 0;
 }

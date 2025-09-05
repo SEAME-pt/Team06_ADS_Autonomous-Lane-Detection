@@ -1,71 +1,40 @@
 #include "pid.hpp"
-#include <cmath>
+#include <algorithm>  // Para std::clamp (limitar valores)
 
-PID::PID()
-    : iTerm(0.0), prevMeasFilt(0.0), measFilt(0.0), lastOutput(0.0), first(true) {}
+double PID::compute(double setpoint, double measured_value) {
+    // Calcula tempo delta (dt) desde o último ciclo
+    auto now = std::chrono::steady_clock::now();
+    double dt = std::chrono::duration<double>(now - last_time_).count();
+    last_time_ = now;
 
-double PID::compute(double setpoint, double measurement, double dt) {
-    if (dt <= 0.0) return lastOutput;
+    // Se dt for zero ou muito pequeno, evita divisão por zero
+    if (dt <= 0.0) dt = 0.001;  // Valor mínimo arbitrário
 
-    // ---- Filtrar medição para derivada (1ª ordem) ----
-    if (first) {
-        measFilt = measurement;
-        prevMeasFilt = measurement;
-        first = false;
-    } else {
-        measFilt = measFilt + dAlpha * (measurement - measFilt);
-    }
+    // Calcula erro atual
+    double error = setpoint - measured_value;
 
-    // Erro (para P e I)
-    double error = setpoint - measurement;
+    // Termo proporcional
+    double proportional = kp_ * error;
 
-    // Derivada NA MEDIÇÃO (melhor anti-ruído e sem "derivative kick" no setpoint)
-    double dMeas = (measFilt - prevMeasFilt) / dt;
-    double dTerm = -Kd * dMeas; // sinal invertido porque é d(measurement)/dt
-    prevMeasFilt = measFilt;
+    // Termo integral (acumula erro ao longo do tempo)
+    integral_ += error * dt;
+    double integral_term = ki_ * integral_;
 
-    // Proporcional
-    double pTerm = Kp * error;
+    // Termo derivativo (taxa de mudança do erro)
+    double derivative = kd_ * (error - previous_error_) / dt;
+    previous_error_ = error;
 
-    // Integral "candidata": só aplicamos ao iTerm se as condições permitirem
-    double iCandidate = iTerm + Ki * error * dt;
+    // Saída total do PID
+    double output = proportional + integral_term + derivative;
 
-    // Saída "não saturada" usando a integral candidata
-    double outUnsat = pTerm + iCandidate + dTerm;
+    // Limita a saída (ex.: para PWM entre -255 e 255, ajusta conforme teus motores)
+    output = std::clamp(output, -255.0, 255.0);
 
-    // ---- Anti-windup por integração condicional ----
-    // Regras:
-    // 1) Se outUnsat estiver dentro dos limites -> podemos aceitar iCandidate.
-    // 2) Se estiver saturado, só integramos se isso ajudar a sair da saturação.
-    bool within = (outUnsat >= outputMin && outUnsat <= outputMax);
-    bool helpsUpper = (outUnsat > outputMax) && (error < 0.0); // erro negativo puxa para baixo
-    bool helpsLower = (outUnsat < outputMin) && (error > 0.0); // erro positivo puxa para cima
-
-    if (within || helpsUpper || helpsLower) {
-        iTerm = iCandidate;
-        // Limitar contribuição integral
-        iTerm = std::clamp(iTerm, -Imax, Imax);
-    }
-    // Recalcular com iTerm final
-    double rawOutput = pTerm + iTerm + dTerm;
-
-    // Saturação da saída
-    if (rawOutput > outputMax) rawOutput = outputMax;
-    else if (rawOutput < outputMin) rawOutput = outputMin;
-
-    // Limitar variação por ciclo (suavidade extra)
-    double limitedOutput = std::clamp(
-        rawOutput,
-        lastOutput - maxStepChange,
-        lastOutput + maxStepChange
-    );
-
-    lastOutput = limitedOutput;
-    return limitedOutput;
+    return output;
 }
 
 void PID::reset() {
-    iTerm = 0.0;
-    lastOutput = 0.0;
-    first = true;
+    integral_ = 0.0;
+    previous_error_ = 0.0;
+    last_time_ = std::chrono::steady_clock::now();
 }
